@@ -248,6 +248,15 @@ declare global {
     launchVillagesStep:number;
     launchVillagesOrder:string;
     launchVillagesWay:number;
+    renderTargetVillages:()=>void;
+    targetItem:targetItem
+  }
+
+
+  interface targetItem{
+    removeTargetItem:()=> void;
+    toggleTargetItem:(elem:any)=> void;
+    selectTargetItem:(event:Event) => void;
   }
 
   interface launchDialog {

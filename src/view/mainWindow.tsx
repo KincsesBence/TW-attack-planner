@@ -1,4 +1,5 @@
 import { launchItem } from "./launchItem";
+import { targetItem } from "./targetItem";
 
 export const mainWindow = ()=>{
     return /* html */`
@@ -70,14 +71,14 @@ export const mainWindow = ()=>{
             grid-template-rows: 30px 1fr; 
             gap: 0px 0px; 
             grid-template-areas: 
-                "launch-header"
-                "launch-list";
+                "target-header"
+                "target-list";
         }
 
-        .traget-header {
-            grid-area: traget-header; 
+        .target-header {
+            grid-area: target-header; 
         }
-        .target-list { grid-area: target-list; }
+        .target-list { grid-area: target-list; overflow-y:auto; }
 
         .launch-title { 
             grid-area: 1 / 3 / 2 / 4;
@@ -219,6 +220,72 @@ export const mainWindow = ()=>{
                 background-color:#ecd8b2;
                 padding: 5px 0;
             }
+            .target-item{
+                overflow-x:hidden;
+                display: block;
+                width:100%;
+                margin: 5px 0;
+                border-top: solid 1px #6c4824;
+                border-bottom: solid 1px #6c4824;
+            }
+            .target-header{
+                height:35px;
+                width:100%;
+                display: flex;
+	            justify-content: space-around;
+                background-color: #ecd8b2;
+                cursor: pointer;
+            }
+
+            .target-header div{
+                padding-top: 9px;
+                padding-bottom: 9px;
+            }
+
+            .target-village-name{
+                color: #603000;
+                font-weight: bold;
+            }
+            .target-extras{
+                flex-grow: 1;
+            }
+
+            .target-launchers{
+                display:none;
+                width:100%;
+                min-height:20px;
+                background-color: #fff5dc;
+            }
+
+            .remove-target-btn {
+                float: right;
+                z-index: 2;
+                width: 20px;
+                height: 20px;
+                background: url(https://dshu.innogamescdn.com/asset/80b013af/graphic/login_close.png) top left no-repeat;
+                cursor: pointer;
+                background-size: 20px;
+                margin-right: 10px;
+            }
+            .add-village-booster{
+                background: url(https://klanhaboru.hu/graphic/plus.png) top left no-repeat;
+                height: 16px;
+                width: 16px;
+                margin-left: 5px;
+                cursor: pointer;
+                display: inline-block;
+                vertical-align: middle;
+            }
+
+            .indicator{
+                font-size: 16px;
+                padding-left: 5px;
+                padding-right: 5px;
+            }
+
+            .indicator-open{
+                transform: rotate(90deg);
+            }
         </style>
     <div class="mainWindow">
         <div class="container">
@@ -255,7 +322,7 @@ export const mainWindow = ()=>{
                 <h3>Targets</h3>
             </div>
             <div class="target-panel">
-                <div class="traget-header">
+                <div class="target-header">
                 </div>
                 <div class="target-list">
                 </div>
@@ -337,6 +404,7 @@ window.mainInit = () => {
     window.launchVillagesWay=1;
     window.launchVillagesOrder='name';
     window.renderLaunchVillages();
+    window.renderTargetVillages();
 }
 
 var TimeOut:NodeJS.Timeout
@@ -385,7 +453,6 @@ window.renderLaunchVillages = async ()=>{
         return;
     }
     var launchList = document.getElementsByClassName('launch-list')[0];
-    console.log(window.launchVillagesPaging,window.launchVillagesPaging+window.launchVillagesStep);
     let to=window.launchVillagesPaging+window.launchVillagesStep
     if(window.launchVillagesPaging+window.launchVillagesStep>window.attackPlan.launchPool.length){
         to=window.attackPlan.launchPool.length;
@@ -411,4 +478,12 @@ window.renderLaunchVillages = async ()=>{
     })
 }
 
+window.renderTargetVillages = async ()=>{
+    
+    for (let i = 0; i < window.attackPlan.targetPool.length; i++) {
+        const target = window.attackPlan.targetPool[i];
+        $('.target-list').append(targetItem(target));
+    }
+
+}
 
