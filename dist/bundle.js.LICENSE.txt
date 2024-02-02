@@ -2,9 +2,19 @@
 
 /*! ./Api */
 
+/*! ./ConfirmVillageSpeedRemoveModal */
+
 /*! ./Model */
 
 /*! ./VillageModel */
+
+/*! ./addAttackModal */
+
+/*! ./addVillageSpeedModal */
+
+/*! ./confirmRemoveModal */
+
+/*! ./confirmRemoveTargetModal */
 
 /*! ./core/Api */
 
@@ -14,11 +24,19 @@
 
 /*! ./core/VillageModel */
 
+/*! ./editArrivalsModal */
+
+/*! ./editTargetModal */
+
+/*! ./editTemplatesModal */
+
 /*! ./launchItem */
 
 /*! ./mainWindow */
 
 /*! ./targetItem */
+
+/*! ./targetsLauncher */
 
 /*! ./view/launchDialog */
 
@@ -64,6 +82,42 @@
   !*** ./src/view/launchDialog.tsx ***!
   \***********************************/
 
+/*!*************************************!*\
+  !*** ./src/view/addAttackModal.tsx ***!
+  \*************************************/
+
+/*!**************************************!*\
+  !*** ./src/view/editTargetModal.tsx ***!
+  \**************************************/
+
+/*!**************************************!*\
+  !*** ./src/view/targetsLauncher.tsx ***!
+  \**************************************/
+
+/*!****************************************!*\
+  !*** ./src/view/editArrivalsModal.tsx ***!
+  \****************************************/
+
+/*!*****************************************!*\
+  !*** ./src/view/confirmRemoveModal.tsx ***!
+  \*****************************************/
+
+/*!*****************************************!*\
+  !*** ./src/view/editTemplatesModal.tsx ***!
+  \*****************************************/
+
 /*!******************************************!*\
   !*** ./src/core/LaunchVillagesModel.tsx ***!
   \******************************************/
+
+/*!*******************************************!*\
+  !*** ./src/view/addVillageSpeedModal.tsx ***!
+  \*******************************************/
+
+/*!***********************************************!*\
+  !*** ./src/view/confirmRemoveTargetModal.tsx ***!
+  \***********************************************/
+
+/*!*****************************************************!*\
+  !*** ./src/view/ConfirmVillageSpeedRemoveModal.tsx ***!
+  \*****************************************************/

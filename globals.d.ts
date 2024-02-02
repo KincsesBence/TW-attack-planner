@@ -242,21 +242,42 @@ declare global {
     Players:PlayersModel
     LaunchVillages:LaunchVillagesModel
     mainInit:()=> void;
-    oderLaunchVillages:(by:string)=> void;
+    oderLaunchVillages:(by:string,re?:boolean)=> void;
     renderLaunchVillages:()=> void;
+    partialRender:(launchers:village[],targets:target[])=> void;
+    openAddLauncherWindow:() => void;
+    addAttack:() => void;
+    closeModal:() => void;
     launchVillagesPaging:number;
     launchVillagesStep:number;
     launchVillagesOrder:string;
     launchVillagesWay:number;
     renderTargetVillages:()=>void;
-    targetItem:targetItem
+    targetItem:targetItem,
+    editTargets:()=>void;
+    addTargets:()=>void;
+    editArrivals:()=>void;
+    addArrival:()=>void;
+    removeArrival:()=>void;
+    editTemplates:()=>void;
+    editPlayerBoosts:()=>void;
+    addTemplate:()=>void;
+    removeTemplate:()=>void; 
+    selectTemplate:()=>void; 
   }
 
 
   interface targetItem{
-    removeTargetItem:()=> void;
     toggleTargetItem:(elem:any)=> void;
     selectTargetItem:(event:Event) => void;
+    removeTargetItem:(event:Event,target:number) => void;
+    confirmRemoveTargetItem:(target:number) => void;
+    removeTargetLauncherItem:(launcher:number,target:number)=>void;
+    confirmRemoveTargetLauncherItem:(launcher:number,target:number)=>void;
+    addVillageBooster:(event:Event,target:number) => void;
+    confirmAddVillageBooster:(target:number) => void;
+    removeVillageBooster:(event:Event,target:number) => void;
+    confirmRemoveVillageBooster:(target:number) => void;
   }
 
   interface launchDialog {
@@ -290,11 +311,15 @@ declare global {
     show : (name:string,content:string)=> void
   } 
 
+  type speed={
+    key:string
+    value:number,
+  }
 
   type attack ={
     villageFrom:village;
     villageTo:village;
-    unitSpeed:string;
+    unitSpeed:speed;
     launchDate:string;
     launchLink:string;
     isAttack:boolean;
@@ -317,7 +342,7 @@ declare global {
     village:village;
     arrival:string;
     isAttack:boolean;
-    unitSpeed:number;
+    unitSpeed:speed;
     notes:string;
   }
 

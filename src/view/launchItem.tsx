@@ -1,6 +1,7 @@
 export const launchItem = (village:village):HTMLDivElement=>{    
     let launchItem = document.createElement("div");
     launchItem.className="launch-item";
+    launchItem.id=village.id.toString();
 
     let nameField  = document.createElement("div");
     nameField.className=`name-field`;

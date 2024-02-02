@@ -1,3 +1,7 @@
+import { addAttackModal } from "./addAttackModal";
+import { editArrivalsModal } from "./editArrivalsModal";
+import { editTargetModal } from "./editTargetModal";
+import { editTemplatesModal } from "./editTemplatesModal";
 import { launchItem } from "./launchItem";
 import { targetItem } from "./targetItem";
 
@@ -123,9 +127,26 @@ export const mainWindow = ()=>{
                 "size-icon spear-icon sword-icon axe-icon archer-icon spy-icon light-icon marcher-icon heavy-icon ram-icon catapult-icon pala-icon snob-icon"
         }
 
-        .launch-filter-bar{
-           
+        .target-launch-header { 
+            background: linear-gradient(to bottom,#e2c07c 0%,#dab874 44%,#c1a264 100%);
+            grid-area: launch-header;
+            display: grid;
+            grid-template-columns:  30px 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 30px; 
+            grid-template-rows: 30px;
+            gap: 0px;
+            grid-template-areas: 
+                "size-icon spear-icon sword-icon axe-icon archer-icon spy-icon light-icon marcher-icon heavy-icon ram-icon catapult-icon pala-icon snob-icon del-icon"
         }
+
+        .target-launch-header div {
+            padding: 5px;
+        }
+
+        .target-launch-header img {
+            margin: 0 auto;
+            display: block;
+        }
+
 
         .credits { grid-area: option / 1 / 4 / 2; border-right: solid 2px #6c4824; padding:10px;}
 
@@ -157,6 +178,7 @@ export const mainWindow = ()=>{
         .catapult-icon { grid-area: catapult-icon; }
         .pala-icon { grid-area: pala-icon; }
         .snob-icon { grid-area: snob-icon; }
+        .del-icon { grid-area: del-icon; }
 
         .option-item{
             width:100%;
@@ -171,8 +193,35 @@ export const mainWindow = ()=>{
         .option-item h2{
             text-align:center;
         }
+
+        .header-count{
+            margin-left:10px;
+            display: inline;
+        }
+
+        .header-count span{
+            font-weight: bold;
+            padding: 0 2px;
+        }
     </style>
      <style>
+            .targetsLauncher-item{
+                height: max-content;
+                border-top: solid 1px #6c4824;
+                border-bottom: solid 1px #6c4824;
+                margin-top:3px;
+                text-align:center;
+                display: grid; 
+                grid-template-columns:  30px 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 30px; 
+                grid-template-rows: 30px 30px ;
+                gap: 0px 0px; 
+                grid-template-areas: 
+                    "size-field name-field name-field name-field name-field name-field name-field name-field name-field name-field name-field name-field name-field del-field"
+                    "size-field spear-field sword-field axe-field archer-field spy-field light-field marcher-field heavy-field ram-field catapult-field knight-field snob-field del-field";
+            }
+            .del-field{ grid-area: del-field; padding: 20px 5px;background-color:#fff5dc;border-left: 1px solid #6c4824;}
+            .size-field{ grid-area: size-field; padding: 5px 8px;background-color:#fff5dc;border-right: 1px solid #6c4824;}
+
             .launch-item{
             height: max-content;
             border-top: solid 1px #6c4824;
@@ -180,7 +229,7 @@ export const mainWindow = ()=>{
             margin-top:3px;
             text-align:center;
             display: grid; 
-            grid-template-columns:  1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;;
+            grid-template-columns:  1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
             grid-template-rows: 30px 30px ;
             gap: 0px 0px; 
             grid-template-areas:
@@ -198,6 +247,16 @@ export const mainWindow = ()=>{
                 height: 16px;
                 float:right;
                 padding-right:3px;
+            }
+
+            .size-field img{
+                height: 16px;
+                float:right;
+                padding: 15px 0;
+            }
+
+            .del-field .remove-target-btn{
+                margin: 0 !important;
             }
 
             .check-field { grid-area: check-field; padding: 20px 0; background-color:#fff5dc; border-right:1px solid #6c4824}
@@ -286,6 +345,101 @@ export const mainWindow = ()=>{
             .indicator-open{
                 transform: rotate(90deg);
             }
+
+            .planner-modal {
+                background: transparent url(https://dshu.innogamescdn.com/asset/fd86cac8/graphic/index/contentbg.png) scroll left top repeat;
+                filter: drop-shadow(0 0 0.75rem rgb(88, 88, 88));
+                width: max-content;
+                height: fit-content;
+                max-height: calc(100vh - 120px);
+                border: 2px solid #6c4824;
+                position: absolute;
+                top: 0;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                margin: auto;
+                border-radius: 10px;
+                z-index: 100001;
+                display: grid;
+                align-content: space-evenly;
+                grid-template-areas:
+                    'header'
+                    'content';
+                grid-template-rows: 30px calc(100% - 30px);
+            }
+
+            .planner-modal-header {
+                font-size:16px;
+                border-top-left-radius: 10px;
+                border-top-right-radius: 10px;
+                padding: 5px;
+                grid-area: header;
+                text-align: center;
+                background: linear-gradient(to bottom,#e2c07c 0%,#dab874 44%,#c1a264 100%);
+            }
+
+            .planner-modal-content {
+                display:grid;
+                grid-area: content;
+                padding: 10px;
+            }
+
+            .modal-input-group{
+                display:inline-grid;
+                text-align:center;
+                border-bottom: solid 1px #603000;
+                padding: 5px 0;
+            }
+
+            .modal-input-inline{
+                display:block;
+                text-align:center;
+                border-bottom: solid 1px #603000;
+                padding: 5px 0;
+            }
+
+            .modal-input-group label{
+                margin-bottom:10px;
+            }
+
+            .modal-input-group input{
+                margin-bottom:10px;
+            }
+
+            .modal-input-group textarea{
+                margin-bottom:10px;
+            }
+
+            .modal-input-group button{
+                margin-bottom:10px;
+            }
+
+            .modal-input-group input{
+                text-align:center;
+                font-size: 14px;
+            }
+
+            .modal-input-group select{
+                text-align:center;
+                font-size: 14px;
+                margin-bottom:10px;
+            }
+            
+            .del-boost {
+                background: url(https://klanhaboru.hu/graphic/minus.png) top left no-repeat;
+                height: 16px;
+                width: 16px;
+                margin-left: 5px;
+                cursor: pointer;
+                display: inline-block;
+                vertical-align: middle;
+            }
+
+            .booster-button {
+                display: inline;
+            }
+
         </style>
     <div class="mainWindow">
         <div class="container">
@@ -297,25 +451,25 @@ export const mainWindow = ()=>{
                     <h2>${window.attackPlan.name}</h2>
                 </div>
                 <div class="option-item">
-                    <button class="btn">Add targets</button>
+                    <button onclick="window.editTargets()" class="btn">Edit targets</button>
                 </div>
                 <div class="option-item">
-                    <button class="btn">Edit arrivals</button>
+                    <button onclick="window.editArrivals()" class="btn">Edit arrivals</button>
                 </div>
                 <div class="option-item">
-                    <button class="btn">Edit Templates</button>
+                    <button onclick="window.editTemplates()" class="btn">Edit Templates</button>
                 </div>
                 <div class="option-item">
-                    <button class="btn">Edit player buffs</button>
+                    <button onclick="window.editPlayerBoosts()" class="btn">Edit player boosts</button>
                 </div>
                 <div class="option-item">
-                    <button class="btn">Auto assigner</button>
+                    <button onclick="window.autoAssign()" class="btn">Auto assigner</button>
                 </div>
                 <div class="option-item">
-                    <button class="btn">Calculate</button>
+                    <button onclick="window.calculateAttack()" class="btn">Calculate</button>
                 </div>
                 <div class="option-item">
-                    <button class="btn">Reset assignments</button>
+                    <button onclick="window.resetAssignments()" class="btn">Reset assignments</button>
                 </div>
             </div>
             <div class="target-title header">
@@ -342,7 +496,7 @@ export const mainWindow = ()=>{
             <div class="launch-panel">
                 <div class="launch-header">
                     <div class="size-icon">
-                        <button class="btn"><---</button>
+                        <button onclick="window.openAddLauncherWindow()" class="btn"><---</button>
                     </div>
                     <div class="spear-icon">
                         <img onclick="window.oderLaunchVillages('spear')" src="https://dshu.innogamescdn.com/asset/fd86cac8/graphic/unit/unit_spear.png">
@@ -392,6 +546,10 @@ export const mainWindow = ()=>{
             </div>
         </div>
     </div>
+    <div class="planner-modal" style="display:none;">
+    <div class="planner-modal-header"><b></b></div>
+    <div class="planner-modal-content"> </div>
+    </div>
     <script>
         window.mainInit();
     </script>
@@ -408,13 +566,18 @@ window.mainInit = () => {
 }
 
 var TimeOut:NodeJS.Timeout
-window.oderLaunchVillages = (by:string) => {
-    if(by==window.launchVillagesOrder){
+window.oderLaunchVillages = (by:string,re:boolean=false) => {
+    console.log(re);
+    
+    if(by==window.launchVillagesOrder && !re){
         window.launchVillagesWay*=-1;
+        console.log('fordíts');
     }
     window.launchVillagesOrder=by;
 
     clearTimeout(TimeOut);
+    console.log(-1*window.launchVillagesWay,by,window.launchVillagesPaging);
+    
     TimeOut= setTimeout(()=>{
         let fn=null;
             switch (by){
@@ -435,14 +598,18 @@ window.oderLaunchVillages = (by:string) => {
                 case "knight": fn=(a:village,b:village)=>{return a.unitsContain.knight>b.unitsContain.knight? -1*window.launchVillagesWay:1*window.launchVillagesWay;};break;
                 default:
                 fn=(a:village,b:village)=>{return a.name<b.name? -1:1;};
-                window.launchVillagesStep=25;
-                window.launchVillagesPaging=0;
+                window.launchVillagesStep=0;
+                window.launchVillagesPaging=window.launchVillagesStep;
                 window.launchVillagesWay=1;
             }
             window.attackPlan.launchPool.sort(fn);
         $('.launch-list').html('');
-        $('.launch-list').scrollTop(0);
-        window.launchVillagesPaging=0;
+
+        if(!re){
+            $('.launch-list').scrollTop(0);
+            window.launchVillagesPaging=0;
+        }
+        
         
         window.renderLaunchVillages();
     },500)
@@ -464,26 +631,128 @@ window.renderLaunchVillages = async ()=>{
     }
 
     
-    window.launchVillagesPaging+=window.launchVillagesStep;
-    
     launchList.addEventListener('scroll', function(ev) {
+        
+        
         let max=launchList.scrollHeight-100;
         let pos= launchList.clientHeight+launchList.scrollTop;
 
         let isOver=false;
-        if(max<=pos && !isOver){
+        if(max<=pos && !isOver && CanScroll){
             isOver=true;
+            window.launchVillagesPaging+=window.launchVillagesStep;
             window.renderLaunchVillages();
+            console.log("scrolled");
         }
     })
 }
 
-window.renderTargetVillages = async ()=>{
+var CanScroll=false;
+var To:NodeJS.Timeout;
+addEventListener("wheel", (event) => {
+    CanScroll=true;
+    clearTimeout(To);
+    To = setTimeout(()=>{
+        CanScroll=false;
+    },500)
     
+});
+
+window.renderTargetVillages = async ()=>{
+    $('.target-list').html('');
     for (let i = 0; i < window.attackPlan.targetPool.length; i++) {
         const target = window.attackPlan.targetPool[i];
         $('.target-list').append(targetItem(target));
     }
 
+}
+
+window.openAddLauncherWindow = () => {
+    if($('input[name="target"]:checked').get().length==0){
+        window.UI.ErrorMessage('No target selected')
+        return;
+    }
+
+    if($('input[name="target"]:checked').get().length==0){
+        window.UI.ErrorMessage('No target selected')
+        return;
+    }
+
+    if($('.launch-list').find("input:checked").get().length==0){
+        window.UI.ErrorMessage('No launcher selected')
+        return;
+    }
+
+    $('.planner-modal-header b').text('Támadás hozzáadása');
+    $('.planner-modal-content').html(addAttackModal());
+    $('.planner-modal').show();
+}
+
+window.closeModal = () => {
+    $('.planner-modal-header b').text('');
+    $('.planner-modal-content').html('');
+    $('.planner-modal').hide();
+}
+
+window.partialRender = (launchers:village[],targets:target[])=>{
+    launchers.forEach((village:village)=>{
+        if(village.popSize==0){
+            $('.launch-list').find(`#${village.id}`).remove();
+            console.log(`removed #${village.id}`);
+            
+        }else{
+            console.log(`updated #${village.id}`);
+            $('.launch-list').find(`#${village.id}`).replaceWith(launchItem(village));
+        }
+    });
+    targets.forEach((target:target)=>{
+        console.log(`updated target #${target.village.id}`);
+        let isopen=$('.target-list').find(`#${target.village.id}`).find('.indicator').hasClass('indicator-open');
+        let isChecked=$('.target-list').find(`#${target.village.id}`).find('input').is(':checked')
+
+        $('.target-list').find(`#${target.village.id}`).replaceWith(targetItem(target,isopen,isChecked));
+    });
+}
+
+window.editTargets = () => {
+    $('.planner-modal-header b').text('Célpontok szerkesztése');
+    $('.planner-modal-content').html(editTargetModal());
+    $('.planner-modal').show();
+}
+
+window.addTargets = () => {
+    let val:string = $('#plan_targets').val().toString();
+    let reg = Array.from(val.matchAll(/([0-9]{1,3}).([0-9]{1,3})/g));
+    reg.forEach((elem:any)=>{
+        let coord=elem[1]+"|"+elem[2];
+        let village = window.Villages.find((village:village)=>{ return village.coord.text==coord})     
+        console.log(coord,village);
+        if(village){
+            window.attackPlan.targetPool.push({
+                booster:0,
+                launchers:[],
+                village
+            })
+        }
+    });
+    $('.planner-modal-content').html(editTargetModal());
+    window.renderTargetVillages();
+    window.closeModal()
+}
+
+window.editArrivals = () =>{
+    $('.planner-modal-header b').text('Érkezések szerkesztése');
+    $('.planner-modal-content').html(editArrivalsModal());
+    $('.planner-modal').show();
+    
+}
+
+
+
+window.editTemplates = () =>{
+    $('.planner-modal-header b').text('Templatek szerkesztése');
+    $('.planner-modal-content').html(editTemplatesModal());
+    $('.planner-modal').show();
+    
 }
 

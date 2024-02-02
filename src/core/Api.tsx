@@ -207,6 +207,8 @@ async function fetchVillage(html:any){
     return villagePool;
 }
 
+
+
 export function loadPlans(){
     let result=localStorage.getItem('TW-Attack-Planner');
     let plans:plan[] = [];
@@ -285,5 +287,55 @@ export function removePlan(id:string){
         plans.splice(ind,1);
         localStorage.setItem('TW-Attack-Planner',JSON.stringify(plans));
     }
+}
+
+function transUnit(to:number,from:number,trans:number):[number,number]{
+    if(from-trans<0){
+        to=from;
+        from=0;
+    }else{
+        to+=trans
+        from-=trans;
+    }
+    
+    return [to,from];
+}
+
+export function TroopTransaction(to:units,from:units,trans:units):[units,units]{
+    let unis:string[]=['spear','sword','axe','archer','spy','light','marcher','heavy','ram','catapult','knight','snob'];
+    unis.forEach((unis)=>{
+        [to[unis as keyof units],from[unis as keyof units]] = transUnit(to[unis as keyof units],from[unis as keyof units],trans[unis as keyof units]);
+    })
+    return [to,from]
+}
+
+export function calcUnitPop(units:units):number{
+    let unis:string[]=['spear','sword','axe','archer','spy','light','marcher','heavy','ram','catapult','knight','snob'];
+    let size=0;
+    unis.forEach((unis)=>{
+        size+=window.unitConfig[unis as keyof unitConfig].pop*units[unis as keyof unitConfig];
+    })
+
+    return size;
+}
+
+export function getSlowestUnit(units:units,isAttack:boolean):speed{
+    let unis:string[]=['spear','sword','axe','archer','spy','light','marcher','heavy','ram','catapult','knight','snob'];
+
+    let speed=999999;
+    let name=null;
+    let conf= window.unitConfig;
+
+    for (let i = 0; i < unis.length; i++) {
+        if(conf[unis[i] as keyof unitConfig].speed<speed && units[unis[i] as keyof unitConfig]>0){
+            speed=conf[unis[i] as keyof unitConfig].speed;
+            name=unis[i];
+        }
+    }
+
+    return {
+        key: name,
+        value:speed==999999? 0:speed,
+    };
 }
 
