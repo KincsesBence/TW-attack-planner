@@ -249,6 +249,7 @@ declare global {
     openAddLauncherWindow:() => void;
     addAttack:() => void;
     closeModal:() => void;
+    createModal:(content:string,header:string) => void;
     launchVillagesPaging:number;
     launchVillagesStep:number;
     launchVillagesOrder:string;

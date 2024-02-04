@@ -686,8 +686,12 @@ window.openAddLauncherWindow = () => {
         return;
     }
 
-    $('.planner-modal-header b').text('Támadás hozzáadása');
-    $('.planner-modal-content').html(addAttackModal());
+    window.createModal(addAttackModal(),'Támadás hozzáadása');
+}
+
+window.createModal = (content:string,header:string) => {
+    $('.planner-modal-header b').text(header);
+    $('.planner-modal-content').html(content);
     $('.planner-modal').show();
 }
 
@@ -718,40 +722,26 @@ window.partialRender = (launchers:village[],targets:target[])=>{
 }
 
 window.editTargets = () => {
-    $('.planner-modal-header b').text('Célpontok Hozzáadása');
-    $('.planner-modal-content').html(editTargetModal());
-    $('.planner-modal').show();
+    window.createModal(editTargetModal(),'Célpontok Hozzáadása');
 }
 
 window.editArrivals = () =>{
-    $('.planner-modal-header b').text('Érkezések szerkesztése');
-    $('.planner-modal-content').html(editArrivalsModal());
-    $('.planner-modal').show();
-    
+    window.createModal(editArrivalsModal(),'Érkezések szerkesztése');
 }
 
 window.editTemplates = () =>{
-    $('.planner-modal-header b').text('Sablonok szerkesztése');
-    $('.planner-modal-content').html(editTemplatesModal());
-    $('.planner-modal').show();
+    window.createModal(editTemplatesModal(),'Sablonok szerkesztése');
 }
 window.editPlayerBoosts = () =>{
-    $('.planner-modal-header b').text('Gyorsítók szerkesztése');
-    $('.planner-modal-content').html(addPlayerSpeedModal());
-    $('.planner-modal').show();
+    window.createModal(addPlayerSpeedModal(),'Gyorsítók szerkesztése');
 }
 
 window.calculateAttack = () =>{
-    $('.planner-modal-header b').text('Templatek szerkesztése');
-    $('.planner-modal-content').html(confirmCalculateAttackModal());
-    $('.planner-modal').show();
+    window.createModal(confirmCalculateAttackModal(),'Támadás kiszámítása');
 }
 
-
 window.confirmCalculateAttack = () =>{
-    $('.planner-modal-header b').text('Támadási terv');
-    $('.planner-modal-content').html(calculatedAttackModal());
-    $('.planner-modal').show();
+    window.createModal(calculatedAttackModal(),'Támadási terv');
 }
 
 

@@ -298,25 +298,21 @@ function transUnit(to:number,from:number,trans:number):[number,number]{
         to+=trans
         from-=trans;
     }
-    
     return [to,from];
 }
 
 export function TroopTransaction(to:units,from:units,trans:units):[units,units]{
-    let unis:string[]=['spear','sword','axe','archer','spy','light','marcher','heavy','ram','catapult','knight','snob'];
-    unis.forEach((unis)=>{
+    Object.keys(window.unitConfig).forEach((unis)=>{
         [to[unis as keyof units],from[unis as keyof units]] = transUnit(to[unis as keyof units],from[unis as keyof units],trans[unis as keyof units]);
     })
     return [to,from]
 }
 
 export function calcUnitPop(units:units):number{
-    let unis:string[]=['spear','sword','axe','archer','spy','light','marcher','heavy','ram','catapult','knight','snob'];
     let size=0;
-    unis.forEach((unis)=>{
+    Object.keys(window.unitConfig).forEach((unis)=>{
         size+=window.unitConfig[unis as keyof unitConfig].pop*units[unis as keyof unitConfig];
     })
-
     return size;
 }
 
