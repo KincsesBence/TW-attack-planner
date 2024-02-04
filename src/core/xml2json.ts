@@ -1,6 +1,6 @@
 export function xml2json(xml:any, tab:any) {
    var X = {
-      toObj: function(xml:any) {
+      toObj: function(xml:any) {    
          var o:any = {};
          if (xml.nodeType==1) {   // element node ..
             if (xml.attributes.length)   // element with attributes  ..
@@ -39,8 +39,12 @@ export function xml2json(xml:any, tab:any) {
                   }
                }
                else if (textChild) { // pure text
-                  if (!xml.attributes.length)
+                  if (!xml.attributes.length){
                      o = X.escape(X.innerXml(xml));
+                     if(!isNaN(o)){
+                        o=parseFloat(o);
+                     }
+                  }
                   else
                      o["#text"] = X.escape(X.innerXml(xml));
                }
@@ -143,6 +147,5 @@ export function xml2json(xml:any, tab:any) {
    };
    if (xml.nodeType == 9) // document node
       xml = xml.documentElement;
-   var json = X.toJson(X.toObj(X.removeWhite(xml)), xml.nodeName, "\t");
-   return "{\n" + tab + (tab ? json.replace(/\t/g, tab) : json.replace(/\t|\n/g, "")) + "\n}";
+   return X.toObj(X.removeWhite(xml))
 }

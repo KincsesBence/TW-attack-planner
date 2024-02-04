@@ -425,7 +425,7 @@ addArrival:()=> {
         window.launchDialog.plan.arrivals.push(val);
     }
 
-    window.attackPlan.arrivals.sort((a,b)=>{return a>b? 1:-1})
+    window.launchDialog.plan.arrivals.sort((a,b)=>{return a>b? 1:-1})
 
     let select="";
     window.launchDialog.plan.arrivals.forEach((arrival)=>{

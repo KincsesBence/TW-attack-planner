@@ -35,13 +35,14 @@ const gameConfigAPI:string="/interface.php?func=get_config";
 
 export async function getServerConifg():Promise<gameConfig>{
     let result = await $.ajax({url: server+gameConfigAPI});
-    return JSON.parse(xml2json(result,"")).config;  
+    
+    return  xml2json(result,"")
 }
 
 export async function getUnitConfig():Promise<unitConfig>{
     let result = await $.ajax({url: server+unitConfigAPI});
-    let config = JSON.parse(xml2json(result,"")).config;
-    return config;
+
+    return xml2json(result,"")
 }
 
 export async function getAllVillages():Promise<village[]>{    
@@ -320,22 +321,32 @@ export function calcUnitPop(units:units):number{
 }
 
 export function getSlowestUnit(units:units,isAttack:boolean):speed{
-    let unis:string[]=['spear','sword','axe','archer','spy','light','marcher','heavy','ram','catapult','knight','snob'];
 
-    let speed=999999;
-    let name=null;
-    let conf= window.unitConfig;
+    var unitConfig = Object.keys(window.unitConfig)
+    .map((k ) => { 
+        return { 
+        key: k,
+        value: window.unitConfig[k as keyof unitConfig].speed
+        };
+    }).sort((a,b)=>{
+        return a.value>b.value? -1:1
+    })
 
-    for (let i = 0; i < unis.length; i++) {
-        if(conf[unis[i] as keyof unitConfig].speed<speed && units[unis[i] as keyof unitConfig]>0){
-            speed=conf[unis[i] as keyof unitConfig].speed;
-            name=unis[i];
+    if(!isAttack && units.knight>0){
+        return {
+            key:'knight',
+            value:window.unitConfig.knight.speed
         }
     }
 
-    return {
-        key: name,
-        value:speed==999999? 0:speed,
-    };
+    for (let i = 0; i < unitConfig.length; i++) {
+        if(units[unitConfig[i].key as keyof unitConfig]>0){
+            return unitConfig[i]
+        }
+    }
+    
 }
 
+export function coordDistance(village1:village, village2:village):number {
+    return Math.sqrt((Math.pow(village2.coord.x - village1.coord.x,2) + Math.pow(village2.coord.y - village1.coord.y,2)));
+}

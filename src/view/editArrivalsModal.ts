@@ -12,7 +12,7 @@ export const editArrivalsModal = ()=>{
 
         }
         </select>
-        <input id="plan_arrivals_input" type="datetime-local" type="text"/>
+        <input id="plan_arrivals_input" type="datetime-local" type="text" step="1"/>
     </div>
     <div class="modal-input-inline">
         <button class="btn" onclick="addArrival()" >add</button>
@@ -26,7 +26,6 @@ export const editArrivalsModal = ()=>{
 
 window.addArrival = ()=> {
     let val = $('#plan_arrivals_input').val().toString().replace('T',' ');
-    console.log(val);
 
     if(val==""){
         return;

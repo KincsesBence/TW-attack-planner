@@ -91,6 +91,10 @@ window.addAttack = () => {
         newVillage.popSize=calcUnitPop(newVillage.unitsContain);
         window.attackPlan.launchPool[indLanucher].popSize=calcUnitPop(window.attackPlan.launchPool[indLanucher].unitsContain);
         
+
+        console.log(getSlowestUnit(newVillage.unitsContain,operation=='attack'));
+        
+
         if(newVillage.popSize>0){
             window.attackPlan.targetPool[indTarget].launchers.push({
                 arrival:arrival,

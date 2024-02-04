@@ -10,7 +10,13 @@
 
 /*! ./addAttackModal */
 
+/*! ./addPlayerSpeedModal */
+
 /*! ./addVillageSpeedModal */
+
+/*! ./calculatedAttackModal */
+
+/*! ./confirmCalculateAttackModal */
 
 /*! ./confirmRemoveModal */
 
@@ -110,13 +116,25 @@
   !*** ./src/core/LaunchVillagesModel.ts ***!
   \*****************************************/
 
+/*!*****************************************!*\
+  !*** ./src/view/addPlayerSpeedModal.ts ***!
+  \*****************************************/
+
 /*!******************************************!*\
   !*** ./src/view/addVillageSpeedModal.ts ***!
   \******************************************/
 
+/*!*******************************************!*\
+  !*** ./src/view/calculatedAttackModal.ts ***!
+  \*******************************************/
+
 /*!**********************************************!*\
   !*** ./src/view/confirmRemoveTargetModal.ts ***!
   \**********************************************/
+
+/*!*************************************************!*\
+  !*** ./src/view/confirmCalculateAttackModal.ts ***!
+  \*************************************************/
 
 /*!****************************************************!*\
   !*** ./src/view/ConfirmVillageSpeedRemoveModal.ts ***!

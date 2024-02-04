@@ -231,6 +231,7 @@ declare global {
     distance?:number
   }
 
+
   interface Window {
     UI:UI,
     Dialog:Dialog;
@@ -264,6 +265,10 @@ declare global {
     addTemplate:()=>void;
     removeTemplate:()=>void; 
     selectTemplate:()=>void; 
+    addPlayerBoost:()=>void;
+    removePlayerBoost:()=>void;
+    calculateAttack:()=>void;  
+    confirmCalculateAttack:()=>void;
   }
 
 

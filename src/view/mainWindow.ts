@@ -1,4 +1,7 @@
 import { addAttackModal } from "./addAttackModal";
+import { addPlayerSpeedModal } from "./addPlayerSpeedModal";
+import { calculatedAttackModal } from "./calculatedAttackModal";
+import { confirmCalculateAttackModal } from "./confirmCalculateAttackModal";
 import { editArrivalsModal } from "./editArrivalsModal";
 import { editTargetModal } from "./editTargetModal";
 import { editTemplatesModal } from "./editTemplatesModal";
@@ -451,7 +454,7 @@ export const mainWindow = ()=>{
                     <h2>${window.attackPlan.name}</h2>
                 </div>
                 <div class="option-item">
-                    <button onclick="window.editTargets()" class="btn">Edit targets</button>
+                    <button onclick="window.editTargets()" class="btn">Add targets</button>
                 </div>
                 <div class="option-item">
                     <button onclick="window.editArrivals()" class="btn">Edit arrivals</button>
@@ -715,29 +718,9 @@ window.partialRender = (launchers:village[],targets:target[])=>{
 }
 
 window.editTargets = () => {
-    $('.planner-modal-header b').text('Célpontok szerkesztése');
+    $('.planner-modal-header b').text('Célpontok Hozzáadása');
     $('.planner-modal-content').html(editTargetModal());
     $('.planner-modal').show();
-}
-
-window.addTargets = () => {
-    let val:string = $('#plan_targets').val().toString();
-    let reg = Array.from(val.matchAll(/([0-9]{1,3}).([0-9]{1,3})/g));
-    reg.forEach((elem:any)=>{
-        let coord=elem[1]+"|"+elem[2];
-        let village = window.Villages.find((village:village)=>{ return village.coord.text==coord})     
-        console.log(coord,village);
-        if(village){
-            window.attackPlan.targetPool.push({
-                booster:0,
-                launchers:[],
-                village
-            })
-        }
-    });
-    $('.planner-modal-content').html(editTargetModal());
-    window.renderTargetVillages();
-    window.closeModal()
 }
 
 window.editArrivals = () =>{
@@ -747,12 +730,29 @@ window.editArrivals = () =>{
     
 }
 
-
-
 window.editTemplates = () =>{
-    $('.planner-modal-header b').text('Templatek szerkesztése');
+    $('.planner-modal-header b').text('Sablonok szerkesztése');
     $('.planner-modal-content').html(editTemplatesModal());
     $('.planner-modal').show();
-    
 }
+window.editPlayerBoosts = () =>{
+    $('.planner-modal-header b').text('Gyorsítók szerkesztése');
+    $('.planner-modal-content').html(addPlayerSpeedModal());
+    $('.planner-modal').show();
+}
+
+window.calculateAttack = () =>{
+    $('.planner-modal-header b').text('Templatek szerkesztése');
+    $('.planner-modal-content').html(confirmCalculateAttackModal());
+    $('.planner-modal').show();
+}
+
+
+window.confirmCalculateAttack = () =>{
+    $('.planner-modal-header b').text('Támadási terv');
+    $('.planner-modal-content').html(calculatedAttackModal());
+    $('.planner-modal').show();
+}
+
+
 
