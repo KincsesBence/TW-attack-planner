@@ -116,7 +116,7 @@ export const mainWindow = ()=>{
             overflow-y:scroll;
             border-bottom-right-radius: 20px;
             grid-area: launch-list; 
-            display: grid;
+            display: block;
         }
         .launch-header { 
             padding-right:5px;

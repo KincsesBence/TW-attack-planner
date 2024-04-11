@@ -24,8 +24,6 @@
 
 /*! ./core/Api */
 
-/*! ./core/LaunchVillagesModel */
-
 /*! ./core/PlayersModel */
 
 /*! ./core/VillageModel */
@@ -111,10 +109,6 @@
 /*!****************************************!*\
   !*** ./src/view/editTemplatesModal.ts ***!
   \****************************************/
-
-/*!*****************************************!*\
-  !*** ./src/core/LaunchVillagesModel.ts ***!
-  \*****************************************/
 
 /*!*****************************************!*\
   !*** ./src/view/addPlayerSpeedModal.ts ***!

@@ -1,9 +1,7 @@
-import { addPlan, findPlan, loadPlans, removePlan } from "../core/Api";
+import { addPlan, findPlan, loadPages, loadPlans, removePlan } from "../core/Api";
 import { mainWindow } from "./mainWindow";
 
-export const launchDialog = (plans:plan[])=>{
-    console.log(plans);
-    
+export const launchDialog = ()=>{
     return /* html */`
         <style>
             .launch-dialog{
@@ -62,10 +60,10 @@ export const launchDialog = (plans:plan[])=>{
             <div class="launch-dialog-selector">
                 <h3>Plans:</h3>
                 <select id="launchDialogSelect" size="5">
-                    ${plans.map((plan)=>{
+                    ${window.Plans.map((plan)=>{
                         console.log(plan);
                         return /* html */`<option value="${plan.id}">${plan.name}</option>`;
-                    })}
+                    }).join('')}
                 </select>
                 <button onclick="launchDialog.loadPlan()" class="btn">Load Plan</button>
                 <button onclick="launchDialog.removePlan()" class="btn">Remove Plan</button>
@@ -79,6 +77,7 @@ export const launchDialog = (plans:plan[])=>{
                     <div id="c2" class="circle inactive">2</div>
                     <div id="c3" class="circle inactive">3</div>
                     <div id="c4" class="circle inactive">4</div>
+                    <div id="c5" class="circle inactive">5</div>
                 </div>
                 <div class="step-1 step">
                     <label for="template_name">Template name:</label><br>
@@ -89,6 +88,20 @@ export const launchDialog = (plans:plan[])=>{
                     <textarea onkeyup="launchDialog.step2Check()" id="plan_targets" size="10"></textarea>
                 </div>
                 <div class="step-3 step" style="display:none;">
+                    <label for="">Lanuchers:</label><br>
+                    <select id="plan_launcher_list" size="5">
+                    </select>
+                    <select id="plan_launcher_select" style="font-size:16px" >
+                        ${window.Groups.map((group)=>{
+                            return /* html */`<option value="${group.id}">${group.name}</option>`;
+                        }).join('')}
+                    </select>
+                    <div>
+                        <button onclick="launchDialog.addGroup()" >add</button>
+                        <button onclick="launchDialog.removeGroup()" >remove</button>
+                    </div>
+                </div>
+                <div class="step-4 step" style="display:none;">
                     <label for="">Arrivals:</label><br>
                     <select id="plan_arrivals_select" size="5">
                     </select>
@@ -98,7 +111,7 @@ export const launchDialog = (plans:plan[])=>{
                         <button onclick="launchDialog.removeArrival()" >remove</button>
                     </div>
                 </div>
-                <div class="step-4 step" style="display:none;">
+                <div class="step-5 step" style="display:none;">
                     <label for="template_select">Templates:</label>
                     <select onclick="launchDialog.selectTemplate()" id="template_select" size="5"></select>
                     <label for="temp_name">name:</label>
@@ -259,6 +272,7 @@ export const launchDialog = (plans:plan[])=>{
 
 
 window.launchDialog={
+groupIDs:[],
 step1Check:()=>{
     let val:string = $('#template_name').val().toString();
     if(val.length >3 && findPlan((elem:plan)=>{return elem.name==val})==null){
@@ -294,27 +308,34 @@ step2Check:()=>{
     }
 },
 step3Check:()=>{
-    if(window.launchDialog.plan.arrivals.length>0){
+    if(window.launchDialog.groupIDs.length>0){
         $('#nextBtn').prop( "disabled", false);
     }else{
         $('#nextBtn').prop( "disabled", true);
     }
 },
 step4Check:()=>{
+    if(window.launchDialog.plan.arrivals.length>0){
+        $('#createPlan').prop( "disabled", false);
+    }else{
+        $('#createPlan').prop( "disabled", true);
+    }
+},
+step5Check:()=>{
     if(window.launchDialog.plan.templates.length>0){
         $('#createPlan').prop( "disabled", false);
     }else{
         $('#createPlan').prop( "disabled", true);
     }
 },
-
 goToStep:(stepIn) =>{
     $('.step-1').hide();
     $('.step-2').hide();
     $('.step-3').hide();
     $('.step-4').hide();
+    $('.step-5').hide();
     $('.step-'+stepIn).show();
-    if(stepIn<4){
+    if(stepIn<5){
         $('#nextBtn').attr('onclick','launchDialog.goNext('+(stepIn+1)+')');
         $('#createPlan').hide();
         $('#nextBtn').show();
@@ -325,15 +346,15 @@ goToStep:(stepIn) =>{
     }
 },
 goNext:(stepIn) =>{
-    console.log(stepIn,stepIn>=4);
     $('.step-1').hide();
     $('.step-2').hide();
     $('.step-3').hide();
     $('.step-4').hide();
+    $('.step-5').hide();
 
     $('#c'+stepIn).attr('onclick','launchDialog.goToStep('+stepIn+')');
-    if(stepIn>3){
-        $('.step-4').show();
+    if(stepIn>4){
+        $('.step-5').show();
         $('#nextBtn').hide();
         $('#createPlan').show();
         $('#c'+stepIn).removeClass('inactive');
@@ -364,18 +385,21 @@ cancelNewPlan: () => {
     $('.step-2').hide();
     $('.step-3').hide();
     $('.step-4').hide();
+    $('.step-5').hide();
     $('#nextBtn').attr('onclick','launchDialog.goNext('+(2)+')');
     $('.new-plan').hide();
     $('.launch-dialog-selector').show();
     $('#c2').addClass('inactive');
     $('#c3').addClass('inactive');
     $('#c4').addClass('inactive');
+    $('#c5').addClass('inactive');
     $('#createPlan').hide();
     $('#nextBtn').show();
     $('#template_name').val("");
     $('#c2').attr('onclick','');
     $('#c3').attr('onclick','');
     $('#c4').attr('onclick','');
+    $('#c5').attr('onclick','');
     $('#plan_arrivals_select').html("");
     $('#plan_targets').val("");
     $('#template_select').html("");
@@ -392,12 +416,12 @@ cancelNewPlan: () => {
     $('#palnner_unit_input_catapult').val('0')
     $('#palnner_unit_input_knight').val('0')
     $('#palnner_unit_input_snob').val('0')
-
+    window.launchDialog.groupIDs=[];
+    $('#plan_launcher_list').html('');
 },
-createPlan : ()=>{
-    window.launchDialog.plan.launchPool = window.LaunchVillages.get();
+createPlan : async ()=>{ 
     window.attackPlan=window.launchDialog.plan;
-
+    window.attackPlan.launchPool = await loadPages(window.launchDialog.groupIDs.map((groupID)=>{return groupID.id}));   
     let res=addPlan(window.attackPlan);
 
     if(res){
@@ -408,7 +432,10 @@ createPlan : ()=>{
 
     $('#dialog-loading').css('display','inline-flex');
     $('.launch-dialog').hide();
+
+
     setTimeout(()=>{
+        window.Dialog.close("launchDialog");
         window.Dialog.show("PlannerMainWindow",mainWindow());
         $('.popup_box_container').append('<div style="position: fixed;width: 100%;height: 100%;top:0;left:0;z-index:12001"></div>');
     },1000);
@@ -550,6 +577,40 @@ selectTemplate:()=> {
         $('#palnner_unit_input_snob').val(temp.units.snob)
     }
 },
+addGroup:()=> {
+    let val=parseInt($('#plan_launcher_select').val().toString());
+
+    let ind = window.launchDialog.groupIDs.findIndex((groupID)=>{return groupID.id==val});
+
+    if(ind>-1){
+        return;
+    }
+
+    window.launchDialog.groupIDs.push({
+        id:val,
+        name:$("#plan_launcher_select option:selected").text()
+    });
+
+    let html='';
+    window.launchDialog.groupIDs.forEach((group)=>{
+        html+= /* html */`<option value="${group.id}">${group.name}</option>`;
+    })
+
+    $('#plan_launcher_list').html(html);
+    window.launchDialog.step3Check();
+},
+removeGroup:()=> {
+    let val=parseInt($('#plan_launcher_list').val().toString());
+    let ind = window.launchDialog.groupIDs.findIndex((groupID)=>{return groupID.id==val});
+    window.launchDialog.groupIDs.splice(ind,1);
+
+    let html='';
+    window.launchDialog.groupIDs.forEach((group)=>{
+        html+= /* html */`<option value="${group.id}">${group.name}</option>`;
+    })
+    $('#plan_launcher_list').html(html);
+    window.launchDialog.step3Check();
+},
 loadPlan:()=>{
     let val=$('#launchDialogSelect').val().toString();
 
@@ -560,6 +621,7 @@ loadPlan:()=>{
     $('#dialog-loading').css('display','inline-flex');
     $('.launch-dialog').hide();
     setTimeout(()=>{
+        window.Dialog.close("launchDialog");
         window.attackPlan=findPlan((elem:plan)=>{return elem.id==val})
         window.Dialog.show("PlannerMainWindow",mainWindow());
         $('.popup_box_container').append('<div style="position: fixed;width: 100%;height: 100%;top:0;left:0;z-index:12001"></div>');

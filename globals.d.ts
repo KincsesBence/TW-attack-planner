@@ -1,3 +1,4 @@
+import { group } from "./src/core/Api";
 import { LaunchVillagesModel } from "./src/core/LaunchVillagesModel";
 import { PlayersModel } from "./src/core/PlayersModel";
 import { VillageModel } from "./src/core/VillageModel";
@@ -12,11 +13,20 @@ export {};
 
 declare global {
 
+  interface pageData{
+    pageCnt:number,
+    pageNum:number,
+    villages:village[]
+  }
+
+
   type coord = {
     x:number,
     y:number,
     text:string
   }
+
+ 
 
   type units = {
     spear:number,
@@ -241,6 +251,8 @@ declare global {
     unitConfig:unitConfig 
     Villages:VillageModel
     Players:PlayersModel
+    Groups:group[];
+    Plans:plan[];
     LaunchVillages:LaunchVillagesModel
     mainInit:()=> void;
     oderLaunchVillages:(by:string,re?:boolean)=> void;
@@ -299,12 +311,15 @@ declare global {
     step2Check:()=> void;
     step3Check:()=> void;
     step4Check:()=> void;
+    step5Check:()=> void;
     addArrival:()=> void;
     removeArrival:()=> void;
     addTemplate:()=> void;
     removeTemplate:()=> void;
     selectTemplate:()=> void;
-
+    addGroup:()=> void;
+    removeGroup:()=> void;
+    groupIDs:group[];
   }
 
   interface UI {
@@ -315,6 +330,7 @@ declare global {
   
   interface Dialog{
     show : (name:string,content:string)=> void
+    close: (name:string)=> void
   } 
 
   type speed={

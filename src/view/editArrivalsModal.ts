@@ -8,9 +8,7 @@ export const editArrivalsModal = ()=>{
             return /* html */`
             <option value="${arrival}">${arrival}</option>
             `
-        })
-
-        }
+        }).join('')}
         </select>
         <input id="plan_arrivals_input" type="datetime-local" type="text" step="1"/>
     </div>

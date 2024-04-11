@@ -4,14 +4,12 @@ import { Model } from "./Model";
 export class LaunchVillagesModel extends Model{
 
     static instance:LaunchVillagesModel=null;
-    static group:number=0;
-    static groups:group[]=[];
 
-    static init (group:number=0) {
-      if(LaunchVillagesModel.instance==null || this.group!=group){
+    static init (groupIDs:number[]) {
+      if(LaunchVillagesModel.instance==null){
         return (async function () {
           LaunchVillagesModel.instance = new LaunchVillagesModel()
-          await LaunchVillagesModel.instance.loadlaunchVillages(group)
+          await LaunchVillagesModel.instance.loadlaunchVillages(groupIDs)
           return LaunchVillagesModel.instance;
         }())
       }else{
@@ -21,9 +19,7 @@ export class LaunchVillagesModel extends Model{
       }
     }
 
-    async loadlaunchVillages(group:number){
-       let {groups,villages} = await loadPages(0,group);
-       this.items=villages;
-       LaunchVillagesModel.groups=groups;
+    async loadlaunchVillages(groupIDs:number[]){
+       this.items = await loadPages(groupIDs);
     } 
 }

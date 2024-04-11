@@ -2,8 +2,8 @@ import { VillageModel } from "./VillageModel";
 import { xml2json } from "./xml2json";
 
 export type group = {
-    value:number,
-    text:string
+    id:number,
+    name:string
 }
 
 type Objectkey = keyof units
@@ -32,6 +32,8 @@ const villageAPI:string="/map/village.txt";
 const playersAPI:string="/map/player.txt";
 const unitConfigAPI:string="/interface.php?func=get_unit_info";
 const gameConfigAPI:string="/interface.php?func=get_config";
+const GroupsLocation:string="screen=accountmanager";
+
 
 export async function getServerConifg():Promise<gameConfig>{
     let result = await $.ajax({url: server+gameConfigAPI});
@@ -92,57 +94,89 @@ function createLink(page=1,group=0){
     return `/game.php?${game.player.sitter != 0 ? "t="+game.player.id+"&":""}village=${game.village.id}&group=${group}&page=${page}&screen=overview_villages&mode=combined`;
 }
 
-export async function loadPages(page:number=0,group:number=0){
-    console.log(group);
-    
-    let villages:village[]=[];
-    let units=[];
-    let result = await $.ajax({url: createLink(0,group)});
-    let {groups,pageCnt} = fetchGroups(result);
-    villages.push(...await fetchVillage(result))
-    if(pageCnt>0){
-        window.top.UI.InfoMessage(`Falvak betöltése 1/${pageCnt}`);
-    }
-    var promises = [];
+export async function fetchGroups():Promise<group[]>{
+    let res = await $.ajax({url: server+`/game.php?${game.player.sitter != 0 ? "t="+game.player.id+"&":""}village=${game.village.id}&`+GroupsLocation});
 
-    for (let i = 1; i < pageCnt; i++) {
-        promises.push(
-            pageRequestDelayed(createLink(i,group),i)
-        );
-    }
-    await Promise.allSettled(promises).then((results) => results.forEach(
-        async (result:any) => {villages.push(...result.value)} 
-    ));
-    
-    return {
-        groups,
-        villages
-    }
+    let groupsHTML = $(res).find('.group-menu-item').get();
+    let groups:group[] = [];
+    groupsHTML.forEach((elem)=>{
+        console.log($(elem).attr('data-group-id'),$(elem).text());
+        groups.push({
+            id:parseInt($(elem).attr('data-group-id')),
+            name:$(elem).text().trim().slice(1,-1),
+        })
+    })
+
+    return groups
 }
 
-function pageRequestDelayed(url:string,delay:number){
-    return new Promise( async (resolve,reject)=>{
+export async function loadPages(groupIDs:number[]){
+    console.log(groupIDs);
+    
+    let villages:village[]=[];
+    let groupPromises:Promise<any>[] = [];
+    let groupCnts:number[] = [];
+    for (let i = 0; i < groupIDs.length; i++) {
+        groupPromises.push(
+            pageRequestDelayed(createLink(0,groupIDs[i]),i,1)
+        );
+    }
+
+    await Promise.allSettled(groupPromises).then((results) => results.forEach(
+        async (result:any) => {
+            groupCnts.push(result.value.pageCnt);
+            result.value.villages.forEach((village:village)=>{
+                let res = villages.findIndex(
+                    (villageIN:village)=>{return village.id==villageIN.id}
+                );
+                if(res==-1){
+                    villages.push(village);
+                }
+            })
+        } 
+    ));
+
+    groupPromises = [];
+    
+    for (let i = 0; i < groupIDs.length; i++) {
+       for (let j = 1; j < groupCnts[i]; j++) {
+            groupPromises.push(
+                pageRequestDelayed(createLink(j,groupIDs[i]),(i+1)*j,j)
+            );
+       }
+    }
+
+    await Promise.allSettled(groupPromises).then((results) => results.forEach(
+        async (result:any) => {
+            result.value.villages.forEach((village:village)=>{
+                let res = villages.findIndex(
+                    (villageIN:village)=>{return village.id==villageIN.id}
+                );
+                if(res==-1){
+                    villages.push(village);
+                }
+            })
+        } 
+    ));
+    
+    return villages
+}
+function pageRequestDelayed(url:string,delay:number,pageCnt:number){
+    return new Promise<pageData>( async (resolve,reject)=>{
         setTimeout(async ()=>{
-            window.top.UI.InfoMessage(`Falvak betöltése 1/${delay+1}`);
+            window.top.UI.InfoMessage(`Falvak betöltése ${pageCnt}/${delay+1}`);
             let result = await $.ajax({url: url});
             let resultVillages = await fetchVillage(result);
-            resolve(resultVillages);
+            resolve({
+                pageCnt:parsePageInfo(result),
+                pageNum:pageCnt-1,
+                villages:resultVillages,
+            });
         },200*delay)
     })
 }
 
-
-
-function fetchGroups(html:string):{groups:group[],pageCnt:number}{
-    let groups:group[]=[];
-    let groupsHtml = $(html).find('.group-menu-item').get();
-    groupsHtml.forEach(group => {
-        groups.push({
-            text:$(group).text().trim().slice(1,-1),
-            value:parseInt($(group).attr('data-group-id'))
-        });
-    });
-
+function parsePageInfo(html:string){
     let select=$($(html).find('.paged-nav-item').get()[0]).parent().find('select');
     let pageCnt=0;
     if(select.length==1){
@@ -152,7 +186,7 @@ function fetchGroups(html:string):{groups:group[],pageCnt:number}{
         pageCnt = $(html).find('.paged-nav-item').length;
     }
 
-    return {groups,pageCnt}
+    return pageCnt
 }
 
 function getUnitNameFromUrl(url:string){
