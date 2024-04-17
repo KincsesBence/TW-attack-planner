@@ -1,3 +1,5 @@
+import { game } from "../core/Api";
+
 export const targetsLauncher = (launcher:launcher,targetId:number):string=>{    
     let size='small';
     if(launcher.village.popSize>1000 && launcher.village.popSize<=5000){
@@ -24,8 +26,11 @@ export const targetsLauncher = (launcher:launcher,targetId:number):string=>{
     }
 
     return /* html */`
-    <div class="targetsLauncher-item" id="${launcher.village.id.toString()}">
-        <div class="name-field">${launcher.village.name} (${launcher.village.coord.text})</div>
+    <div class="targetsLauncher-item" id="${launcher.village.id}">
+        <div class="name-field">
+            <span><a target="_blank" href="/game.php?village=${game.village.id}&screen=info_village&id=${launcher.village.id}">${launcher.village.name} (${launcher.village.coord.text}) K${launcher.village.kontinent}</a></span>
+            <span style="font-size:9px;color:black">(${launcher.arrival})</span>
+        </div>
         <div class="size-field"><img src="${src}"></div>
         ${unitText}
         <div class="del-field"><a onclick="window.targetItem.removeTargetLauncherItem(${launcher.village.id.toString()},${targetId})" class="remove-target-btn"></a></div>

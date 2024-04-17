@@ -25,7 +25,7 @@ interface pageLoadInput{
 
 const server:string="https://"+window.location.hostname;
 // @ts-ignore: Unreachable code error   
-const game=game_data;
+export const game=game_data;
 // @ts-ignore: Unreachable code error   
 //const mainOverView:string=`/game.php?village=${game!.village.id}&screen=overview_villages&page=-1&order=axe&dir=desc&mode=combined&group=${params.get('group')}`;
 const villageAPI:string="/map/village.txt";
@@ -54,14 +54,17 @@ export async function getAllVillages():Promise<village[]>{
     let lines=result.split('\n');
     for (let i = 0; i < lines.length; i++) {
         let columns = lines[i].split(',');
+        let x=parseInt(columns[2]);
+        let y=parseInt(columns[3]);
         villages.push( {
             id:parseInt(columns[0]),
             name:decodeURIComponent(columns[1]).replaceAll('+',' '),
             owner:parseInt(columns[4]),
+            kontinent:Math.floor(y/100)*10+Math.floor(x/100),
             coord:{
                 text:columns[2]+'|'+columns[3],
-                x:parseInt(columns[2]),
-                y:parseInt(columns[3])
+                x:x,
+                y:y,
             },
             popRemain:null,
             unitsContain:null,

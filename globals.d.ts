@@ -234,6 +234,7 @@ declare global {
     id:number,
     name:string,
     coord:coord,
+    kontinent:number,
     owner:number,
     popRemain:number|null,
     popSize:number|null,
@@ -282,6 +283,7 @@ declare global {
     removePlayerBoost:()=>void;
     calculateAttack:()=>void;  
     confirmCalculateAttack:()=>void;
+    changeDisplayType:()=>void;
   }
 
 

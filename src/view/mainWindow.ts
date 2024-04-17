@@ -216,7 +216,7 @@ export const mainWindow = ()=>{
                 text-align:center;
                 display: grid; 
                 grid-template-columns:  30px 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 30px; 
-                grid-template-rows: 30px 30px ;
+                grid-template-rows: 35px 30px ;
                 gap: 0px 0px; 
                 grid-template-areas: 
                     "size-field name-field name-field name-field name-field name-field name-field name-field name-field name-field name-field name-field name-field del-field"
@@ -276,6 +276,7 @@ export const mainWindow = ()=>{
             .knight-field { grid-area: knight-field; padding: 5px 0;background-color:#fff5dc}
             .snob-field { grid-area: snob-field; padding: 5px 0;background-color:#fff5dc}
             .name-field { 
+                display:grid;
                 grid-area: name-field;
                 color: #603000;
                 font-weight: bold;

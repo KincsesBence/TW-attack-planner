@@ -1,4 +1,4 @@
-import { TroopTransaction } from "../core/Api";
+import { TroopTransaction, game } from "../core/Api";
 import { ConfirmVillageSpeedRemoveModal } from "./ConfirmVillageSpeedRemoveModal";
 import { addVillageBoosterModal } from "./addVillageSpeedModal";
 import { confirmRemoveModal } from "./confirmRemoveModal";
@@ -33,7 +33,7 @@ export const targetItem = (target:target,isOpen:boolean=false,isSeleted:boolean=
         <div onclick="targetItem.toggleTargetItem(this)" class="target-header">
             <div><input value="${target.village.id}" onclick="targetItem.selectTargetItem(event)" type="radio" name="target" ${isSeleted? `checked`:``}/></div>
             <div class="indicator ${isOpen? 'indicator-open':''}"><span >▶<span></div>
-            <div class="target-village-name">${target.village.name}(${target.village.coord.text})</div>
+            <div class="target-village-name"><a target="_blank" href="/game.php?village=${game.village.id}&screen=info_village&id=${target.village.id}">${target.village.name}(${target.village.coord.text}) K${target.village.kontinent}</a></div>
             <div class="target-extras">
                 ${target.booster>0 ? /* html */`
                 <div class="booster-button">( ${target.booster}% <img height="15" src="https://dshu.innogamescdn.com/asset/f9cb54f8/graphic/items/3005.png">) <a class="del-boost" onclick="targetItem.removeVillageBooster(event,${target.village.id})"></a></div>

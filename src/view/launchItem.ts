@@ -1,12 +1,18 @@
+import { game } from "../core/Api";
+
 export const launchItem = (village:village):HTMLDivElement=>{    
     let launchItem = document.createElement("div");
     launchItem.className="launch-item";
     launchItem.id=village.id.toString();
 
+    let nameText  = document.createElement("a");
+    nameText.innerText=`${village.name} (${village.coord.text}) K${village.kontinent}`;
+    nameText.href=`/game.php?village=${game.village.id}&screen=info_village&id=${village.id}`;
+    nameText.target='_blank';
     let nameField  = document.createElement("div");
     nameField.className=`name-field`;
-    nameField.innerText=`${village.name} (${village.coord.text})`;
-    launchItem.appendChild(nameField)
+    nameField.appendChild(nameText);
+    launchItem.appendChild(nameField);
 
     let checkBox = document.createElement("input");
     checkBox.value=`${village.id}`;
