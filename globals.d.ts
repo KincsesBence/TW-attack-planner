@@ -254,12 +254,12 @@ declare global {
     Players:PlayersModel
     Groups:group[];
     Plans:plan[];
-    LaunchVillages:LaunchVillagesModel
     mainInit:()=> void;
     oderLaunchVillages:(by:string,re?:boolean)=> void;
     renderLaunchVillages:()=> void;
     partialRender:(launchers:village[],targets:target[])=> void;
     openAddLauncherWindow:() => void;
+    openAutoAssignModal:() => void;
     addAttack:() => void;
     closeModal:() => void;
     createModal:(content:string,header:string) => void;
@@ -267,6 +267,7 @@ declare global {
     launchVillagesStep:number;
     launchVillagesOrder:string;
     launchVillagesWay:number;
+    launchvillagesRender:village[];
     renderTargetVillages:()=>void;
     targetItem:targetItem,
     editTargets:()=>void;
@@ -284,6 +285,9 @@ declare global {
     calculateAttack:()=>void;  
     confirmCalculateAttack:()=>void;
     changeDisplayType:()=>void;
+    resetFilter:()=>void;
+    search:()=>void;
+
   }
 
 

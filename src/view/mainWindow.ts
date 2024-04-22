@@ -1,5 +1,6 @@
 import { addAttackModal } from "./addAttackModal";
 import { addPlayerSpeedModal } from "./addPlayerSpeedModal";
+import { autoAssignModal } from "./autoAssignModal";
 import { calculatedAttackModal } from "./calculatedAttackModal";
 import { confirmCalculateAttackModal } from "./confirmCalculateAttackModal";
 import { editArrivalsModal } from "./editArrivalsModal";
@@ -46,7 +47,7 @@ export const mainWindow = ()=>{
             border-radius:20px;
             display: grid;
             grid-template-columns: 0.5fr 1.3fr 1.3fr;
-            grid-template-rows: 26px 3fr [option] 0.1fr;
+            grid-template-rows: 30px 3fr [option] 0.1fr;
             gap: 0px 0px;
             grid-auto-flow: row;
         }
@@ -444,6 +445,26 @@ export const mainWindow = ()=>{
                 display: inline;
             }
 
+            .launch-search-bar{
+                display: inline-block;
+
+            }
+
+            .launch-search-bar input{
+                width:60px;
+                font-size:12px;
+            }
+
+            .remove-search-btn {
+                float: right;
+                z-index: 2;
+                width: 20px;
+                height: 20px;
+                background: url(https://dshu.innogamescdn.com/asset/80b013af/graphic/login_close.png) top left no-repeat;
+                cursor: pointer;
+                background-size: 20px;
+            }
+
         </style>
     <div class="mainWindow">
         <div class="container">
@@ -467,7 +488,7 @@ export const mainWindow = ()=>{
                     <button onclick="window.editPlayerBoosts()" class="btn">Edit player boosts</button>
                 </div>
                 <div class="option-item">
-                    <button onclick="window.autoAssign()" class="btn">Auto assigner</button>
+                    <button onclick="window.openAutoAssignModal()" class="btn">Auto assigner</button>
                 </div>
                 <div class="option-item">
                     <button onclick="window.calculateAttack()" class="btn">Calculate</button>
@@ -477,7 +498,7 @@ export const mainWindow = ()=>{
                 </div>
             </div>
             <div class="target-title header">
-                <h3>Targets</h3>
+                <h3>Targets (<span id="target-cnt"></span>)</h3>
             </div>
             <div class="target-panel">
                 <div class="target-header">
@@ -491,10 +512,13 @@ export const mainWindow = ()=>{
                     <button onclick="window.oderLaunchVillages('name')" class="btn">Name</button>
                     
                 </div>
-                <h3>Launch villages</h3>
+                <h3>Launch villages (<span id="launch-cnt"></span>)</h3>
                 <div class="launch-filter-bar">
                     <button onclick="window.oderLaunchVillages('size')" class="btn">Size</button>
-                    <button onclick="window.oderLaunchVillages('reset')" class="btn">Reset</button>
+                    <div class="launch-search-bar">
+                        <input id="search-bar" onkeyup="window.search()" placeholder='keresés' type="text">
+                        <button onclick="window.resetFilter()" class="btn">Reset</button>
+                    </div>
                 </div>
             </div>
             <div class="launch-panel">
@@ -565,13 +589,13 @@ window.mainInit = () => {
     window.launchVillagesPaging=0;
     window.launchVillagesWay=1;
     window.launchVillagesOrder='name';
+    window.launchvillagesRender=[...window.attackPlan.launchPool];
     window.renderLaunchVillages();
     window.renderTargetVillages();
 }
 
 var TimeOut:NodeJS.Timeout
 window.oderLaunchVillages = (by:string,re:boolean=false) => {
-    console.log(re);
     
     if(by==window.launchVillagesOrder && !re){
         window.launchVillagesWay*=-1;
@@ -580,33 +604,32 @@ window.oderLaunchVillages = (by:string,re:boolean=false) => {
     window.launchVillagesOrder=by;
 
     clearTimeout(TimeOut);
-    console.log(-1*window.launchVillagesWay,by,window.launchVillagesPaging);
     
     TimeOut= setTimeout(()=>{
         let fn=null;
-            switch (by){
-                case "name": fn=(a:village,b:village)=>{return a.name<b.name? -1*window.launchVillagesWay:1*window.launchVillagesWay;};break;
-                case "coord": fn=(a:village,b:village)=>{return a.coord.text<b.coord.text? -1*window.launchVillagesWay:1*window.launchVillagesWay;};break;
-                case "size": fn=(a:village,b:village)=>{return a.popSize>b.popSize? -1*window.launchVillagesWay:1*window.launchVillagesWay;};break;
-                case "spear": fn=(a:village,b:village)=>{return a.unitsContain.spear>b.unitsContain.spear? -1*window.launchVillagesWay:1*window.launchVillagesWay;};break;
-                case "sword": fn=(a:village,b:village)=>{return a.unitsContain.sword>b.unitsContain.sword? -1*window.launchVillagesWay:1*window.launchVillagesWay;};break;
-                case "axe": fn=(a:village,b:village)=>{return a.unitsContain.axe>b.unitsContain.axe? -1*window.launchVillagesWay:1*window.launchVillagesWay;};break;
-                case "archer": fn=(a:village,b:village)=>{return a.unitsContain.archer>b.unitsContain.archer? -1*window.launchVillagesWay:1*window.launchVillagesWay;};break;
-                case "light": fn=(a:village,b:village)=>{return a.unitsContain.light>b.unitsContain.light? -1*window.launchVillagesWay:1*window.launchVillagesWay;};break;
-                case "spy": fn=(a:village,b:village)=>{return a.unitsContain.spy>b.unitsContain.spy? -1*window.launchVillagesWay:1*window.launchVillagesWay;};break;
-                case "marcher": fn=(a:village,b:village)=>{return a.unitsContain.marcher>b.unitsContain.marcher? -1*window.launchVillagesWay:1*window.launchVillagesWay;};break;
-                case "heavy": fn=(a:village,b:village)=>{return a.unitsContain.heavy>b.unitsContain.heavy? -1*window.launchVillagesWay:1*window.launchVillagesWay;};break;
-                case "ram": fn=(a:village,b:village)=>{return a.unitsContain.ram>b.unitsContain.ram? -1*window.launchVillagesWay:1*window.launchVillagesWay;};break;
-                case "catapult": fn=(a:village,b:village)=>{return a.unitsContain.catapult>b.unitsContain.catapult? -1*window.launchVillagesWay:1*window.launchVillagesWay;};break;
-                case "snob": fn=(a:village,b:village)=>{return a.unitsContain.snob>b.unitsContain.snob? -1*window.launchVillagesWay:1*window.launchVillagesWay;};break;
-                case "knight": fn=(a:village,b:village)=>{return a.unitsContain.knight>b.unitsContain.knight? -1*window.launchVillagesWay:1*window.launchVillagesWay;};break;
-                default:
-                fn=(a:village,b:village)=>{return a.name<b.name? -1:1;};
-                window.launchVillagesStep=0;
-                window.launchVillagesPaging=window.launchVillagesStep;
-                window.launchVillagesWay=1;
-            }
-            window.attackPlan.launchPool.sort(fn);
+        switch (by){
+            case "name": fn=(a:village,b:village)=>{return a.name<b.name? -1*window.launchVillagesWay:1*window.launchVillagesWay;};break;
+            case "coord": fn=(a:village,b:village)=>{return a.coord.text<b.coord.text? -1*window.launchVillagesWay:1*window.launchVillagesWay;};break;
+            case "size": fn=(a:village,b:village)=>{return a.popSize>b.popSize? -1*window.launchVillagesWay:1*window.launchVillagesWay;};break;
+            case "spear": fn=(a:village,b:village)=>{return a.unitsContain.spear>b.unitsContain.spear? -1*window.launchVillagesWay:1*window.launchVillagesWay;};break;
+            case "sword": fn=(a:village,b:village)=>{return a.unitsContain.sword>b.unitsContain.sword? -1*window.launchVillagesWay:1*window.launchVillagesWay;};break;
+            case "axe": fn=(a:village,b:village)=>{return a.unitsContain.axe>b.unitsContain.axe? -1*window.launchVillagesWay:1*window.launchVillagesWay;};break;
+            case "archer": fn=(a:village,b:village)=>{return a.unitsContain.archer>b.unitsContain.archer? -1*window.launchVillagesWay:1*window.launchVillagesWay;};break;
+            case "light": fn=(a:village,b:village)=>{return a.unitsContain.light>b.unitsContain.light? -1*window.launchVillagesWay:1*window.launchVillagesWay;};break;
+            case "spy": fn=(a:village,b:village)=>{return a.unitsContain.spy>b.unitsContain.spy? -1*window.launchVillagesWay:1*window.launchVillagesWay;};break;
+            case "marcher": fn=(a:village,b:village)=>{return a.unitsContain.marcher>b.unitsContain.marcher? -1*window.launchVillagesWay:1*window.launchVillagesWay;};break;
+            case "heavy": fn=(a:village,b:village)=>{return a.unitsContain.heavy>b.unitsContain.heavy? -1*window.launchVillagesWay:1*window.launchVillagesWay;};break;
+            case "ram": fn=(a:village,b:village)=>{return a.unitsContain.ram>b.unitsContain.ram? -1*window.launchVillagesWay:1*window.launchVillagesWay;};break;
+            case "catapult": fn=(a:village,b:village)=>{return a.unitsContain.catapult>b.unitsContain.catapult? -1*window.launchVillagesWay:1*window.launchVillagesWay;};break;
+            case "snob": fn=(a:village,b:village)=>{return a.unitsContain.snob>b.unitsContain.snob? -1*window.launchVillagesWay:1*window.launchVillagesWay;};break;
+            case "knight": fn=(a:village,b:village)=>{return a.unitsContain.knight>b.unitsContain.knight? -1*window.launchVillagesWay:1*window.launchVillagesWay;};break;
+            default:
+            fn=(a:village,b:village)=>{return a.name<b.name? -1:1;};
+            window.launchVillagesStep=0;
+            window.launchVillagesPaging=window.launchVillagesStep;
+            window.launchVillagesWay=1;
+        }
+        window.launchvillagesRender.sort(fn);
         $('.launch-list').html('');
 
         if(!re){
@@ -614,30 +637,29 @@ window.oderLaunchVillages = (by:string,re:boolean=false) => {
             window.launchVillagesPaging=0;
         }
         
-        
         window.renderLaunchVillages();
     },500)
 }
 
 window.renderLaunchVillages = async ()=>{
-    if(window.attackPlan.launchPool.length<window.launchVillagesPaging){
+    $('#launch-cnt').text(window.launchvillagesRender.length);
+
+    if(window.launchvillagesRender.length<window.launchVillagesPaging){
         return;
     }
     var launchList = document.getElementsByClassName('launch-list')[0];
     let to=window.launchVillagesPaging+window.launchVillagesStep
-    if(window.launchVillagesPaging+window.launchVillagesStep>window.attackPlan.launchPool.length){
-        to=window.attackPlan.launchPool.length;
+    if(window.launchVillagesPaging+window.launchVillagesStep>window.launchvillagesRender.length){
+        to=window.launchvillagesRender.length;
     }
 
     for (let i = window.launchVillagesPaging; i < to; i++) {
-        const village = window.attackPlan.launchPool[i];
+        const village = window.launchvillagesRender[i];
         launchList.appendChild(launchItem(village));
     }
 
     
     launchList.addEventListener('scroll', function(ev) {
-        
-        
         let max=launchList.scrollHeight-100;
         let pos= launchList.clientHeight+launchList.scrollTop;
 
@@ -649,6 +671,37 @@ window.renderLaunchVillages = async ()=>{
             console.log("scrolled");
         }
     })
+}
+
+window.search = () => {
+    let value=$('#search-bar').val().toString();
+    console.log(value);
+    clearTimeout(TimeOut);
+
+    TimeOut = setTimeout(()=>{
+        window.launchvillagesRender = [...window.attackPlan.launchPool];
+        window.launchvillagesRender = window.launchvillagesRender.filter((village:village)=>{return `${village.name} (${village.coord.text}) K${village.kontinent}`.includes(value)})
+        console.log(window.launchvillagesRender);
+        $('.launch-list').html('');
+        $('.launch-list').scrollTop(0);
+        window.launchVillagesStep=25;
+        window.launchVillagesPaging=0;
+        window.launchVillagesWay=1;
+        window.launchVillagesOrder='name';
+        window.renderLaunchVillages();
+    },500)
+}
+
+window.resetFilter = ()=>{
+    $('#search-bar').val('');
+    window.launchvillagesRender = [...window.attackPlan.launchPool];
+    $('.launch-list').html('');
+    $('.launch-list').scrollTop(0);
+    window.launchVillagesStep=25;
+    window.launchVillagesPaging=0;
+    window.launchVillagesWay=1;
+    window.launchVillagesOrder='name';
+    window.renderLaunchVillages();
 }
 
 var CanScroll=false;
@@ -664,6 +717,7 @@ addEventListener("wheel", (event) => {
 
 window.renderTargetVillages = async ()=>{
     $('.target-list').html('');
+    $('#target-cnt').text(window.attackPlan.targetPool.length);
     for (let i = 0; i < window.attackPlan.targetPool.length; i++) {
         const target = window.attackPlan.targetPool[i];
         $('.target-list').append(targetItem(target));
@@ -738,6 +792,17 @@ window.editPlayerBoosts = () =>{
 }
 
 window.calculateAttack = () =>{
+    let cnt=0;
+    window.attackPlan.targetPool.forEach((target:target)=>{
+        target.launchers.forEach((launcher:launcher)=>{
+            cnt++;
+        })
+    })
+
+    if (cnt==0){
+        window.UI.ErrorMessage('Nincs egy támadás se kiosztva!');
+        return;
+    }
     window.createModal(confirmCalculateAttackModal(),'Támadás kiszámítása');
 }
 
@@ -745,5 +810,8 @@ window.confirmCalculateAttack = () =>{
     window.createModal(calculatedAttackModal(),'Támadási terv');
 }
 
+window.openAutoAssignModal = ()=>{
+    window.createModal(autoAssignModal(),'Autómata hozzárrendelés');
+}
 
 
