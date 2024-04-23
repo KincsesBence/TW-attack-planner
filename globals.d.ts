@@ -19,14 +19,11 @@ declare global {
     villages:village[]
   }
 
-
   type coord = {
     x:number,
     y:number,
     text:string
   }
-
- 
 
   type units = {
     spear:number,
@@ -252,6 +249,11 @@ declare global {
     unitConfig:unitConfig 
     Villages:VillageModel
     Players:PlayersModel
+    templateModal:templateModal
+    editTargetModal:editTargetModal,
+    editPlanNameModal:editPlanNameModal
+    editArrivalsModal:editArrivalsModal
+    autoAssign:autoAssign
     Groups:group[];
     Plans:plan[];
     mainInit:()=> void;
@@ -272,14 +274,8 @@ declare global {
     targetItem:targetItem,
     editTargets:()=>void;
     addTargets:()=>void;
-    editArrivals:()=>void;
-    addArrival:()=>void;
-    removeArrival:()=>void;
     editTemplates:()=>void;
     editPlayerBoosts:()=>void;
-    addTemplate:()=>void;
-    removeTemplate:()=>void; 
-    selectTemplate:()=>void; 
     addPlayerBoost:()=>void;
     removePlayerBoost:()=>void;
     calculateAttack:()=>void;  
@@ -287,9 +283,41 @@ declare global {
     changeDisplayType:()=>void;
     resetFilter:()=>void;
     search:()=>void;
-
+    editName:()=>void;
+    editArrivals:()=>void;
   }
 
+  interface autoAssign{
+    loadNukeTemplates:()=> void;
+    loadNukeCount:() => void;
+    loadFakeTemplates:()=> void;
+    loadFakeCount:() => void;
+    loadNobleCount:() => void;
+    checkAll:() => void;
+  }
+
+  interface templateModal{
+    addTemplate:()=>void;
+    removeTemplate:()=>void; 
+    selectTemplate:()=>void; 
+    selectAll:(unit:string)=>void;
+    templateRef:template[];
+  }
+
+  interface editTargetModal{
+    addTargets:() => void;
+    removeTargets:() => void;
+    targetRef:target[];
+  }
+
+  interface editPlanNameModal{
+    saveName:() => void;
+    planRef?:plan
+  }
+  interface editArrivalsModal{
+    addArrival:() => void;
+    removeArrival:() => void;
+  }
 
   interface targetItem{
     toggleTargetItem:(elem:any)=> void;
@@ -313,19 +341,11 @@ declare global {
     goToStep:(stepIn:number)=> void;
     cancelNewPlan:()=> void;
     plan?:plan,
-    step1Check:()=> void;
-    step2Check:()=> void;
-    step3Check:()=> void;
-    step4Check:()=> void;
-    step5Check:()=> void;
-    addArrival:()=> void;
-    removeArrival:()=> void;
-    addTemplate:()=> void;
-    removeTemplate:()=> void;
-    selectTemplate:()=> void;
+    stepCheck:()=> void;
     addGroup:()=> void;
     removeGroup:()=> void;
     groupIDs:group[];
+    currentStep:number;
   }
 
   interface UI {

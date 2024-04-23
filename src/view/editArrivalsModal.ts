@@ -1,5 +1,5 @@
 
-export const editArrivalsModal = ()=>{
+export const editArrivalsModal = (arrival:string[])=>{
     return /* html */`
     <div class="modal-input-group">
         <label for="">Arrivals:</label>
@@ -16,51 +16,47 @@ export const editArrivalsModal = ()=>{
         <button class="btn" onclick="addArrival()" >add</button>
         <button class="btn" onclick="removeArrival()">remove</button>
     </div>
-    <div class="modal-input-inline">
-        <button class="btn" onclick="window.closeModal()">Bezár</button>
-    </div>
     `
 }
+window.editArrivalsModal = {
+    addArrival:()=> {
+        let val = $('#plan_arrivals_input').val().toString().replace('T',' ');
 
-window.addArrival = ()=> {
-    let val = $('#plan_arrivals_input').val().toString().replace('T',' ');
+        if(val==""){
+            return;
+        }
+        
+        if(!window.attackPlan.arrivals.includes(val)){
+            window.attackPlan.arrivals.push(val);
+        }
 
-    if(val==""){
-        return;
+        window.attackPlan.arrivals.sort((a,b)=>{return a>b? 1:-1})
+
+        let select="";
+
+        window.attackPlan.arrivals.forEach((arrival)=>{
+            select+=`<option value="${arrival}">${arrival}</option>`;
+        });
+        $('#plan_arrivals_select').html(select);
+    },
+    removeArrival:()=> {
+        let val = $('#plan_arrivals_select').val().toString().replace('T',' ');
+        console.log(val);
+
+        if(val==""){
+            return;
+        }
+
+        let ind=window.attackPlan.arrivals.findIndex((arrival)=>{ return arrival==val})
+
+        if(ind>-1){
+            window.attackPlan.arrivals.splice(ind,1);
+        }
+
+        let select="";
+        window.attackPlan.arrivals.forEach((arrival)=>{
+            select+=`<option value="${arrival}">${arrival}</option>`;
+        });
+        $('#plan_arrivals_select').html(select);
     }
-    
-    if(!window.attackPlan.arrivals.includes(val)){
-        window.attackPlan.arrivals.push(val);
-    }
-
-    window.attackPlan.arrivals.sort((a,b)=>{return a>b? 1:-1})
-
-    let select="";
-
-    window.attackPlan.arrivals.forEach((arrival)=>{
-        select+=`<option value="${arrival}">${arrival}</option>`;
-    });
-    $('#plan_arrivals_select').html(select);
-}
-
-
-window.removeArrival = ()=> {
-    let val = $('#plan_arrivals_select').val().toString().replace('T',' ');
-    console.log(val);
-
-    if(val==""){
-        return;
-    }
-
-    let ind=window.attackPlan.arrivals.findIndex((arrival)=>{ return arrival==val})
-
-    if(ind>-1){
-        window.attackPlan.arrivals.splice(ind,1);
-    }
-
-    let select="";
-    window.attackPlan.arrivals.forEach((arrival)=>{
-        select+=`<option value="${arrival}">${arrival}</option>`;
-    });
-    $('#plan_arrivals_select').html(select);
 }

@@ -4,6 +4,7 @@ import { autoAssignModal } from "./autoAssignModal";
 import { calculatedAttackModal } from "./calculatedAttackModal";
 import { confirmCalculateAttackModal } from "./confirmCalculateAttackModal";
 import { editArrivalsModal } from "./editArrivalsModal";
+import { editPlanNameModal } from "./editPlanNameModal";
 import { editTargetModal } from "./editTargetModal";
 import { editTemplatesModal } from "./editTemplatesModal";
 import { launchItem } from "./launchItem";
@@ -473,7 +474,7 @@ export const mainWindow = ()=>{
             </div>
             <div class="options-panel">
                 <div class="option-item">
-                    <h2>${window.attackPlan.name}</h2>
+                    <h2><span id="open-plan-name">${window.attackPlan.name}</span><a onclick="window.editName()" class="rename-icon" href="#" data-title="Átnevez"></a></h2>
                 </div>
                 <div class="option-item">
                     <button onclick="window.editTargets()" class="btn">Add targets</button>
@@ -745,8 +746,10 @@ window.openAddLauncherWindow = () => {
 }
 
 window.createModal = (content:string,header:string) => {
+    
+    let close=`<div class="modal-input-inline"><button class="btn" onclick="window.closeModal()">Bezár</button></div>`;
     $('.planner-modal-header b').text(header);
-    $('.planner-modal-content').html(content);
+    $('.planner-modal-content').html(content+close);
     $('.planner-modal').show();
 }
 
@@ -776,20 +779,26 @@ window.partialRender = (launchers:village[],targets:target[])=>{
     });
 }
 
+window.editName = () => {
+    window.createModal(editPlanNameModal(window.attackPlan),'Terv átnevezése');
+}
+
 window.editTargets = () => {
-    window.createModal(editTargetModal(),'Célpontok Hozzáadása');
+    window.createModal(editTargetModal(window.attackPlan.targetPool),'Célpontok Hozzáadása');
 }
 
 window.editArrivals = () =>{
-    window.createModal(editArrivalsModal(),'Érkezések szerkesztése');
+    window.createModal(editArrivalsModal(window.attackPlan.arrivals),'Érkezések szerkesztése');
 }
 
 window.editTemplates = () =>{
-    window.createModal(editTemplatesModal(),'Sablonok szerkesztése');
+    window.createModal(editTemplatesModal(window.attackPlan.templates),'Sablonok szerkesztése');
 }
 window.editPlayerBoosts = () =>{
     window.createModal(addPlayerSpeedModal(),'Gyorsítók szerkesztése');
 }
+
+
 
 window.calculateAttack = () =>{
     let cnt=0;
@@ -811,7 +820,7 @@ window.confirmCalculateAttack = () =>{
 }
 
 window.openAutoAssignModal = ()=>{
-    window.createModal(autoAssignModal(),'Autómata hozzárrendelés');
+    window.createModal(autoAssignModal(),'Automata hozzárrendelés');
 }
 
 
