@@ -32,6 +32,8 @@
 
 /*! ./editArrivalsModal */
 
+/*! ./editLaunchVillagesModal */
+
 /*! ./editPlanNameModal */
 
 /*! ./editTargetModal */
@@ -133,6 +135,10 @@
 /*!*******************************************!*\
   !*** ./src/view/calculatedAttackModal.ts ***!
   \*******************************************/
+
+/*!*********************************************!*\
+  !*** ./src/view/editLaunchVillagesModal.ts ***!
+  \*********************************************/
 
 /*!**********************************************!*\
   !*** ./src/view/confirmRemoveTargetModal.ts ***!

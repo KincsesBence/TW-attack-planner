@@ -1,5 +1,6 @@
 import { addPlan, findPlan, loadPages, loadPlans, removePlan } from "../core/Api";
 import { editArrivalsModal } from "./editArrivalsModal";
+import { editLaunchVillagesModal } from "./editLaunchVillagesModal";
 import { editPlanNameModal } from "./editPlanNameModal";
 import { editTargetModal } from "./editTargetModal";
 import { editTemplatesModal } from "./editTemplatesModal";
@@ -50,10 +51,11 @@ export const launchDialog = ()=>{
                 padding: 4px 10px;
                 font-size: 20px;
                 cursor:pointer;
+                z-index:2;
             }
 
             .inactive{
-                background: linear-gradient(to bottom, #947a6266 0%,#7b5c3d69 22%,#6c48245e 30%,#6c482480 100%) !important
+                background: linear-gradient(to bottom, #b1a397 0%, #645d56 22%, #635f5a 30%, #6c6763 100%) !important
             }
 
             .modal-input-group{
@@ -96,6 +98,20 @@ export const launchDialog = ()=>{
                 font-size: 14px;
                 margin-bottom:10px;
             }
+            .progress-field{
+                width:88%; 
+                position:absolute;
+                height: 5px;
+                background-color: black;
+                margin-top: 13px;
+                z-index:1;
+                background: linear-gradient(to bottom, #b1a397 0%, #645d56 22%, #635f5a 30%, #6c6763 100%);
+            }
+            #progress-bar{
+                height:100%;
+                background: linear-gradient(to bottom, #947a62 0%,#7b5c3d 22%,#6c4824 30%,#6c4824 100%);
+                z-index:1;
+            }
         </style>
         <div id="dialog-loading" style="display: none;justify-content: center;width: 100%;">
             <img style="height:25px" src="https://dshu.innogamescdn.com/asset/6389cdba/graphic/loading.gif"><span style="padding:5px">Betöltés...</span>
@@ -118,46 +134,20 @@ export const launchDialog = ()=>{
 
             <div class="new-plan">
                 <div class="steps">
+                    <div class="progress-field">
+                        <div id="progress-bar" style="width:0%"></div>
+                    </div>
                     <div id="c1" onclick="launchDialog.goToStep(1)" class="circle">1</div>
                     <div id="c2" class="circle inactive">2</div>
                     <div id="c3" class="circle inactive">3</div>
                     <div id="c4" class="circle inactive">4</div>
                     <div id="c5" class="circle inactive">5</div>
                 </div>
-                <div class="step-1 step">
-                    <label for="template_name_input">Template name:</label><br>
-                    <input onkeyup="launchDialog.stepCheck()" id="template_name_input" type="text"/>
-                </div>
-                <div class="step-2 step" style="display:none;">
-                   
-                </div>
-                <div class="step-3 step" style="display:none;">
-                    <label for="">Lanuchers:</label><br>
-                    <select id="plan_launcher_list" size="5">
-                    </select>
-                    <select id="plan_launcher_select" style="font-size:16px" >
-                        ${window.Groups.map((group)=>{
-                            return /* html */`<option value="${group.id}">${group.name}</option>`;
-                        }).join('')}
-                    </select>
-                    <div>
-                        <button onclick="launchDialog.addGroup()" >add</button>
-                        <button onclick="launchDialog.removeGroup()" >remove</button>
-                    </div>
-                </div>
-                <div class="step-4 step" style="display:none;">
-                    <label for="">Arrivals:</label><br>
-                    <select id="plan_arrivals_select" size="5">
-                    </select>
-                    <input id="plan_arrivals_input" type="datetime-local" type="text"/>
-                    <div>
-                        <button onclick="launchDialog.addArrival()" >add</button>
-                        <button onclick="launchDialog.removeArrival()" >remove</button>
-                    </div>
-                </div>
-                <div class="step-5 step" style="display:none;">
-                    
-                </div>
+                <div class="step-1 step"></div>
+                <div class="step-2 step" style="display:none;"></div>
+                <div class="step-3 step" style="display:none;"></div>
+                <div class="step-4 step" style="display:none;"></div>
+                <div class="step-5 step" style="display:none;"></div>
                 <button id="nextBtn" onclick="launchDialog.goNext(2)" class="btn" disabled>Next</button>
                 <button style="display:none;" id="createPlan" onclick="launchDialog.createPlan()" class="btn" disabled>Create Plan</button>
                 <button onclick="launchDialog.cancelNewPlan()" class="btn">Cancel</button>
@@ -165,12 +155,13 @@ export const launchDialog = ()=>{
         </div>
     `;
 }
-
-
 window.launchDialog={
 groupIDs:[],
 currentStep:0,
 stepCheck:()=>{
+    if($('#dialog-loading').get().length==0){
+        return;
+    }
     let stmt=false;
     let max=window.launchDialog.currentStep;
     switch(window.launchDialog.currentStep){
@@ -208,6 +199,9 @@ stepCheck:()=>{
     if(max<window.launchDialog.currentStep){
         $('#nextBtn').prop( "disabled", false);
     }
+    if( window.launchDialog.currentStep==5){
+        $('#createPlan').prop( "disabled", false);
+    }
     console.log(max,window.launchDialog.currentStep);
 },
 goToStep:(stepIn) =>{
@@ -226,6 +220,7 @@ goToStep:(stepIn) =>{
         $('#createPlan').show();
         $('#nextBtn').hide();
     }
+    window.launchDialog.stepCheck()
 },
 goNext:(stepIn) =>{
     $('.step-1').hide();
@@ -233,6 +228,8 @@ goNext:(stepIn) =>{
     $('.step-3').hide();
     $('.step-4').hide();
     $('.step-5').hide();
+    console.log('in',stepIn);
+    
 
     $('#c'+stepIn).attr('onclick','launchDialog.goToStep('+stepIn+')');
     if(stepIn>4){
@@ -240,10 +237,12 @@ goNext:(stepIn) =>{
         $('#nextBtn').hide();
         $('#createPlan').show();
         $('#c'+stepIn).removeClass('inactive');
+        $('#progress-bar').css('width',(stepIn-1)*25+'%')
     }else{
         $('#nextBtn').prop( "disabled", true);
         $('.step-'+stepIn).show();
         $('#c'+stepIn).removeClass('inactive');
+        $('#progress-bar').css('width',(stepIn-1)*25+'%')
         stepIn++;
         $('#nextBtn').attr('onclick','launchDialog.goNext('+stepIn+')');
     }
@@ -264,7 +263,7 @@ newplan: () => {
     }
     $('.step-1').html(editPlanNameModal(window.launchDialog.plan));
     $('.step-2').html(editTargetModal(window.launchDialog.plan.targetPool));
-    $('.step-3').html(editTargetModal(window.launchDialog.plan.targetPool));
+    $('.step-3').html(editLaunchVillagesModal(window.launchDialog.plan.launchPool));
     $('.step-4').html(editArrivalsModal(window.launchDialog.plan.arrivals));
     $('.step-5').html(editTemplatesModal(window.launchDialog.plan.templates));
 },
@@ -296,58 +295,25 @@ cancelNewPlan: () => {
     $('#plan_launcher_list').html('');
 },
 createPlan : async ()=>{ 
-    window.attackPlan=window.launchDialog.plan;
-    window.attackPlan.launchPool = await loadPages(window.launchDialog.groupIDs.map((groupID)=>{return groupID.id}));   
-    let res=addPlan(window.attackPlan);
-
-    if(res){
-        window.UI.SuccessMessage('Plan successfully created!')
-    }else{
-        window.UI.SuccessMessage('Plan with this name already exist!')
-    }
-
     $('#dialog-loading').css('display','inline-flex');
     $('.launch-dialog').hide();
+    setTimeout( async ()=>{
+        window.attackPlan=window.launchDialog.plan;
+        window.attackPlan.launchPool = await loadPages(window.launchDialog.groupIDs.map((groupID)=>{return groupID.id}));   
+        let res=addPlan(window.attackPlan);
 
+        if(res){
+            window.UI.SuccessMessage('Plan successfully created!')
+        }else{
+            window.UI.SuccessMessage('Plan with this name already exist!')
+        }
 
-    setTimeout(()=>{
-        window.Dialog.close("launchDialog");
-        window.Dialog.show("PlannerMainWindow",mainWindow());
-        $('.popup_box_container').append('<div style="position: fixed;width: 100%;height: 100%;top:0;left:0;z-index:12001"></div>');
+        setTimeout(()=>{
+            window.Dialog.close("launchDialog");
+            window.Dialog.show("PlannerMainWindow",mainWindow());
+            $('.popup_box_container').append('<div style="position: fixed;width: 100%;height: 100%;top:0;left:0;z-index:12001"></div>');
+        },1000);
     },1000);
-},
-
-addGroup:()=> {
-    let val=parseInt($('#plan_launcher_select').val().toString());
-
-    let ind = window.launchDialog.groupIDs.findIndex((groupID)=>{return groupID.id==val});
-
-    if(ind>-1){
-        return;
-    }
-
-    window.launchDialog.groupIDs.push({
-        id:val,
-        name:$("#plan_launcher_select option:selected").text()
-    });
-
-    let html='';
-    window.launchDialog.groupIDs.forEach((group)=>{
-        html+= /* html */`<option value="${group.id}">${group.name}</option>`;
-    })
-
-    $('#plan_launcher_list').html(html);
-},
-removeGroup:()=> {
-    let val=parseInt($('#plan_launcher_list').val().toString());
-    let ind = window.launchDialog.groupIDs.findIndex((groupID)=>{return groupID.id==val});
-    window.launchDialog.groupIDs.splice(ind,1);
-
-    let html='';
-    window.launchDialog.groupIDs.forEach((group)=>{
-        html+= /* html */`<option value="${group.id}">${group.name}</option>`;
-    })
-    $('#plan_launcher_list').html(html);
 },
 loadPlan:()=>{
     let val=$('#launchDialogSelect').val().toString();

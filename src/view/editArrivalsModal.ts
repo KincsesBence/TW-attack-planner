@@ -1,10 +1,11 @@
 
-export const editArrivalsModal = (arrival:string[])=>{
+export const editArrivalsModal = (arrivals:string[])=>{
+    window.editArrivalsModal.arrivalsRef=arrivals;
     return /* html */`
     <div class="modal-input-group">
         <label for="">Arrivals:</label>
         <select id="plan_arrivals_select" size="5">
-        ${window.attackPlan.arrivals.map((arrival)=>{
+        ${arrivals.map((arrival)=>{
             return /* html */`
             <option value="${arrival}">${arrival}</option>
             `
@@ -13,8 +14,8 @@ export const editArrivalsModal = (arrival:string[])=>{
         <input id="plan_arrivals_input" type="datetime-local" type="text" step="1"/>
     </div>
     <div class="modal-input-inline">
-        <button class="btn" onclick="addArrival()" >add</button>
-        <button class="btn" onclick="removeArrival()">remove</button>
+        <button class="btn" onclick="editArrivalsModal.addArrival()" >add</button>
+        <button class="btn" onclick="editArrivalsModal.removeArrival()">remove</button>
     </div>
     `
 }
@@ -26,18 +27,19 @@ window.editArrivalsModal = {
             return;
         }
         
-        if(!window.attackPlan.arrivals.includes(val)){
-            window.attackPlan.arrivals.push(val);
+        if(! window.editArrivalsModal.arrivalsRef.includes(val)){
+            window.editArrivalsModal.arrivalsRef.push(val);
         }
 
-        window.attackPlan.arrivals.sort((a,b)=>{return a>b? 1:-1})
+        window.editArrivalsModal.arrivalsRef.sort((a,b)=>{return a>b? 1:-1})
 
         let select="";
 
-        window.attackPlan.arrivals.forEach((arrival)=>{
+        window.editArrivalsModal.arrivalsRef.forEach((arrival)=>{
             select+=`<option value="${arrival}">${arrival}</option>`;
         });
         $('#plan_arrivals_select').html(select);
+        window.launchDialog.stepCheck();
     },
     removeArrival:()=> {
         let val = $('#plan_arrivals_select').val().toString().replace('T',' ');
@@ -47,16 +49,17 @@ window.editArrivalsModal = {
             return;
         }
 
-        let ind=window.attackPlan.arrivals.findIndex((arrival)=>{ return arrival==val})
+        let ind= window.editArrivalsModal.arrivalsRef.findIndex((arrival)=>{ return arrival==val})
 
         if(ind>-1){
-            window.attackPlan.arrivals.splice(ind,1);
+            window.editArrivalsModal.arrivalsRef.splice(ind,1);
         }
 
         let select="";
-        window.attackPlan.arrivals.forEach((arrival)=>{
+        window.editArrivalsModal.arrivalsRef.forEach((arrival)=>{
             select+=`<option value="${arrival}">${arrival}</option>`;
         });
         $('#plan_arrivals_select').html(select);
+        window.launchDialog.stepCheck();
     }
 }

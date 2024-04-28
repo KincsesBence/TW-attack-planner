@@ -63,18 +63,24 @@ export const targetItem = (target:target,isOpen:boolean=false,isSeleted:boolean=
             <div class="axe-icon">
                 <img  src="https://dshu.innogamescdn.com/asset/fd86cac8/graphic/unit/unit_axe.png">
             </div>
+            ${window.gameConfig.game.archer==0 ?
+            /* html */``:/* html */`
             <div class="archer-icon">
                 <img src="https://dshu.innogamescdn.com/asset/fd86cac8/graphic/unit/unit_archer.png">
             </div>
+            `}
             <div class="spy-icon">
                 <img src="https://dshu.innogamescdn.com/asset/fd86cac8/graphic/unit/unit_spy.png">
             </div>
             <div class="light-icon">
                 <img src="https://dshu.innogamescdn.com/asset/fd86cac8/graphic/unit/unit_light.png">
             </div>
+            ${window.gameConfig.game.archer==0 ?
+            /* html */``:/* html */`
             <div class="marcher-icon">
                 <img src="https://dshu.innogamescdn.com/asset/fd86cac8/graphic/unit/unit_marcher.png">
             </div>
+            `}
             <div class="heavy-icon">
                 <img src="https://dshu.innogamescdn.com/asset/fd86cac8/graphic/unit/unit_heavy.png">
             </div>
@@ -143,12 +149,12 @@ window.targetItem = {
         });
 
         if(window.attackPlan.targetPool[targetIndex].launchers.length>0){
+            window.launchvillagesRender=[...window.attackPlan.launchPool];
             window.oderLaunchVillages(window.launchVillagesOrder,true);
             window.renderLaunchVillages();
         }
 
         window.attackPlan.targetPool.splice(targetIndex,1);
-        
         window.renderTargetVillages();
         window.closeModal();
     },
@@ -179,6 +185,7 @@ window.targetItem = {
             let newVillage={...window.attackPlan.targetPool[targetIndex].launchers[targetLauncherIndex].village};
             window.attackPlan.launchPool.push(newVillage);
             window.attackPlan.targetPool[targetIndex].launchers.splice(targetLauncherIndex,1);
+            window.launchvillagesRender=[...window.attackPlan.launchPool];
             window.oderLaunchVillages(window.launchVillagesOrder,true);
             window.renderLaunchVillages();
         }else{

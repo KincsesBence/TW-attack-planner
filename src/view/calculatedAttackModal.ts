@@ -73,9 +73,6 @@ export const calculatedAttackModal = ()=>{
         <input onclick="window.changeDisplayType()" type="radio" id="inapp" value="inapp" name="showType" checked>
         <div class="bb-field" style="display:none"></div>
         <div class="inApp-field"></div>
-        <div class="modal-input-inline">
-            <button class="btn" onclick="window.closeModal()">Bezár</button>
-        </div>
     </div>
     `
 }

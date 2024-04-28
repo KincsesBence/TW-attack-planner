@@ -45,7 +45,7 @@ window.editTargetModal = {
         $('#modal-targets-cnt').text(window.editTargetModal.targetRef.length);
         $('#target-select').html(window.editTargetModal.targetRef.map((target:target)=>{
             return /* html */`
-            <option value="${target.village.name}">${target.village.name}(${target.village.coord.text}) K${target.village.kontinent}</option>
+            <option value="${target.village.name}">${target.village.name} (${target.village.coord.text}) K${target.village.kontinent}</option>
             `
         }).join(''))
         window.launchDialog.stepCheck();

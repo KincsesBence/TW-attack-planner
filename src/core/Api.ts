@@ -167,7 +167,6 @@ export async function loadPages(groupIDs:number[]){
 function pageRequestDelayed(url:string,delay:number,pageCnt:number){
     return new Promise<pageData>( async (resolve,reject)=>{
         setTimeout(async ()=>{
-            window.top.UI.InfoMessage(`Falvak betöltése ${pageCnt}/${delay+1}`);
             let result = await $.ajax({url: url});
             let resultVillages = await fetchVillage(result);
             resolve({
@@ -328,6 +327,17 @@ export function removePlan(id:string){
 }
 
 function transUnit(to:number,from:number,trans:number):[number,number]{
+    console.log('real',to,from,trans);
+
+    if(trans<0){
+        trans=from+trans;
+        if(trans<0){
+            trans=0;
+        }
+    }
+
+    console.log('fixed',to,from,trans);
+    
     if(from-trans<0){
         to=from;
         from=0;
@@ -339,6 +349,10 @@ function transUnit(to:number,from:number,trans:number):[number,number]{
 }
 
 export function TroopTransaction(to:units,from:units,trans:units):[units,units]{
+    console.log('to',to);
+    console.log('from',from);
+    console.log('trans',trans);
+    
     Object.keys(window.unitConfig).forEach((unis)=>{
         [to[unis as keyof units],from[unis as keyof units]] = transUnit(to[unis as keyof units],from[unis as keyof units],trans[unis as keyof units]);
     })

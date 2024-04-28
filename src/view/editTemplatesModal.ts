@@ -3,7 +3,9 @@ export const editTemplatesModal = (templates:template[])=>{
     window.templateModal.templateRef=templates;
     return /* html */`
         <style>
-            .template-editor {  display: grid;
+            .template-editor {  
+            margin: 0 auto;
+            display: grid;
             grid-template-columns: 100px 100px;
             grid-template-rows: max-content 35px max-content max-content;
             text-align:center;
@@ -30,6 +32,9 @@ export const editTemplatesModal = (templates:template[])=>{
                 padding: 2px 5px;
                 text-align: center;
             }
+            .template-unitsInput {
+                width: 45px;
+            }
 
         </style>
         <div class="template-editor">
@@ -49,68 +54,68 @@ export const editTemplatesModal = (templates:template[])=>{
             <div class="template-infantry">
                 <div class="template-input-group">
                     <img src="https://dshu.innogamescdn.com/asset/31698b62/graphic/unit/unit_spear.png" >
-                    <input id="palnner_unit_input_spear" type="number" tabindex="1" value="" class="unitsInput"><br>
+                    <input id="palnner_unit_input_spear" type="number" tabindex="1" value="0" class="template-unitsInput"><br>
                     <input onclick="templateModal.selectAll('spear')" id="max_spear" type="checkbox"> Összes
                 </div>
                 <div class="template-input-group">
                     <img src="https://dshu.innogamescdn.com/asset/31698b62/graphic/unit/unit_sword.png" >
-                    <input id="palnner_unit_input_sword" type="number" tabindex="1" value="" class="unitsInput"><br>
+                    <input id="palnner_unit_input_sword" type="number" tabindex="1" value="0" class="template-unitsInput"><br>
                     <input onclick="templateModal.selectAll('sword')" id="max_sword" type="checkbox"> Összes
                 </div>
                 <div class="template-input-group">
                     <img src="https://dshu.innogamescdn.com/asset/31698b62/graphic/unit/unit_axe.png" >
-                    <input id="palnner_unit_input_axe" type="number" tabindex="1" value="" class="unitsInput"><br>
+                    <input id="palnner_unit_input_axe" type="number" tabindex="1" value="0" class="template-unitsInput"><br>
                     <input onclick="templateModal.selectAll('axe')" id="max_axe" type="checkbox"> Összes
                 </div>
-                <div class="template-input-group">
+                <div class="template-input-group" ${window.gameConfig.game.archer==0 ? 'style="display:none;"':''} >
                     <img src="https://dshu.innogamescdn.com/asset/31698b62/graphic/unit/unit_archer.png" >
-                    <input id="palnner_unit_input_archer" type="number" tabindex="1" value="" class="unitsInput"><br>
+                    <input id="palnner_unit_input_archer" type="number" tabindex="1" value="0" class="template-unitsInput"><br>
                     <input onclick="templateModal.selectAll('archer')" id="max_archer" type="checkbox"> Összes
                 </div>
             </div>
             <div class="template-calvary">
                 <div class="template-input-group">
                     <img src="https://dshu.innogamescdn.com/asset/31698b62/graphic/unit/unit_spy.png" >
-                    <input id="palnner_unit_input_spy" type="number" tabindex="1" value="" class="unitsInput"><br>
+                    <input id="palnner_unit_input_spy" type="number" tabindex="1" value="0" class="template-unitsInput"><br>
                     <input onclick="templateModal.selectAll('spy')" id="max_spy" type="checkbox"> Összes
                 </div>
                 <div class="template-input-group">
                     <img src="https://dshu.innogamescdn.com/asset/31698b62/graphic/unit/unit_light.png" >
-                    <input id="palnner_unit_input_light" type="number" tabindex="1" value="" class="unitsInput"><br>
+                    <input id="palnner_unit_input_light" type="number" tabindex="1" value="0" class="template-unitsInput"><br>
                     <input onclick="templateModal.selectAll('light')" id="max_light" type="checkbox"> Összes
                 </div>
-                <div class="template-input-group">
+                <div class="template-input-group" ${window.gameConfig.game.archer==0 ? 'style="display:none;"':''}>
                     <img src="https://dshu.innogamescdn.com/asset/31698b62/graphic/unit/unit_marcher.png" >
-                    <input id="palnner_unit_input_marcher" type="number" tabindex="1" value="" class="unitsInput"><br>
+                    <input id="palnner_unit_input_marcher" type="number" tabindex="1" value="0" class="template-unitsInput"><br>
                     <input onclick="templateModal.selectAll('marcher')" id="max_marcher" type="checkbox"> Összes
                 </div>
                 <div class="template-input-group">
                     <img src="https://dshu.innogamescdn.com/asset/31698b62/graphic/unit/unit_heavy.png" >
-                    <input id="palnner_unit_input_heavy" type="number" tabindex="1" value="" class="unitsInput"><br>
+                    <input id="palnner_unit_input_heavy" type="number" tabindex="1" value="0" class="template-unitsInput"><br>
                     <input onclick="templateModal.selectAll('heavy')" id="max_heavy" type="checkbox"> Összes
                 </div>    
             </div>
             <div class="template-machines">
                 <div class="template-input-group">
                     <img src="https://dshu.innogamescdn.com/asset/31698b62/graphic/unit/unit_ram.png" >
-                    <input id="palnner_unit_input_ram" type="number" tabindex="1" value="" class="unitsInput"><br>
+                    <input id="palnner_unit_input_ram" type="number" tabindex="1" value="0" class="template-unitsInput"><br>
                     <input onclick="templateModal.selectAll('ram')" id="max_ram" type="checkbox"> Összes
                 </div>
                 <div class="template-input-group">
                     <img src="https://dshu.innogamescdn.com/asset/31698b62/graphic/unit/unit_catapult.png" >
-                    <input id="palnner_unit_input_catapult"  type="number" tabindex="1" value="" class="unitsInput"><br>
+                    <input id="palnner_unit_input_catapult"  type="number" tabindex="1" value="0" class="template-unitsInput"><br>
                     <input onclick="templateModal.selectAll('catapult')" id="max_catapult" type="checkbox"> Összes
                 </div>
             </div>
             <div class="template-other">
                 <div class="template-input-group">
                     <img src="https://dshu.innogamescdn.com/asset/31698b62/graphic/unit/unit_knight.png" >
-                    <input id="palnner_unit_input_knight" type="number" tabindex="1" value="" class="unitsInput"><br>
+                    <input id="palnner_unit_input_knight" type="number" tabindex="1" value="0" class="template-unitsInput"><br>
                     <input onclick="templateModal.selectAll('knight')" id="max_knight" type="checkbox"> Összes
                 </div>
                 <div class="template-input-group">
                     <img src="https://dshu.innogamescdn.com/asset/31698b62/graphic/unit/unit_snob.png" >
-                    <input id="palnner_unit_input_snob" type="number" tabindex="1" value="" class="unitsInput"><br>
+                    <input id="palnner_unit_input_snob" type="number" tabindex="1" value="0" class="template-unitsInput"><br>
                     <input onclick="templateModal.selectAll('snob')" id="max_snob" type="checkbox"> Összes
                 </div>
             </div>
@@ -139,7 +144,12 @@ window.templateModal = {
                 val=99999
             }
 
+            if(val==null){
+                val=0;
+            }
+
             template.units[unit as keyof unitConfig]=val;
+
         })
         console.log(template);
     
@@ -209,7 +219,12 @@ window.templateModal = {
         }
     },
     selectAll:(unit:string)=>{
-        $(`#palnner_unit_input_${unit}`).val('');
+        if($(`#max_${unit}`).prop("checked")){
+            $(`#palnner_unit_input_${unit}`).val('');
+        }else{
+            $(`#palnner_unit_input_${unit}`).val('0');
+        }
+
         $(`#palnner_unit_input_${unit}`).prop('disabled',$(`#max_${unit}`).prop("checked"));
     }
 }

@@ -253,6 +253,7 @@ declare global {
     editTargetModal:editTargetModal,
     editPlanNameModal:editPlanNameModal
     editArrivalsModal:editArrivalsModal
+    editLaunchVillagesModal:editLaunchVillagesModal
     autoAssign:autoAssign
     Groups:group[];
     Plans:plan[];
@@ -317,6 +318,13 @@ declare global {
   interface editArrivalsModal{
     addArrival:() => void;
     removeArrival:() => void;
+    arrivalsRef?:string[];
+  }
+
+  interface editLaunchVillagesModal{
+    launchVillagesRef?:village[]
+    addGroup:() => void;
+    removeGroup:() => void;
   }
 
   interface targetItem{
@@ -342,8 +350,6 @@ declare global {
     cancelNewPlan:()=> void;
     plan?:plan,
     stepCheck:()=> void;
-    addGroup:()=> void;
-    removeGroup:()=> void;
     groupIDs:group[];
     currentStep:number;
   }
