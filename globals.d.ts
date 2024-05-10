@@ -2,6 +2,7 @@ import { group } from "./src/core/Api";
 import { LaunchVillagesModel } from "./src/core/LaunchVillagesModel";
 import { PlayersModel } from "./src/core/PlayersModel";
 import { VillageModel } from "./src/core/VillageModel";
+import { planDB } from "./src/core/planDB";
 
 declare module '*.css';
 declare module "*.html" {
@@ -241,6 +242,7 @@ declare global {
 
 
   interface Window {
+    DB:planDB,
     UI:UI,
     Dialog:Dialog;
     attackPlan:plan;
@@ -293,6 +295,7 @@ declare global {
     loadNukeCount:() => void;
     loadFakeTemplates:()=> void;
     loadFakeCount:() => void;
+    loadNobleTemplates:() => void;
     loadNobleCount:() => void;
     checkAll:() => void;
   }

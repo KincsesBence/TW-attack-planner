@@ -12,7 +12,7 @@ export const addPlayerSpeedModal = ()=>{
 
     owners.forEach((owner)=>{
         let res = window.Players.find((palyer:player)=>{return palyer.id==owner})
-        
+        if(!res) return
         if(window.attackPlan.boosters.findIndex((boost:boost)=>{return boost.playerId==res.id})==-1){
             ownerdata.push(res);
         }

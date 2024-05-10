@@ -208,6 +208,12 @@ export const mainWindow = ()=>{
             font-weight: bold;
             padding: 0 2px;
         }
+
+        .btn-add-attack{
+                font-size: 30px !important;
+                padding: 0;
+                line-height: 20px;
+        }
     </style>
      <style>
             .targetsLauncher-item{
@@ -466,6 +472,8 @@ export const mainWindow = ()=>{
                 background-size: 20px;
             }
 
+           
+
         </style>
     <div class="mainWindow">
         <div class="container">
@@ -525,7 +533,7 @@ export const mainWindow = ()=>{
             <div class="launch-panel">
                 <div class="launch-header">
                     <div class="size-icon">
-                        <button onclick="window.openAddLauncherWindow()" class="btn"><---</button>
+                        <button onclick="window.openAddLauncherWindow()" class="btn btn-add-attack">⬅</button>
                     </div>
                     <div class="spear-icon">
                         <img onclick="window.oderLaunchVillages('spear')" src="https://dshu.innogamescdn.com/asset/fd86cac8/graphic/unit/unit_spear.png">

@@ -2,9 +2,7 @@ import { getAllVillages } from "./Api";
 import { Model } from "./Model";
 
 export class VillageModel extends Model{
-
     static instance:VillageModel=null;
-
     static init () {
         if(VillageModel.instance==null){
             return (async function () {
@@ -15,8 +13,6 @@ export class VillageModel extends Model{
         }else{
             return VillageModel.instance;
         }
-
-        
     }
 
     async loadVillages(){

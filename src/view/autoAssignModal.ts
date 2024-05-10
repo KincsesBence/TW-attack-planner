@@ -13,17 +13,18 @@ export const autoAssignModal = ()=>{
     <style>
         .assigner-row {  display: grid;
             width:600px;
-            grid-template-columns: 1fr 0.5fr 50px 50px 0.5fr 50px 50px;
+            grid-template-columns: 1fr 0.5fr 50px 0.5fr 50px 0.5fr 50px 50px;
             grid-template-rows: 30px;
             gap: 0px 0px;
             grid-auto-flow: row;
             grid-template-areas:
-                "target-village nuke-template nuke-count noble-count fake-template fake-count checkbox";
+                "target-village nuke-template nuke-count noble-template noble-count fake-template fake-count checkbox";
         }
         .target-village { grid-area: target-village; }
         .nuke-template { grid-area: nuke-template; }
         .nuke-count { grid-area: nuke-count; }
         .noble-count { grid-area: noble-count; }
+        .noble-template { grid-area: noble-template; }
         .fake-template { grid-area: fake-template; }
         .fake-count { grid-area: fake-count; }
         .checkbox { grid-area: checkbox;}
@@ -43,6 +44,11 @@ export const autoAssignModal = ()=>{
         </div>
         <div class="nuke-count">
             <input id='assigner-main-nuke-count' value="0" max="50" min="0" type="number">
+        </div>
+        <div class="noble-template">
+            <select id='assigner-main-noble-template'>
+                ${templates}
+            </select>
         </div>
         <div class="noble-count">
             <select id='assigner-main-noble-count'>
@@ -65,6 +71,7 @@ export const autoAssignModal = ()=>{
         <div class="target-village"></div>
         <div class="nuke-template"><button onclick="window.autoAssign.loadNukeTemplates()" class="btn">-↓-</button></div>
         <div class="nuke-count"><button onclick="window.autoAssign.loadNukeCount()" class="btn">-↓-</button></div>
+        <div class="noble-template"><button onclick="window.autoAssign.loadNobleTemplates()" class="btn">-↓-</button></div>
         <div class="noble-count"><button onclick="window.autoAssign.loadNobleCount()" class="btn">-↓-</button></div>
         <div class="fake-template"><button onclick="window.autoAssign.loadFakeTemplates()" class="btn">-↓-</button></div>
         <div class="fake-count"><button onclick="window.autoAssign.loadFakeCount()" class="btn">-↓-</button></div>
@@ -74,6 +81,7 @@ export const autoAssignModal = ()=>{
         <div class="target-village">Name</div>
         <div class="nuke-template">Nuke template</div>
         <div class="nuke-count">Nuke</div>
+        <div class="noble-template">Noble template</div>
         <div class="noble-count">Noble</div>
         <div class="fake-template">Fake template</div>
         <div class="fake-count">Fake</div>
@@ -93,6 +101,11 @@ export const autoAssignModal = ()=>{
                 </div>
                 <div class="nuke-count">
                     <input class="assigner-nuke-count" value="0" max="50" min="0" type="number">
+                </div>
+                <div class="noble-template">
+                    <select class="assigner-noble-template">
+                        ${templates} 
+                    </select>
                 </div>
                 <div class="noble-count">
                     <select class="assigner-noble-count">
@@ -151,6 +164,14 @@ window.autoAssign = {
         checked.forEach((check)=>{
             let row = $(check).parent().parent();
             row.find('.assigner-fake-count').val(val);
+        })
+    },
+    loadNobleTemplates:()=> {
+        let val= $('#assigner-main-noble-template').val();
+        let checked = $('.assigner-target-villages').find('input[type=checkbox]:checked').get();
+        checked.forEach((check)=>{
+            let row = $(check).parent().parent();
+            row.find('.assigner-noble-template').val(val);
         })
     },
     loadNobleCount:() => {

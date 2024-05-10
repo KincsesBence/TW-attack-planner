@@ -2,12 +2,8 @@ import { getAllPlayer } from "./Api";
 import { Model } from "./Model";
 
 export class PlayersModel extends Model{
-
     static instance:PlayersModel=null;
-
     static init () {
-        console.log(PlayersModel.instance);
-        
         if(PlayersModel.instance==null){
             return (async function () {
                 PlayersModel.instance = new PlayersModel()

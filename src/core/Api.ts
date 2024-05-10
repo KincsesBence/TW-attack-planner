@@ -103,13 +103,12 @@ export async function fetchGroups():Promise<group[]>{
     let groupsHTML = $(res).find('.group-menu-item').get();
     let groups:group[] = [];
     groupsHTML.forEach((elem)=>{
-        console.log($(elem).attr('data-group-id'),$(elem).text());
         groups.push({
             id:parseInt($(elem).attr('data-group-id')),
             name:$(elem).text().trim().slice(1,-1),
         })
     })
-
+    console.log(groups);
     return groups
 }
 
@@ -216,8 +215,6 @@ async function fetchVillage(html:any){
     });
 
     for (let i = 1; i < rows.length; i++) {
-        
-        
         const row = rows[i];
         let colums = $(row).find('td');    
         let villageID=parseInt($(row).find('.quickedit-vn').attr('data-id'));     
@@ -239,91 +236,8 @@ async function fetchVillage(html:any){
         village.popSize=size
         villagePool.push(village);   
     }
-
     console.log(villagePool);
     return villagePool;
-}
-
-
-
-export function loadPlans(){
-    let result=localStorage.getItem('TW-Attack-Planner');
-    let plans:plan[] = [];
-    if(result){
-        plans = JSON.parse(result);
-    }
-
-    return plans
-}
-
-export function findPlan(predicate: (value: any, index: number, array: any[]) => unknown): plan | null{
-    let result=localStorage.getItem('TW-Attack-Planner');
-    let plans:plan[] = [];
-    if(result){
-        plans = JSON.parse(result);
-    }
-
-    let ind=plans.findIndex(predicate)
-
-    if(ind>-1){ 
-        return plans[ind];
-    }else{
-        return null;
-    }
-}
-
-
-export function addPlan(newPlan:plan):boolean{
-    let result=localStorage.getItem('TW-Attack-Planner');
-    let plans:plan[] = [];
-    if(result){
-        plans = JSON.parse(result);
-    }
-
-    let ind=plans.findIndex((plan)=>{
-        return plan.name==newPlan.name
-    })
-
-    if(ind==-1){
-        plans.push(newPlan);
-    }else{
-        return false;
-    }
-    localStorage.setItem('TW-Attack-Planner',JSON.stringify(plans));
-    return true;
-}
-
-export function updatePlan(updatedPlan:plan):boolean{
-    let result=localStorage.getItem('TW-Attack-Planner');
-    let plans:plan[] = [];
-    if(result){
-        plans = JSON.parse(result);
-    }
-
-    let ind=plans.findIndex((plan)=>{
-        return plan.id==updatedPlan.id
-    })
-
-    plans[ind]=updatedPlan;
-    localStorage.setItem('TW-Attack-Planner',JSON.stringify(plans));
-    return true;
-}
-
-export function removePlan(id:string){
-    let result=localStorage.getItem('TW-Attack-Planner');
-    let plans:plan[] = [];
-    if(result){
-        plans = JSON.parse(result);
-    }
-
-    let ind=plans.findIndex((plan)=>{
-        return plan.id==id;
-    })
-
-    if(ind>-1){
-        plans.splice(ind,1);
-        localStorage.setItem('TW-Attack-Planner',JSON.stringify(plans));
-    }
 }
 
 function transUnit(to:number,from:number,trans:number):[number,number]{

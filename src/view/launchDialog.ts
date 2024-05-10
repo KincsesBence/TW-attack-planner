@@ -1,4 +1,4 @@
-import { addPlan, findPlan, loadPages, loadPlans, removePlan } from "../core/Api";
+import { loadPages} from "../core/Api";
 import { editArrivalsModal } from "./editArrivalsModal";
 import { editLaunchVillagesModal } from "./editLaunchVillagesModal";
 import { editPlanNameModal } from "./editPlanNameModal";
@@ -166,7 +166,7 @@ stepCheck:()=>{
     let max=window.launchDialog.currentStep;
     switch(window.launchDialog.currentStep){
         case 0:
-            if(window.launchDialog.plan.name.length >3 && findPlan((elem:plan)=>{return elem.name==window.launchDialog.plan.name})==null){
+            if(window.launchDialog.plan.name.length >3 && window.Plans.findIndex((plan)=>{return plan.name==window.launchDialog.plan.name})==-1){
                 window.launchDialog.currentStep++
             }else{
                 break;
@@ -300,14 +300,8 @@ createPlan : async ()=>{
     setTimeout( async ()=>{
         window.attackPlan=window.launchDialog.plan;
         window.attackPlan.launchPool = await loadPages(window.launchDialog.groupIDs.map((groupID)=>{return groupID.id}));   
-        let res=addPlan(window.attackPlan);
-
-        if(res){
-            window.UI.SuccessMessage('Plan successfully created!')
-        }else{
-            window.UI.SuccessMessage('Plan with this name already exist!')
-        }
-
+        await window.DB.savePlan(window.attackPlan)
+        window.UI.SuccessMessage('Plan successfully created!')
         setTimeout(()=>{
             window.Dialog.close("launchDialog");
             window.Dialog.show("PlannerMainWindow",mainWindow());
@@ -320,25 +314,26 @@ loadPlan:()=>{
 
     if(val==""){
         return
-    }
+    }   
+    let ind=window.Plans.findIndex((plan)=>{return plan.id==val});
+    if(ind==-1) return;
     
     $('#dialog-loading').css('display','inline-flex');
     $('.launch-dialog').hide();
     setTimeout(()=>{
         window.Dialog.close("launchDialog");
-        window.attackPlan=findPlan((elem:plan)=>{return elem.id==val})
+        window.attackPlan=window.Plans[ind]
         window.Dialog.show("PlannerMainWindow",mainWindow());
         $('.popup_box_container').append('<div style="position: fixed;width: 100%;height: 100%;top:0;left:0;z-index:12001"></div>');
     },1000)
 },
-removePlan:()=>{
+removePlan: async()=>{
     let val=$('#launchDialogSelect').val().toString();
     if(val==""){
         return
     }
-    removePlan(val);
-
-    let plans = loadPlans();
+    window.DB.removePlan(parseInt(val));
+    let plans = await window.DB.loadPlans()
     $('#launchDialogSelect').html(`${plans.map((plan)=>{
         return /* html */`<option value="${plan.id}">${plan.name}</option>`;
     })}`);
