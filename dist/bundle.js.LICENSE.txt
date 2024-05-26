@@ -24,6 +24,8 @@
 
 /*! ./confirmRemoveTargetModal */
 
+/*! ./confirmResetAssignmentsModal */
+
 /*! ./core/Api */
 
 /*! ./core/PlayersModel */
@@ -153,6 +155,10 @@
 /*!*************************************************!*\
   !*** ./src/view/confirmCalculateAttackModal.ts ***!
   \*************************************************/
+
+/*!**************************************************!*\
+  !*** ./src/view/confirmResetAssignmentsModal.ts ***!
+  \**************************************************/
 
 /*!****************************************************!*\
   !*** ./src/view/ConfirmVillageSpeedRemoveModal.ts ***!

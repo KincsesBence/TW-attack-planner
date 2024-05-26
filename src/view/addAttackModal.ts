@@ -113,4 +113,5 @@ window.addAttack = () => {
     targets.push(window.attackPlan.targetPool[indTarget]);
     window.partialRender(launchers,targets);
     $('.planner-modal').hide();
+    window.DB.savePlan(window.attackPlan);
 }

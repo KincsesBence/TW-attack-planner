@@ -60,7 +60,7 @@ window.addPlayerBoost = ()=> {
         playerId:id,
         value:val
     })
-    
+    window.DB.savePlan(window.attackPlan);
     $('.planner-modal-content').html(addPlayerSpeedModal());
 }
 

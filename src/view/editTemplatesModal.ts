@@ -130,6 +130,10 @@ export const editTemplatesModal = (templates:template[])=>{
 window.templateModal = {
     templateRef:[],
     addTemplate: ()=> {
+        if($('#temp_name').val().toString().length>10){
+            return;
+        }
+
         let template:template ={
             name:$('#temp_name').val().toString(),
             units:{spear:0,sword:0,archer:0,axe:0,spy:0,light:0,marcher:0,heavy:0,ram:0,catapult:0,knight:0,snob:0}
@@ -175,7 +179,12 @@ window.templateModal = {
             select+=`<option value="${temp.name}">${temp.name}</option>`;
         });
         $('#template_select').html(select);
-        window.launchDialog.stepCheck();
+        
+        if($('.mainWindow').get().length==1){
+            window.DB.savePlan(window.attackPlan);
+        }else{
+            window.launchDialog.stepCheck();
+        }
     },
     removeTemplate:()=> {
         let val=$('#template_select').val();
@@ -192,7 +201,12 @@ window.templateModal = {
         });
     
         $('#template_select').html(select);
-        window.launchDialog.stepCheck();
+
+        if($('.mainWindow').get().length==1){
+            window.DB.savePlan(window.attackPlan);
+        }else{
+            window.launchDialog.stepCheck();
+        }
     },
     selectTemplate:()=> {
         let val=$('#template_select').val();

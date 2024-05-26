@@ -3,6 +3,7 @@ import { addPlayerSpeedModal } from "./addPlayerSpeedModal";
 import { autoAssignModal } from "./autoAssignModal";
 import { calculatedAttackModal } from "./calculatedAttackModal";
 import { confirmCalculateAttackModal } from "./confirmCalculateAttackModal";
+import { confirmResetAssignmentsModal } from "./confirmResetAssignmentsModal";
 import { editArrivalsModal } from "./editArrivalsModal";
 import { editPlanNameModal } from "./editPlanNameModal";
 import { editTargetModal } from "./editTargetModal";
@@ -579,7 +580,7 @@ export const mainWindow = ()=>{
                 </div>
             </div>
             <div class="credits">
-                v0.1.0-alpha; by: toldi26
+                v0.1.0-beta [2024.05.11.]; by: toldi26
             </div>
         </div>
     </div>
@@ -754,7 +755,6 @@ window.openAddLauncherWindow = () => {
 }
 
 window.createModal = (content:string,header:string) => {
-    
     let close=`<div class="modal-input-inline"><button class="btn" onclick="window.closeModal()">Bezár</button></div>`;
     $('.planner-modal-header b').text(header);
     $('.planner-modal-content').html(content+close);
@@ -805,9 +805,6 @@ window.editTemplates = () =>{
 window.editPlayerBoosts = () =>{
     window.createModal(addPlayerSpeedModal(),'Gyorsítók szerkesztése');
 }
-
-
-
 window.calculateAttack = () =>{
     let cnt=0;
     window.attackPlan.targetPool.forEach((target:target)=>{
@@ -828,7 +825,12 @@ window.confirmCalculateAttack = () =>{
 }
 
 window.openAutoAssignModal = ()=>{
+    window.autoAssign.assignTypes=[];
     window.createModal(autoAssignModal(),'Automata hozzárrendelés');
+}
+
+window.resetAssignments = ()=>{
+    window.createModal(confirmResetAssignmentsModal(),'Támadások visszaállítása');
 }
 
 

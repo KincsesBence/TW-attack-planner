@@ -228,7 +228,7 @@ declare global {
     rank:number
   }
 
-  interface village {
+  type village = {
     id:number,
     name:string,
     coord:coord,
@@ -288,16 +288,26 @@ declare global {
     search:()=>void;
     editName:()=>void;
     editArrivals:()=>void;
+    resetAssignments:()=>void;
+    finalResetAssignments:()=>void;
   }
 
   interface autoAssign{
-    loadNukeTemplates:()=> void;
-    loadNukeCount:() => void;
-    loadFakeTemplates:()=> void;
-    loadFakeCount:() => void;
-    loadNobleTemplates:() => void;
-    loadNobleCount:() => void;
+    addAssignment:() => void;
+    removeAssignment:(id:Number) => void;
+    fillAssignment:(id:Number) => void;
     checkAll:() => void;
+    startAssignment:() => void;
+    assignTypes:assignTypes[];
+  }
+
+  type assignTypes = {
+    id:string,
+    template:template,
+    filtered:village[],
+    required:number,
+    noble:Boolean,
+    arrival:string
   }
 
   interface templateModal{

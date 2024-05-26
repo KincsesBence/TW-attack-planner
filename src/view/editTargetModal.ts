@@ -48,7 +48,12 @@ window.editTargetModal = {
             <option value="${target.village.name}">${target.village.name} (${target.village.coord.text}) K${target.village.kontinent}</option>
             `
         }).join(''))
-        window.launchDialog.stepCheck();
+        
+        if($('.mainWindow').get().length==1){
+            window.DB.savePlan(window.attackPlan);
+        }else{
+            window.launchDialog.stepCheck();
+        }
     },
     removeTargets:() => {},
     targetRef:[],

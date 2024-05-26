@@ -39,7 +39,11 @@ window.editArrivalsModal = {
             select+=`<option value="${arrival}">${arrival}</option>`;
         });
         $('#plan_arrivals_select').html(select);
-        window.launchDialog.stepCheck();
+        if($('.mainWindow').get().length==1){
+            window.DB.savePlan(window.attackPlan);
+        }else{
+            window.launchDialog.stepCheck();
+        }
     },
     removeArrival:()=> {
         let val = $('#plan_arrivals_select').val().toString().replace('T',' ');
@@ -60,6 +64,10 @@ window.editArrivalsModal = {
             select+=`<option value="${arrival}">${arrival}</option>`;
         });
         $('#plan_arrivals_select').html(select);
-        window.launchDialog.stepCheck();
+        if($('.mainWindow').get().length==1){
+            window.DB.savePlan(window.attackPlan);
+        }else{
+            window.launchDialog.stepCheck();
+        }
     }
 }

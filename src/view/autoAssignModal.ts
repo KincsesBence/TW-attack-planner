@@ -9,178 +9,199 @@ export const autoAssignModal = ()=>{
         `;
     });
 
+    
+
     return /* html */`
     <style>
         .assigner-row {  display: grid;
-            width:600px;
-            grid-template-columns: 1fr 0.5fr 50px 0.5fr 50px 0.5fr 50px 50px;
-            grid-template-rows: 30px;
-            gap: 0px 0px;
-            grid-auto-flow: row;
-            grid-template-areas:
-                "target-village nuke-template nuke-count noble-template noble-count fake-template fake-count checkbox";
+            display: grid;
+            grid-template-columns: 200px repeat(auto-fill, 80px);
         }
-        .target-village { grid-area: target-village; }
-        .nuke-template { grid-area: nuke-template; }
-        .nuke-count { grid-area: nuke-count; }
-        .noble-count { grid-area: noble-count; }
-        .noble-template { grid-area: noble-template; }
-        .fake-template { grid-area: fake-template; }
-        .fake-count { grid-area: fake-count; }
-        .checkbox { grid-area: checkbox;}
-        .assigner-row input{ width:40px }
-        .assigner-row input{ width:40px }
+
+        .assigner-row input{
+            width:30px;
+        }
+
+        .item{
+            margin:5px;
+        }
+
+        .add-assignment{
+            display:inline-grid;
+        }
+
         .assigner-target-villages{
+            width:1100px;
             max-height:300px;
             overflow-y:auto;
         }
+        .assigner-target-btn{
+            display:block;
+            width: 20px;
+            height: 20px;
+            background: url(https://dshu.innogamescdn.com/asset/80b013af/graphic/login_close.png) top left no-repeat;
+            cursor: pointer;
+            background-size: 20px;
+            margin-right: 10px;
+        }
+
+        .assigner-date div{
+            transform: rotate(290deg) translateX(20px);
+            text-wrap: nowrap;
+        }
     </style>
-    <div class="assigner-row">
-        <div class="target-village"></div>
-        <div class="nuke-template">
-            <select id='assigner-main-nuke-template'>
+    
+    <div class="assigner">
+        <div class="add-assignment">
+            dátum:
+            <select id="assignmentArrival">
+                ${window.attackPlan.arrivals.map((arrival)=>{
+                    return /* html */`<option value='${arrival}'>${arrival}</option>`
+                }).join('')}
+            </select>
+            temlate:
+            <select id="assignmentTemplates">
                 ${templates}
             </select>
+            nemes:
+            <input type="checkbox" id="assignmentNoble">
+            <button onclick="autoAssign.addAssignment()">+</button>
         </div>
-        <div class="nuke-count">
-            <input id='assigner-main-nuke-count' value="0" max="50" min="0" type="number">
-        </div>
-        <div class="noble-template">
-            <select id='assigner-main-noble-template'>
-                ${templates}
-            </select>
-        </div>
-        <div class="noble-count">
-            <select id='assigner-main-noble-count'>
-                <option>1x4</option>
-                <option>2x2</option>
-                <option>4x1</option>
-            </select>
-        </div>
-        <div class="fake-template">
-            <select id='assigner-main-fake-template'>
-                ${templates}
-            </select>
-        </div>
-        <div class="fake-count">
-            <input id='assigner-main-fake-count' value="0" max="50" min="0" type="number">
-        </div>
-        <div class="checkbox"></div>
-    </div>
-    <div class="assigner-row">
-        <div class="target-village"></div>
-        <div class="nuke-template"><button onclick="window.autoAssign.loadNukeTemplates()" class="btn">-↓-</button></div>
-        <div class="nuke-count"><button onclick="window.autoAssign.loadNukeCount()" class="btn">-↓-</button></div>
-        <div class="noble-template"><button onclick="window.autoAssign.loadNobleTemplates()" class="btn">-↓-</button></div>
-        <div class="noble-count"><button onclick="window.autoAssign.loadNobleCount()" class="btn">-↓-</button></div>
-        <div class="fake-template"><button onclick="window.autoAssign.loadFakeTemplates()" class="btn">-↓-</button></div>
-        <div class="fake-count"><button onclick="window.autoAssign.loadFakeCount()" class="btn">-↓-</button></div>
-        <div class="checkbox"></div>
-    </div>
-    <div class="assigner-row">
-        <div class="target-village">Name</div>
-        <div class="nuke-template">Nuke template</div>
-        <div class="nuke-count">Nuke</div>
-        <div class="noble-template">Noble template</div>
-        <div class="noble-count">Noble</div>
-        <div class="fake-template">Fake template</div>
-        <div class="fake-count">Fake</div>
-        <div class="checkbox"><input onclick="window.autoAssign.checkAll()" id="assigner-main-checkbox" type="checkbox"></div>
-    </div>
-    <div class="assigner-target-villages">
-        ${window.attackPlan.targetPool.map((target:target)=>{
-            return /* html */`
-            <div class="assigner-row" id="assigner-row-${target.village.id}">
-                <div class="target-village">
-                <a target="_blank" href="/game.php?village=${game.village.id}&screen=info_village&id=${target.village.id}">${target.village.name}(${target.village.coord.text}) K${target.village.kontinent}</a>
-                </div>
-                <div class="nuke-template">
-                    <select class="assigner-nuke-template">
-                        ${templates} 
-                    </select>
-                </div>
-                <div class="nuke-count">
-                    <input class="assigner-nuke-count" value="0" max="50" min="0" type="number">
-                </div>
-                <div class="noble-template">
-                    <select class="assigner-noble-template">
-                        ${templates} 
-                    </select>
-                </div>
-                <div class="noble-count">
-                    <select class="assigner-noble-count">
-                        <option>1x4</option>
-                        <option>2x2</option>
-                        <option>4x1</option>
-                    </select>
-                </div>
-                <div class="fake-template">
-                    <select class="assigner-fake-template">
-                        ${templates} 
-                    </select>
-                </div>
-                <div class="fake-count">
-                    <input class="assigner-fake-count" value="0" max="50" min="0" type="number">
-                </div>
-                <div class="checkbox">
-                    <input class="assigner-target-check" value="${target.village.id}" type="checkbox">
+        <div class="assigner-header">
+            <div class="assigner-row assigner-date">
+                    <div class="item"></div>
+                    <div class="item checkbox"></div>
+            </div>
+            <div class="assigner-row assigner-remover">
+                    <div class="item"></div>
+                    <div class="item checkbox"></div>
+            </div>
+            <div class="assigner-row assigner-loader">
+                    <div class="item"></div>
+                    <div class="item checkbox"></div>
+            </div>
+            <div class="assigner-row assigner-name">
+                <div class="item">falu</div>
+                <div class="item checkbox">
+                    <input id="assigner-main-checkbox" onclick="autoAssign.checkAll()" type="checkbox">
                 </div>
             </div>
+        <div>
+        <div class="assigner-target-villages">
+            ${window.attackPlan.targetPool.map((target:target)=>{
+            return /* html */`
+                <div class="assigner-row" id="assigner-row-${target.village.id}">
+                    <div class="item"><a target="_blank" href="/game.php?village=${game.village.id}&screen=info_village&id=${target.village.id}">${target.village.name}(${target.village.coord.text}) K${target.village.kontinent}</a></div>
+                    <div class="item checkbox">
+                        <input class="assigner-target-check" value="${target.village.id}" type="checkbox">
+                    </div>
+                </div>
             `
         }).join('')}
+        </div>
+        <div>
+            <label>Egyenletes</label><input value="1" type="radio" name="assignmentAlg">
+            <label>Egyenként random</label><input value="2" type="radio" name="assignmentAlg">
+            <label>Egyenként legközelebb</label><input value="3"  type="radio" name="assignmentAlg">
+            <label>Célpothoz legközelebb</label><input value="4" type="radio" name="assignmentAlg">
+        </div>
+        <div>
+            <button onclick="autoAssign.startAssignment()" class="btn">Start Assignment</button>
+        </div>
         
     </div>
     `
 }
 
 window.autoAssign = {
-    loadNukeTemplates:()=> {
-        let val= $('#assigner-main-nuke-template').val();
-        let checked = $('.assigner-target-villages').find('input[type=checkbox]:checked').get();
-        checked.forEach((check)=>{
-            let row = $(check).parent().parent();
-            row.find('.assigner-nuke-template').val(val);
+    assignTypes:[],
+    removeAssignment:(id) =>{
+        let ind = window.autoAssign.assignTypes.findIndex((type)=>{return type.id==id.toString()})
+        if(ind==-1){
+            return
+        }
+        window.autoAssign.assignTypes.splice(ind,1);
+
+        $('.ar-'+id).remove();
+    },
+    fillAssignment:(id) =>{
+        $(`.assigner-target-villages .assigner-target-check`).get().forEach((elem)=>{
+            if(!$(elem).is(':checked')){
+                return
+            }
+            let val= $(`.assigner-loader .ar-${id}`).find('.ass-inp').val();
+            
+            $(elem).parent().parent().find(`.ar-${id} .ass-inp`).val(val);
         })
     },
-    loadNukeCount:() => {
-        let val= $('#assigner-main-nuke-count').val();
-        let checked = $('.assigner-target-villages').find('input[type=checkbox]:checked').get();
-        checked.forEach((check)=>{
-            let row = $(check).parent().parent();
-            row.find('.assigner-nuke-count').val(val);
+    addAssignment:() =>{
+        if(window.autoAssign.assignTypes.length>=10){
+            return;
+        }
+        let arrival= $('#assignmentArrival').val().toString();
+        let templateName= $('#assignmentTemplates').val().toString();
+        let noble= $('#assignmentNoble').is(':checked');
+        console.log(arrival,templateName,noble);
+        let temp= window.attackPlan.templates.find((template)=>{
+            return template.name==templateName;
+        })
+        let villages:village[]=[];
+        let newAssignment = {
+            id:new Date().getTime().toString(),
+            arrival:arrival,
+            filtered:villages,
+            required:0,
+            noble:noble,
+            template:temp
+        }
+        window.autoAssign.assignTypes.push(newAssignment);
+        $('.assigner-header .assigner-loader .checkbox').before(/* html */`<div class="item ar-${newAssignment.id}" >
+        ${newAssignment.noble? 
+            /* html */`<select class="ass-inp">
+                            <option value="4">4x1</option>
+                            <option value="2">2x2</option>
+                            <option value="1">1x4</option>
+                        </select>`
+            :
+            /* html */`<input class="ass-inp" value="0" type="number" min="0">`
+        }
+        <button onclick="autoAssign.fillAssignment(${newAssignment.id})">↓</button></div>
+        `)
+        $('.assigner-header .assigner-name .checkbox').before(/* html */`
+            <div class="item ar-${newAssignment.id}" >${newAssignment.template.name}</div>
+        `);
+        $('.assigner-header .assigner-remover .checkbox').before(/* html */`
+            <div class="item ar-${newAssignment.id}" ><a onclick="autoAssign.removeAssignment(${newAssignment.id})" class="assigner-target-btn"></a></div>
+        `);
+        $('.assigner-header .assigner-date .checkbox').before(/* html */`
+        <div class="item ar-${newAssignment.id}" >${newAssignment.arrival}</div>
+    `);
+        $('.assigner-target-villages').find('.assigner-row').get().forEach((row)=>{
+            $(row).find('.checkbox').before(/* html */`<div class="item ar-${newAssignment.id}" >
+                ${newAssignment.noble? 
+                /* html */`<select class="ass-inp">
+                            <option value="4">4x1</option>
+                            <option value="2">2x2</option>
+                            <option value="1">1x4</option>
+                            </select>`
+                :
+                /* html */`<input class="ass-inp" value="0" type="number" min="0">`}</div>`);
         })
     },
-    loadFakeTemplates:()=> {
-        let val= $('#assigner-main-fake-template').val();
-        let checked = $('.assigner-target-villages').find('input[type=checkbox]:checked').get();
-        checked.forEach((check)=>{
-            let row = $(check).parent().parent();
-            row.find('.assigner-fake-template').val(val);
+    startAssignment:()=>{
+        let alg=$('input[name="assignmentAlg"]:checked').val();
+        window.autoAssign.assignTypes.forEach((elem)=>{
+            elem.required=0;
+            let inputs= $(`.assigner-target-villages .ar-${elem.id}`).find('.ass-inp').get();
+            inputs.forEach((input)=>{
+                elem.required+=parseInt($(input).val().toString());
+            })
         })
-    },
-    loadFakeCount:() => {
-        let val= $('#assigner-main-fake-count').val();
-        let checked = $('.assigner-target-villages').find('input[type=checkbox]:checked').get();
-        checked.forEach((check)=>{
-            let row = $(check).parent().parent();
-            row.find('.assigner-fake-count').val(val);
-        })
-    },
-    loadNobleTemplates:()=> {
-        let val= $('#assigner-main-noble-template').val();
-        let checked = $('.assigner-target-villages').find('input[type=checkbox]:checked').get();
-        checked.forEach((check)=>{
-            let row = $(check).parent().parent();
-            row.find('.assigner-noble-template').val(val);
-        })
-    },
-    loadNobleCount:() => {
-        let val= $('#assigner-main-noble-count').val();
-        let checked = $('.assigner-target-villages').find('input[type=checkbox]:checked').get();
-        checked.forEach((check)=>{
-            let row = $(check).parent().parent();
-            row.find('.assigner-noble-count').val(val);
-        })
+        /** todo: start with noble **/
+        /** todo: filter launch villages **/
+        /** todo: iterate on filtered and create troop transactions based on seleted algorithm **/
+        console.log(window.autoAssign.assignTypes);
+        
     },
     checkAll:() =>{
         let checked = $('.assigner-target-villages').find('input[type=checkbox]').get();

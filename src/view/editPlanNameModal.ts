@@ -13,8 +13,11 @@ window.editPlanNameModal={
         if($('#open-plan-name').get().length>0){
             $('#open-plan-name').text(val);
         }
-        
-        window.launchDialog.stepCheck();
+        if($('.mainWindow').get().length==1){
+            window.DB.savePlan(window.attackPlan);
+        }else{
+            window.launchDialog.stepCheck();
+        }
     }
 }
 

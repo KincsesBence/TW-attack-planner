@@ -157,6 +157,7 @@ window.targetItem = {
         window.attackPlan.targetPool.splice(targetIndex,1);
         window.renderTargetVillages();
         window.closeModal();
+        window.DB.savePlan(window.attackPlan);
     },
     removeTargetLauncherItem:(launcher:number,target:number)=>{
         $('.planner-modal-header b').text('Támadás eltávolítása');
@@ -206,6 +207,7 @@ window.targetItem = {
 
         window.partialRender(renderLauncher,[window.attackPlan.targetPool[targetIndex]]);
         window.closeModal();
+        window.DB.savePlan(window.attackPlan);
     },
     addVillageBooster:(event:Event,target:number)=>{
         event.stopPropagation();
@@ -221,6 +223,7 @@ window.targetItem = {
         window.attackPlan.targetPool[targetIndex].booster=parseInt($('#planner-village-boost').val().toString());
         window.closeModal();
         window.partialRender([],[window.attackPlan.targetPool[targetIndex]]);
+        window.DB.savePlan(window.attackPlan);
     },
     removeVillageBooster:(event:Event,target:number)=>{
         event.stopPropagation();
@@ -237,6 +240,7 @@ window.targetItem = {
         window.attackPlan.targetPool[targetIndex].booster=0;
         window.closeModal();
         window.partialRender([],[window.attackPlan.targetPool[targetIndex]]);
+        window.DB.savePlan(window.attackPlan);
     },
 }
 
