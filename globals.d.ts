@@ -265,7 +265,8 @@ declare global {
     partialRender:(launchers:village[],targets:target[])=> void;
     openAddLauncherWindow:() => void;
     openAutoAssignModal:() => void;
-    addAttack:() => void;
+    addLauncher:(indTarget: number, indLanucher: number,trans:units,operation:string,arrival:string,notes:string) => void;
+    addAttackConfirm:() => void;
     closeModal:() => void;
     createModal:(content:string,header:string) => void;
     launchVillagesPaging:number;
@@ -298,15 +299,16 @@ declare global {
     fillAssignment:(id:Number) => void;
     checkAll:() => void;
     startAssignment:() => void;
-    assignTypes:assignTypes[];
+    updateCount:(id:Number) => void;
+    assignTypes:assignType[];
+    launchPoolCopy:village[];
   }
 
-  type assignTypes = {
+  type assignType = {
     id:string,
     template:template,
     filtered:village[],
     required:number,
-    noble:Boolean,
     arrival:string
   }
 

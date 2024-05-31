@@ -108,12 +108,10 @@ export async function fetchGroups():Promise<group[]>{
             name:$(elem).text().trim().slice(1,-1),
         })
     })
-    console.log(groups);
     return groups
 }
 
 export async function loadPages(groupIDs:number[]){
-    console.log(groupIDs);
     
     let villages:village[]=[];
     let groupPromises:Promise<any>[] = [];
@@ -236,21 +234,16 @@ async function fetchVillage(html:any){
         village.popSize=size
         villagePool.push(village);   
     }
-    console.log(villagePool);
     return villagePool;
 }
 
 function transUnit(to:number,from:number,trans:number):[number,number]{
-    console.log('real',to,from,trans);
-
     if(trans<0){
         trans=from+trans;
         if(trans<0){
             trans=0;
         }
     }
-
-    console.log('fixed',to,from,trans);
     
     if(from-trans<0){
         to=from;
@@ -263,10 +256,6 @@ function transUnit(to:number,from:number,trans:number):[number,number]{
 }
 
 export function TroopTransaction(to:units,from:units,trans:units):[units,units]{
-    console.log('to',to);
-    console.log('from',from);
-    console.log('trans',trans);
-    
     Object.keys(window.unitConfig).forEach((unis)=>{
         [to[unis as keyof units],from[unis as keyof units]] = transUnit(to[unis as keyof units],from[unis as keyof units],trans[unis as keyof units]);
     })
@@ -282,7 +271,7 @@ export function calcUnitPop(units:units):number{
 }
 
 export function getSlowestUnit(units:units,isAttack:boolean):speed{
-
+    
     var unitConfig = Object.keys(window.unitConfig)
     .map((k ) => { 
         return { 
@@ -308,6 +297,35 @@ export function getSlowestUnit(units:units,isAttack:boolean):speed{
     
 }
 
-export function coordDistance(village1:village, village2:village):number {
+export function coordDistance(village1:village | null, village2:village | null):number {
+    if(!village1 || !village2){
+        return null;
+    }
     return Math.sqrt((Math.pow(village2.coord.x - village1.coord.x,2) + Math.pow(village2.coord.y - village1.coord.y,2)));
+}
+
+export function hasAvailableTroops(village:village,units:units){
+    let keys= Object.keys(window.unitConfig);    
+    for (let i = 0; i < keys.length; i++) {
+        const key = keys[i];
+        if(key=='snob' && village.unitsContain[key as keyof unitConfig]>0 && units[key as keyof unitConfig]==0){
+            console.log("ide");
+            return false;
+        }
+
+        if(units[key as keyof unitConfig]==0){
+            continue;
+        }
+        if(units[key as keyof unitConfig]<0 && village.unitsContain[key as keyof unitConfig]+units[key as keyof unitConfig]<0){
+            return false;
+        }
+        if(village.unitsContain[key as keyof unitConfig]==0 && units[key as keyof unitConfig]==99999){
+            return false; 
+        }
+        if(village.unitsContain[key as keyof unitConfig] < units[key as keyof unitConfig] 
+            && units[key as keyof unitConfig]!=99999 && units[key as keyof unitConfig]>0){
+            return false; 
+        }    
+    }
+    return true; 
 }

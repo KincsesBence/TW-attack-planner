@@ -72,7 +72,8 @@ export const calculatedAttackModal = ()=>{
         <label for="inapp">In-app:</label>
         <input onclick="window.changeDisplayType()" type="radio" id="inapp" value="inapp" name="showType" checked>
         <div class="bb-field" style="display:none"></div>
-        <div class="inApp-field"></div>
+        <div class="inApp-field" style="max-height:600px; overflow-y: auto;">
+        </div>
     </div>
     `
 }

@@ -826,6 +826,9 @@ window.confirmCalculateAttack = () =>{
 
 window.openAutoAssignModal = ()=>{
     window.autoAssign.assignTypes=[];
+    window.autoAssign.launchPoolCopy=structuredClone(window.attackPlan.launchPool)
+    console.log(window.attackPlan.launchPool[5].unitsContain);
+    console.log(window.autoAssign.launchPoolCopy[5].unitsContain);
     window.createModal(autoAssignModal(),'Automata hozzárrendelés');
 }
 
