@@ -580,7 +580,7 @@ export const mainWindow = ()=>{
                 </div>
             </div>
             <div class="credits">
-                v0.1.0-beta [2024.05.11.]; by: toldi26
+                v0.1.1-beta [2024.06.04.]; by: toldi26
             </div>
         </div>
     </div>
@@ -755,7 +755,7 @@ window.openAddLauncherWindow = () => {
 }
 
 window.createModal = (content:string,header:string) => {
-    let close=`<div class="modal-input-inline"><button class="btn" onclick="window.closeModal()">Bezár</button></div>`;
+    let close=`<div id="plannerCloseBtn" class="modal-input-inline"><button class="btn" onclick="window.closeModal()">Bezár</button></div>`;
     $('.planner-modal-header b').text(header);
     $('.planner-modal-content').html(content+close);
     $('.planner-modal').show();

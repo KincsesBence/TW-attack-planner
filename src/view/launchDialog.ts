@@ -332,7 +332,7 @@ removePlan: async()=>{
     if(val==""){
         return
     }
-    window.DB.removePlan(parseInt(val));
+    window.DB.removePlan(val);
     let plans = await window.DB.loadPlans()
     $('#launchDialogSelect').html(`${plans.map((plan)=>{
         return /* html */`<option value="${plan.id}">${plan.name}</option>`;

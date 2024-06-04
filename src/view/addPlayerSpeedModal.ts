@@ -38,9 +38,6 @@ export const addPlayerSpeedModal = ()=>{
         <input id="planner-player-boost" type="number" max="60" min="1" placeholder="%">
         <button class="btn" onclick="window.addPlayerBoost()">Add</button>
     </div>
-    <div class="modal-input-inline">
-        <button class="btn" onclick="window.closeModal()">Bezár</button>
-    </div>
     `
 }
 

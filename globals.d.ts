@@ -303,13 +303,18 @@ declare global {
     assignTypes:assignType[];
     launchPoolCopy:village[];
   }
+  type assignmentCount = {
+    id:number,
+    cnt:number
+  }
 
   type assignType = {
     id:string,
     template:template,
     filtered:village[],
     required:number,
-    arrival:string
+    arrival:string,
+    max:number
   }
 
   interface templateModal{

@@ -21,7 +21,9 @@ export class planDB {
         let transaction = this.db.transaction("plans", "readwrite");
         await transaction.objectStore("plans").put({id:plan.id,data:JSON.stringify(plan)});
     }
-    async removePlan(id:number){
+    async removePlan(id:string){
+        console.log(id);
+        
         let transaction = this.db.transaction("plans", "readwrite");
         await transaction.objectStore("plans").delete(id);
     }

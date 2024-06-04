@@ -6,7 +6,6 @@ export const addVillageBoosterModal = (target:number)=>{
     </div>
     <div class="modal-input-inline">
         <button class="btn" onclick="window.targetItem.confirmAddVillageBooster(${target})">Igen</button> 
-        <button class="btn" onclick="window.closeModal()">Mégse</button>
     </div>
     `
 }
