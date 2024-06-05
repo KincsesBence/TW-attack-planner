@@ -1,13 +1,14 @@
+import { TroopTransaction } from "../core/Api";
 
 export const editTargetModal = (targets:target[])=>{
     window.editTargetModal.targetRef=targets;
     return /* html */`
     <div class="modal-input-group">
     <label for="target-select">Targets (<span id="modal-targets-cnt">${targets.length}</span>):</label>
-    <select id="target-select" size="5">
+    <select id="target-select" size="5" multiple>
         ${targets.map((target)=>{
             return /* html */`
-            <option value="${target.village.name}">${target.village.name} (${target.village.coord.text}) K${target.village.kontinent}</option>
+            <option value="${target.village.id}">${target.village.name} (${target.village.coord.text}) K${target.village.kontinent}</option>
             `
         }).join('')}
     </select>
@@ -36,7 +37,9 @@ window.editTargetModal = {
                 window.editTargetModal.targetRef.push({
                     booster:0,
                     launchers:[],
-                    village:village
+                    village:village,
+                    isOpen:false,
+                    isSelected:false,
                 })
             }
         });
@@ -51,11 +54,49 @@ window.editTargetModal = {
         
         if($('.mainWindow').get().length==1){
             window.DB.savePlan(window.attackPlan);
+            window.renderTargetVillages();
         }else{
             window.launchDialog.stepCheck();
         }
     },
-    removeTargets:() => {},
+    removeTargets:() => {
+        let vals=$('#target-select').val().toString().split(',');
+        
+        vals.forEach((elem)=>{
+           let ind = window.editTargetModal.targetRef.findIndex((target:target)=>{return target.village.id==parseInt(elem)})
+
+           if($('.mainWindow').get().length==1){
+                window.editTargetModal.targetRef[ind].launchers.forEach((launcher:launcher)=>{
+                    let LauncherIndex=window.attackPlan.launchPool.findIndex((lpVilage:village)=>{return lpVilage.id==launcher.village.id});
+                    if(LauncherIndex==-1){
+                        window.attackPlan.launchPool.push({...launcher.village});
+                    }else{
+                        
+                        [window.attackPlan.launchPool[LauncherIndex].unitsContain,
+                        launcher.village.unitsContain]  
+                        = TroopTransaction(
+                            window.attackPlan.launchPool[LauncherIndex].unitsContain,
+                            launcher.village.unitsContain,
+                            launcher.village.unitsContain
+                        )    
+                    }
+                })
+           }
+
+           window.editTargetModal.targetRef.splice(ind,1);
+           
+        })
+
+        $('#target-select').html(window.editTargetModal.targetRef.map((target:target)=>{
+            return /* html */`
+            <option value="${target.village.name}">${target.village.name} (${target.village.coord.text}) K${target.village.kontinent}</option>
+            `
+        }).join(''))
+        if($('.mainWindow').get().length==1){
+            window.targetPoolQuery.resetAll();
+            window.launchVillagesQuery.resetAll();
+        }
+    },
     targetRef:[],
 }
 

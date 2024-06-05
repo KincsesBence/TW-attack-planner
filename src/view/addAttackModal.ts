@@ -57,18 +57,12 @@ window.window.addAttackConfirm = () => {
     let notes = $('#planner-notes').val().toString();
 
     console.log($('.launch-list').find("input:checked").get().length,targetID,templateName,operation,arrival,notes);
-
     let indTarget= window.attackPlan.targetPool.findIndex((target)=>{return target.village.id==targetID})    
     let indPlan= window.attackPlan.templates.findIndex((template)=>{return template.name==templateName})
-
-
 
     $('.launch-list').find("input:checked").get().forEach((input:any)=>{
         let launcherID = parseInt($(input).val().toString());
         let indLanucher = window.attackPlan.launchPool.findIndex((vill:village)=>{return vill.id==launcherID;})
-        
-        
-        
         let template=null;
         if(indPlan>-1){
             template=window.attackPlan.templates[indPlan].units;
@@ -76,12 +70,23 @@ window.window.addAttackConfirm = () => {
         if(templateName=='temp_all'){
             template=window.attackPlan.launchPool[indLanucher].unitsContain
         }
-        window.addLauncher(indTarget,indLanucher,template,operation,arrival,notes)
-        launchers.push(window.attackPlan.launchPool[indLanucher]);
+        let villageId=window.attackPlan.launchPool[indLanucher].id;
+        let isDel = window.addLauncher(indTarget,indLanucher,template,operation,arrival,notes)
+        console.log(isDel);
+        
+        if(!isDel){
+            launchers.push(window.attackPlan.launchPool[indLanucher]);
+        }else{
+            $('.launch-list').find(`#${villageId}`).remove();
+        }
+        
     })
 
     targets.push(window.attackPlan.targetPool[indTarget]);
-    window.partialRender(launchers,targets);
+
+    window.targetPoolQuery.partialRender(targets,"village.id");
+    window.launchVillagesQuery.partialRender(launchers,"id");
+
     $('.planner-modal').hide();
 
     window.DB.savePlan(window.attackPlan);
@@ -102,7 +107,6 @@ window.addLauncher = (indTarget: number, indLanucher: number,trans:units,operati
 
         newVillage.popSize=calcUnitPop(newVillage.unitsContain);
         window.attackPlan.launchPool[indLanucher].popSize=calcUnitPop(window.attackPlan.launchPool[indLanucher].unitsContain);
-        
 
         //console.log(getSlowestUnit(newVillage.unitsContain,operation=='attack'));
         
@@ -118,7 +122,8 @@ window.addLauncher = (indTarget: number, indLanucher: number,trans:units,operati
         }
 
         if(window.attackPlan.launchPool[indLanucher].popSize==0){
-            console.log('removed');
             window.attackPlan.launchPool.splice(indLanucher,1);
+            return true;
         }
+        return false;
 }

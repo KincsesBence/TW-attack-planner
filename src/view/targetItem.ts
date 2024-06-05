@@ -5,7 +5,7 @@ import { confirmRemoveModal } from "./confirmRemoveModal";
 import { confirmRemoveTargetModal } from "./confirmRemoveTargetModal";
 import { targetsLauncher } from "./targetsLauncher";
 
-export const targetItem = (target:target,isOpen:boolean=false,isSeleted:boolean=false)=>{
+export const targetItem = (target:target)=>{
     let snob=0;
     let small=0;
     let medium=0;
@@ -31,8 +31,8 @@ export const targetItem = (target:target,isOpen:boolean=false,isSeleted:boolean=
     return /* html */`
     <div id="${target.village.id}" class="target-item">
         <div onclick="targetItem.toggleTargetItem(this)" class="target-header">
-            <div><input value="${target.village.id}" onclick="targetItem.selectTargetItem(event)" type="radio" name="target" ${isSeleted? `checked`:``}/></div>
-            <div class="indicator ${isOpen? 'indicator-open':''}"><span >▶<span></div>
+            <div><input value="${target.village.id}" onclick="targetItem.selectTargetItem(event)" type="radio" name="target" ${target.isSelected? `checked`:``}/></div>
+            <div class="indicator ${target.isOpen? 'indicator-open':''}"><span >▶<span></div>
             <div class="target-village-name"><a target="_blank" href="/game.php?village=${game.village.id}&screen=info_village&id=${target.village.id}">${target.village.name}(${target.village.coord.text}) K${target.village.kontinent}</a></div>
             <div class="target-extras">
                 ${target.booster>0 ? /* html */`
@@ -52,7 +52,7 @@ export const targetItem = (target:target,isOpen:boolean=false,isSeleted:boolean=
             </div>
             <div><a onclick="targetItem.removeTargetItem(event,${target.village.id})" class="remove-target-btn"></a></div>
         </div>
-        <div class="target-launchers" style="display: ${isOpen ? 'block':'none' };">
+        <div class="target-launchers" style="display: ${target.isOpen ? 'block':'none' };">
         <div class="target-launch-header">
             <div class="spear-icon">
                 <img src="https://dshu.innogamescdn.com/asset/fd86cac8/graphic/unit/unit_spear.png">
@@ -111,8 +111,20 @@ window.targetItem = {
         $(elem).parent().find('.target-launchers').toggle();
         $(elem).find('.indicator').toggleClass('indicator-open');
         $(elem).find('input').prop('checked', true);
+        let id=parseInt($(elem).parent().attr('id'));
+        let ind = window.attackPlan.targetPool.findIndex((target)=>{return target.village.id==id})
+        window.attackPlan.targetPool[ind].isOpen=!window.attackPlan.targetPool[ind].isOpen;
     },
     selectTargetItem:(e)=>{
+        let id=parseInt($(e.target).parent().parent().parent().attr('id'));
+        window.attackPlan.targetPool.forEach((target:target)=>{
+            if(target.village.id==id){
+                target.isSelected=true;
+                target.isOpen=true;
+            }else{
+                target.isSelected=false;
+            }
+        })
         e.stopPropagation();
         $(e.target).parent().parent().parent().find('.target-launchers').toggle();
         $(e.target).parent().parent().find('.indicator').toggleClass('indicator-open');
@@ -129,7 +141,6 @@ window.targetItem = {
         if(targetIndex<-1){
             return;
         }
-
         window.attackPlan.targetPool[targetIndex].launchers.forEach((launcher)=>{
 
             let LauncherIndex=window.attackPlan.launchPool.findIndex((lp)=>{return lp.id==launcher.village.id});
@@ -149,13 +160,11 @@ window.targetItem = {
         });
 
         if(window.attackPlan.targetPool[targetIndex].launchers.length>0){
-            window.launchvillagesRender=[...window.attackPlan.launchPool];
-            window.oderLaunchVillages(window.launchVillagesOrder,true);
-            window.renderLaunchVillages();
+            window.launchVillagesQuery.resetAll();
         }
 
         window.attackPlan.targetPool.splice(targetIndex,1);
-        window.renderTargetVillages();
+        window.targetPoolQuery.resetAll();
         window.closeModal();
         window.DB.savePlan(window.attackPlan);
     },
@@ -186,9 +195,7 @@ window.targetItem = {
             let newVillage={...window.attackPlan.targetPool[targetIndex].launchers[targetLauncherIndex].village};
             window.attackPlan.launchPool.push(newVillage);
             window.attackPlan.targetPool[targetIndex].launchers.splice(targetLauncherIndex,1);
-            window.launchvillagesRender=[...window.attackPlan.launchPool];
-            window.oderLaunchVillages(window.launchVillagesOrder,true);
-            window.renderLaunchVillages();
+            window.launchVillagesQuery.resetAll();
         }else{
             
             [window.attackPlan.launchPool[LauncherIndex].unitsContain,
@@ -204,8 +211,8 @@ window.targetItem = {
             renderLauncher.push(window.attackPlan.launchPool[LauncherIndex]);
             window.attackPlan.targetPool[targetIndex].launchers.splice(targetLauncherIndex,1);
         }
-
-        window.partialRender(renderLauncher,[window.attackPlan.targetPool[targetIndex]]);
+        window.launchVillagesQuery.partialRender(renderLauncher,"id");
+        window.targetPoolQuery.partialRender([window.attackPlan.targetPool[targetIndex]],"village.id");
         window.closeModal();
         window.DB.savePlan(window.attackPlan);
     },
@@ -222,7 +229,7 @@ window.targetItem = {
         }
         window.attackPlan.targetPool[targetIndex].booster=parseInt($('#planner-village-boost').val().toString());
         window.closeModal();
-        window.partialRender([],[window.attackPlan.targetPool[targetIndex]]);
+        window.targetPoolQuery.partialRender([window.attackPlan.targetPool[targetIndex]],"village.id");
         window.DB.savePlan(window.attackPlan);
     },
     removeVillageBooster:(event:Event,target:number)=>{
@@ -239,7 +246,7 @@ window.targetItem = {
         }
         window.attackPlan.targetPool[targetIndex].booster=0;
         window.closeModal();
-        window.partialRender([],[window.attackPlan.targetPool[targetIndex]]);
+        window.targetPoolQuery.partialRender([window.attackPlan.targetPool[targetIndex]],"village.id");
         window.DB.savePlan(window.attackPlan);
     },
 }

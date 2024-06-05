@@ -1,3 +1,4 @@
+import { Query } from "../core/Query";
 import { addAttackModal } from "./addAttackModal";
 import { addPlayerSpeedModal } from "./addPlayerSpeedModal";
 import { autoAssignModal } from "./autoAssignModal";
@@ -10,6 +11,7 @@ import { editTargetModal } from "./editTargetModal";
 import { editTemplatesModal } from "./editTemplatesModal";
 import { launchItem } from "./launchItem";
 import { targetItem } from "./targetItem";
+
 
 export const mainWindow = ()=>{
     return /* html */`
@@ -48,7 +50,7 @@ export const mainWindow = ()=>{
             border: solid 2px #6c4824;
             border-radius:20px;
             display: grid;
-            grid-template-columns: 0.5fr 1.3fr 1.3fr;
+            grid-template-columns: 260px 1.3fr 1.3fr;
             grid-template-rows: 30px 3fr [option] 0.1fr;
             gap: 0px 0px;
             grid-auto-flow: row;
@@ -483,10 +485,10 @@ export const mainWindow = ()=>{
             </div>
             <div class="options-panel">
                 <div class="option-item">
-                    <h2><span id="open-plan-name">${window.attackPlan.name}</span><a onclick="window.editName()" class="rename-icon" href="#" data-title="Átnevez"></a></h2>
+                    <h2 style="font-size: 1rem;"><span id="open-plan-name">${window.attackPlan.name}</span><a onclick="window.editName()" class="rename-icon" href="#" data-title="Átnevez"></a></h2>
                 </div>
                 <div class="option-item">
-                    <button onclick="window.editTargets()" class="btn">Add targets</button>
+                    <button onclick="window.editTargets()" class="btn">Edit targets</button>
                 </div>
                 <div class="option-item">
                     <button onclick="window.editArrivals()" class="btn">Edit arrivals</button>
@@ -518,16 +520,16 @@ export const mainWindow = ()=>{
             </div>
             <div class="launch-title header">
                 <div class="launch-filter-bar">
-                    <button onclick="window.oderLaunchVillages('coord')" class="btn">XY</button>
-                    <button onclick="window.oderLaunchVillages('name')" class="btn">Name</button>
+                    <button onclick="window.launchVillagesQuery.order('coord')" class="btn">XY</button>
+                    <button onclick="window.launchVillagesQuery.order('name')" class="btn">Name</button>
                     
                 </div>
                 <h3>Launch villages (<span id="launch-cnt"></span>)</h3>
                 <div class="launch-filter-bar">
-                    <button onclick="window.oderLaunchVillages('size')" class="btn">Size</button>
+                    <button onclick="window.launchVillagesQuery.order('popSize')" class="btn">Size</button>
                     <div class="launch-search-bar">
-                        <input id="search-bar" onkeyup="window.search()" placeholder='keresés' type="text">
-                        <button onclick="window.resetFilter()" class="btn">Reset</button>
+                        <input id="search-bar" onkeyup="window.launchVillagesQuery.search()" placeholder='keresés' type="text">
+                        <button onclick="window.launchVillagesQuery.resetAll()" class="btn">Reset</button>
                     </div>
                 </div>
             </div>
@@ -537,43 +539,43 @@ export const mainWindow = ()=>{
                         <button onclick="window.openAddLauncherWindow()" class="btn btn-add-attack">⬅</button>
                     </div>
                     <div class="spear-icon">
-                        <img onclick="window.oderLaunchVillages('spear')" src="https://dshu.innogamescdn.com/asset/fd86cac8/graphic/unit/unit_spear.png">
+                        <img onclick="window.launchVillagesQuery.order('unitsContain.spear')" src="https://dshu.innogamescdn.com/asset/fd86cac8/graphic/unit/unit_spear.png">
                     </div>
                     <div class="sword-icon">
-                        <img onclick="window.oderLaunchVillages('sword')" src="https://dshu.innogamescdn.com/asset/fd86cac8/graphic/unit/unit_sword.png">
+                        <img onclick="window.launchVillagesQuery.order('unitsContain.sword')" src="https://dshu.innogamescdn.com/asset/fd86cac8/graphic/unit/unit_sword.png">
                     </div>
                     <div class="axe-icon">
-                        <img onclick="window.oderLaunchVillages('axe')" src="https://dshu.innogamescdn.com/asset/fd86cac8/graphic/unit/unit_axe.png">
+                        <img onclick="window.launchVillagesQuery.order('unitsContain.axe')" src="https://dshu.innogamescdn.com/asset/fd86cac8/graphic/unit/unit_axe.png">
                     </div>
                     ${window.gameConfig.game.archer==1 &&
                         /* html */`<div class="archer-icon">
-                        <img onclick="window.oderLaunchVillages('archer')" src="https://dshu.innogamescdn.com/asset/fd86cac8/graphic/unit/unit_archer.png">
+                        <img onclick="window.launchVillagesQuery.order('unitsContain.archer')" src="https://dshu.innogamescdn.com/asset/fd86cac8/graphic/unit/unit_archer.png">
                     </div>`}
                     <div class="spy-icon">
-                        <img onclick="window.oderLaunchVillages('spy')" src="https://dshu.innogamescdn.com/asset/fd86cac8/graphic/unit/unit_spy.png">
+                        <img onclick="window.launchVillagesQuery.order('unitsContain.spy')" src="https://dshu.innogamescdn.com/asset/fd86cac8/graphic/unit/unit_spy.png">
                     </div>
                     <div class="light-icon">
-                        <img onclick="window.oderLaunchVillages('light')" src="https://dshu.innogamescdn.com/asset/fd86cac8/graphic/unit/unit_light.png">
+                        <img onclick="window.launchVillagesQuery.order('unitsContain.light')" src="https://dshu.innogamescdn.com/asset/fd86cac8/graphic/unit/unit_light.png">
                     </div>
                     ${window.gameConfig.game.archer==1 &&
                         /* html */`<div class="marcher-icon">
-                            <img onclick="window.oderLaunchVillages('marcher')" src="https://dshu.innogamescdn.com/asset/fd86cac8/graphic/unit/unit_marcher.png">
+                            <img onclick="window.launchVillagesQuery.order('unitsContain.marcher')" src="https://dshu.innogamescdn.com/asset/fd86cac8/graphic/unit/unit_marcher.png">
                         </div>`
                     }
                     <div class="heavy-icon">
-                        <img onclick="window.oderLaunchVillages('heavy')" src="https://dshu.innogamescdn.com/asset/fd86cac8/graphic/unit/unit_heavy.png">
+                        <img onclick="window.launchVillagesQuery.order('unitsContain.heavy')" src="https://dshu.innogamescdn.com/asset/fd86cac8/graphic/unit/unit_heavy.png">
                     </div>
                     <div class="ram-icon">
-                        <img onclick="window.oderLaunchVillages('ram')" src="https://dshu.innogamescdn.com/asset/fd86cac8/graphic/unit/unit_ram.png">
+                        <img onclick="window.launchVillagesQuery.order('unitsContain.ram')" src="https://dshu.innogamescdn.com/asset/fd86cac8/graphic/unit/unit_ram.png">
                     </div>
                     <div class="catapult-icon">
-                        <img onclick="window.oderLaunchVillages('catapult')" src="https://dshu.innogamescdn.com/asset/fd86cac8/graphic/unit/unit_catapult.png">
+                        <img onclick="window.launchVillagesQuery.order('unitsContain.catapult')" src="https://dshu.innogamescdn.com/asset/fd86cac8/graphic/unit/unit_catapult.png">
                     </div>
                     <div class="pala-icon">
-                        <img onclick="window.oderLaunchVillages('pala')" src="https://dshu.innogamescdn.com/asset/fd86cac8/graphic/unit/unit_knight.png">
+                        <img onclick="window.launchVillagesQuery.order('unitsContain.pala')" src="https://dshu.innogamescdn.com/asset/fd86cac8/graphic/unit/unit_knight.png">
                     </div>
                     <div class="snob-icon">
-                        <img onclick="window.oderLaunchVillages('snob')" src="https://dshu.innogamescdn.com/asset/fd86cac8/graphic/unit/unit_snob.png">
+                        <img onclick="window.launchVillagesQuery.order('unitsContain.snob')" src="https://dshu.innogamescdn.com/asset/fd86cac8/graphic/unit/unit_snob.png">
                     </div>
                 </div>
                 <div class="launch-list">
@@ -595,144 +597,10 @@ export const mainWindow = ()=>{
 }
 
 window.mainInit = () => {
-    window.launchVillagesStep=25;
-    window.launchVillagesPaging=0;
-    window.launchVillagesWay=1;
-    window.launchVillagesOrder='name';
-    window.launchvillagesRender=[...window.attackPlan.launchPool];
-    window.renderLaunchVillages();
-    window.renderTargetVillages();
-}
-
-var TimeOut:NodeJS.Timeout
-window.oderLaunchVillages = (by:string,re:boolean=false) => {
-    
-    if(by==window.launchVillagesOrder && !re){
-        window.launchVillagesWay*=-1;
-        console.log('fordíts');
-    }
-    window.launchVillagesOrder=by;
-
-    clearTimeout(TimeOut);
-    
-    TimeOut= setTimeout(()=>{
-        let fn=null;
-        switch (by){
-            case "name": fn=(a:village,b:village)=>{return a.name<b.name? -1*window.launchVillagesWay:1*window.launchVillagesWay;};break;
-            case "coord": fn=(a:village,b:village)=>{return a.coord.text<b.coord.text? -1*window.launchVillagesWay:1*window.launchVillagesWay;};break;
-            case "size": fn=(a:village,b:village)=>{return a.popSize>b.popSize? -1*window.launchVillagesWay:1*window.launchVillagesWay;};break;
-            case "spear": fn=(a:village,b:village)=>{return a.unitsContain.spear>b.unitsContain.spear? -1*window.launchVillagesWay:1*window.launchVillagesWay;};break;
-            case "sword": fn=(a:village,b:village)=>{return a.unitsContain.sword>b.unitsContain.sword? -1*window.launchVillagesWay:1*window.launchVillagesWay;};break;
-            case "axe": fn=(a:village,b:village)=>{return a.unitsContain.axe>b.unitsContain.axe? -1*window.launchVillagesWay:1*window.launchVillagesWay;};break;
-            case "archer": fn=(a:village,b:village)=>{return a.unitsContain.archer>b.unitsContain.archer? -1*window.launchVillagesWay:1*window.launchVillagesWay;};break;
-            case "light": fn=(a:village,b:village)=>{return a.unitsContain.light>b.unitsContain.light? -1*window.launchVillagesWay:1*window.launchVillagesWay;};break;
-            case "spy": fn=(a:village,b:village)=>{return a.unitsContain.spy>b.unitsContain.spy? -1*window.launchVillagesWay:1*window.launchVillagesWay;};break;
-            case "marcher": fn=(a:village,b:village)=>{return a.unitsContain.marcher>b.unitsContain.marcher? -1*window.launchVillagesWay:1*window.launchVillagesWay;};break;
-            case "heavy": fn=(a:village,b:village)=>{return a.unitsContain.heavy>b.unitsContain.heavy? -1*window.launchVillagesWay:1*window.launchVillagesWay;};break;
-            case "ram": fn=(a:village,b:village)=>{return a.unitsContain.ram>b.unitsContain.ram? -1*window.launchVillagesWay:1*window.launchVillagesWay;};break;
-            case "catapult": fn=(a:village,b:village)=>{return a.unitsContain.catapult>b.unitsContain.catapult? -1*window.launchVillagesWay:1*window.launchVillagesWay;};break;
-            case "snob": fn=(a:village,b:village)=>{return a.unitsContain.snob>b.unitsContain.snob? -1*window.launchVillagesWay:1*window.launchVillagesWay;};break;
-            case "knight": fn=(a:village,b:village)=>{return a.unitsContain.knight>b.unitsContain.knight? -1*window.launchVillagesWay:1*window.launchVillagesWay;};break;
-            default:
-            fn=(a:village,b:village)=>{return a.name<b.name? -1:1;};
-            window.launchVillagesStep=0;
-            window.launchVillagesPaging=window.launchVillagesStep;
-            window.launchVillagesWay=1;
-        }
-        window.launchvillagesRender.sort(fn);
-        $('.launch-list').html('');
-
-        if(!re){
-            $('.launch-list').scrollTop(0);
-            window.launchVillagesPaging=0;
-        }
-        
-        window.renderLaunchVillages();
-    },500)
-}
-
-window.renderLaunchVillages = async ()=>{
-    $('#launch-cnt').text(window.launchvillagesRender.length);
-
-    if(window.launchvillagesRender.length<window.launchVillagesPaging){
-        return;
-    }
-    var launchList = document.getElementsByClassName('launch-list')[0];
-    let to=window.launchVillagesPaging+window.launchVillagesStep
-    if(window.launchVillagesPaging+window.launchVillagesStep>window.launchvillagesRender.length){
-        to=window.launchvillagesRender.length;
-    }
-
-    for (let i = window.launchVillagesPaging; i < to; i++) {
-        const village = window.launchvillagesRender[i];
-        launchList.appendChild(launchItem(village));
-    }
-
-    
-    launchList.addEventListener('scroll', function(ev) {
-        let max=launchList.scrollHeight-100;
-        let pos= launchList.clientHeight+launchList.scrollTop;
-
-        let isOver=false;
-        if(max<=pos && !isOver && CanScroll){
-            isOver=true;
-            window.launchVillagesPaging+=window.launchVillagesStep;
-            window.renderLaunchVillages();
-            console.log("scrolled");
-        }
-    })
-}
-
-window.search = () => {
-    let value=$('#search-bar').val().toString();
-    console.log(value);
-    clearTimeout(TimeOut);
-
-    TimeOut = setTimeout(()=>{
-        window.launchvillagesRender = [...window.attackPlan.launchPool];
-        window.launchvillagesRender = window.launchvillagesRender.filter((village:village)=>{return `${village.name} (${village.coord.text}) K${village.kontinent}`.includes(value)})
-        console.log(window.launchvillagesRender);
-        $('.launch-list').html('');
-        $('.launch-list').scrollTop(0);
-        window.launchVillagesStep=25;
-        window.launchVillagesPaging=0;
-        window.launchVillagesWay=1;
-        window.launchVillagesOrder='name';
-        window.renderLaunchVillages();
-    },500)
-}
-
-window.resetFilter = ()=>{
-    $('#search-bar').val('');
-    window.launchvillagesRender = [...window.attackPlan.launchPool];
-    $('.launch-list').html('');
-    $('.launch-list').scrollTop(0);
-    window.launchVillagesStep=25;
-    window.launchVillagesPaging=0;
-    window.launchVillagesWay=1;
-    window.launchVillagesOrder='name';
-    window.renderLaunchVillages();
-}
-
-var CanScroll=false;
-var To:NodeJS.Timeout;
-addEventListener("wheel", (event) => {
-    CanScroll=true;
-    clearTimeout(To);
-    To = setTimeout(()=>{
-        CanScroll=false;
-    },500)
-    
-});
-
-window.renderTargetVillages = async ()=>{
-    $('.target-list').html('');
-    $('#target-cnt').text(window.attackPlan.targetPool.length);
-    for (let i = 0; i < window.attackPlan.targetPool.length; i++) {
-        const target = window.attackPlan.targetPool[i];
-        $('.target-list').append(targetItem(target));
-    }
-
+    window.launchVillagesQuery = new Query(window.attackPlan.launchPool,$('.launch-list').get()[0],$('#launch-cnt').get()[0],launchItem);
+    window.launchVillagesQuery.render();
+    window.targetPoolQuery = new Query(window.attackPlan.targetPool,$('.target-list').get()[0],$('#target-cnt').get()[0],targetItem);
+    window.targetPoolQuery.render();
 }
 
 window.openAddLauncherWindow = () => {
@@ -765,26 +633,6 @@ window.closeModal = () => {
     $('.planner-modal-header b').text('');
     $('.planner-modal-content').html('');
     $('.planner-modal').hide();
-}
-
-window.partialRender = (launchers:village[],targets:target[])=>{
-    launchers.forEach((village:village)=>{
-        if(village.popSize==0){
-            $('.launch-list').find(`#${village.id}`).remove();
-            console.log(`removed #${village.id}`);
-            
-        }else{
-            console.log(`updated #${village.id}`);
-            $('.launch-list').find(`#${village.id}`).replaceWith(launchItem(village));
-        }
-    });
-    targets.forEach((target:target)=>{
-        console.log(`updated target #${target.village.id}`);
-        let isopen=$('.target-list').find(`#${target.village.id}`).find('.indicator').hasClass('indicator-open');
-        let isChecked=$('.target-list').find(`#${target.village.id}`).find('input').is(':checked')
-
-        $('.target-list').find(`#${target.village.id}`).replaceWith(targetItem(target,isopen,isChecked));
-    });
 }
 
 window.editName = () => {

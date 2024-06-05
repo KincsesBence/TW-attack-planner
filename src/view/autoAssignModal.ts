@@ -282,9 +282,9 @@ window.autoAssign = {
                     closestToTarget()
                 break;
             }
-            window.renderTargetVillages();
-            window.renderLaunchVillages();
-            window.closeModal()
+            window.targetPoolQuery.resetAll();
+            window.launchVillagesQuery.resetAll();
+            window.closeModal();
         }, 200);
         
     },

@@ -13,6 +13,8 @@ export const confirmResetAssignmentsModal = ()=>{
 
 window.finalResetAssignments = () => {
     window.attackPlan.targetPool.forEach((target:target)=>{
+        target.isSelected=false;
+        target.isOpen=false;
         target.launchers.forEach((launcher:launcher)=>{
             let LauncherIndex=window.attackPlan.launchPool.findIndex((lpVilage:village)=>{return lpVilage.id==launcher.village.id});
             if(LauncherIndex==-1){
@@ -31,9 +33,7 @@ window.finalResetAssignments = () => {
         target.launchers=[];
     })
     window.closeModal();
-    window.launchvillagesRender=[...window.attackPlan.launchPool];
-    window.renderLaunchVillages();
-    window.renderTargetVillages();
+    window.launchVillagesQuery.resetAll();
+    window.targetPoolQuery.resetAll();
     window.DB.savePlan(window.attackPlan);
-
 }

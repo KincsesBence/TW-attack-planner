@@ -1,6 +1,7 @@
 import { group } from "./src/core/Api";
 import { LaunchVillagesModel } from "./src/core/LaunchVillagesModel";
 import { PlayersModel } from "./src/core/PlayersModel";
+import { Query } from "./src/core/Query";
 import { VillageModel } from "./src/core/VillageModel";
 import { planDB } from "./src/core/planDB";
 
@@ -265,15 +266,12 @@ declare global {
     partialRender:(launchers:village[],targets:target[])=> void;
     openAddLauncherWindow:() => void;
     openAutoAssignModal:() => void;
-    addLauncher:(indTarget: number, indLanucher: number,trans:units,operation:string,arrival:string,notes:string) => void;
+    addLauncher:(indTarget: number, indLanucher: number,trans:units,operation:string,arrival:string,notes:string) => boolean;
     addAttackConfirm:() => void;
     closeModal:() => void;
     createModal:(content:string,header:string) => void;
-    launchVillagesPaging:number;
-    launchVillagesStep:number;
-    launchVillagesOrder:string;
-    launchVillagesWay:number;
-    launchvillagesRender:village[];
+    launchVillagesQuery:Query;
+    targetPoolQuery:Query;
     renderTargetVillages:()=>void;
     targetItem:targetItem,
     editTargets:()=>void;
@@ -409,7 +407,9 @@ declare global {
   type target = {
       booster:number,
       village:village,
-      launchers:launcher[]
+      launchers:launcher[],
+      isOpen:boolean,
+      isSelected:boolean,
   }
 
   type launcher ={
