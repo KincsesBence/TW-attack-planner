@@ -1,3 +1,4 @@
+import { Lang } from "../core/Language";
 
 export const addPlayerSpeedModal = ()=>{
 
@@ -25,7 +26,7 @@ export const addPlayerSpeedModal = ()=>{
             return /* html */`<option value="${boost.playerId}">${boost.player} (${boost.value}%)</option>`
            })}
         </select>
-        <button class="btn" onclick="window.removePlayerBoost()">remove</button>
+        <button class="btn" onclick="window.removePlayerBoost()">${Lang('remove')}</button>
     </div>
 
     <div class="modal-input-group">
@@ -34,9 +35,9 @@ export const addPlayerSpeedModal = ()=>{
             return /* html */`<option value="${data.id}">${data.name}</option>`
            })}
         </select>
-        <label for="planner-player-boost">Gyorsító százalékban:</label>
+        <label for="planner-player-boost">${Lang('boosterPct')}:</label>
         <input id="planner-player-boost" type="number" max="60" min="1" placeholder="%">
-        <button class="btn" onclick="window.addPlayerBoost()">Add</button>
+        <button class="btn" onclick="window.addPlayerBoost()">${Lang('add')}</button>
     </div>
     `
 }

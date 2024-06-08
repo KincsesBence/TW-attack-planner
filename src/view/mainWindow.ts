@@ -1,3 +1,4 @@
+import { Lang } from "../core/Language";
 import { Query } from "../core/Query";
 import { addAttackModal } from "./addAttackModal";
 import { addPlayerSpeedModal } from "./addPlayerSpeedModal";
@@ -481,36 +482,36 @@ export const mainWindow = ()=>{
     <div class="mainWindow">
         <div class="container">
             <div class="options-title header">
-                <h3>Options</h3>
+                <h3>${Lang('options')}</h3>
             </div>
             <div class="options-panel">
                 <div class="option-item">
-                    <h2 style="font-size: 1rem;"><span id="open-plan-name">${window.attackPlan.name}</span><a onclick="window.editName()" class="rename-icon" href="#" data-title="Átnevez"></a></h2>
+                    <h2 style="font-size: 1rem;"><span id="open-plan-name">${window.attackPlan.name}</span><a onclick="window.editName()" class="rename-icon" href="#" data-title="${'rename'}"></a></h2>
                 </div>
                 <div class="option-item">
-                    <button onclick="window.editTargets()" class="btn">Edit targets</button>
+                    <button onclick="window.editTargets()" class="btn">${Lang('editTargets')}</button>
                 </div>
                 <div class="option-item">
-                    <button onclick="window.editArrivals()" class="btn">Edit arrivals</button>
+                    <button onclick="window.editArrivals()" class="btn">${Lang('editArrivals')}</button>
                 </div>
                 <div class="option-item">
-                    <button onclick="window.editTemplates()" class="btn">Edit Templates</button>
+                    <button onclick="window.editTemplates()" class="btn">${Lang('editTemplates')}</button>
                 </div>
                 <div class="option-item">
-                    <button onclick="window.editPlayerBoosts()" class="btn">Edit player boosts</button>
+                    <button onclick="window.editPlayerBoosts()" class="btn">${Lang('editPalyerBoosters')}</button>
                 </div>
                 <div class="option-item">
-                    <button onclick="window.openAutoAssignModal()" class="btn">Auto assigner</button>
+                    <button onclick="window.openAutoAssignModal()" class="btn">${Lang('autoAssigner')}</button>
                 </div>
                 <div class="option-item">
-                    <button onclick="window.calculateAttack()" class="btn">Calculate</button>
+                    <button onclick="window.calculateAttack()" class="btn">${Lang('calculateAttack')}</button>
                 </div>
                 <div class="option-item">
-                    <button onclick="window.resetAssignments()" class="btn">Reset assignments</button>
+                    <button onclick="window.resetAssignments()" class="btn">${Lang('resetAssigments')}</button>
                 </div>
             </div>
             <div class="target-title header">
-                <h3>Targets (<span id="target-cnt"></span>)</h3>
+                <h3>${Lang('targets')} (<span id="target-cnt"></span>)</h3>
             </div>
             <div class="target-panel">
                 <div class="target-header">
@@ -520,16 +521,16 @@ export const mainWindow = ()=>{
             </div>
             <div class="launch-title header">
                 <div class="launch-filter-bar">
-                    <button onclick="window.launchVillagesQuery.order('coord')" class="btn">XY</button>
-                    <button onclick="window.launchVillagesQuery.order('name')" class="btn">Name</button>
+                    <button onclick="window.launchVillagesQuery.order('coord.text')" class="btn">XY</button>
+                    <button onclick="window.launchVillagesQuery.order('name')" class="btn">${Lang('name')}</button>
                     
                 </div>
-                <h3>Launch villages (<span id="launch-cnt"></span>)</h3>
+                <h3>${Lang('launchVillages')} (<span id="launch-cnt"></span>)</h3>
                 <div class="launch-filter-bar">
-                    <button onclick="window.launchVillagesQuery.order('popSize')" class="btn">Size</button>
+                    <button onclick="window.launchVillagesQuery.order('popSize')" class="btn">${Lang('size')}</button>
                     <div class="launch-search-bar">
-                        <input id="search-bar" onkeyup="window.launchVillagesQuery.search()" placeholder='keresés' type="text">
-                        <button onclick="window.launchVillagesQuery.resetAll()" class="btn">Reset</button>
+                        <input id="search-bar" onkeyup="window.launchVillagesQuery.search(this)" placeholder="${Lang('search')}" type="text">
+                        <button onclick="window.launchVillagesQuery.resetAll()" class="btn">${Lang('reset')}</button>
                     </div>
                 </div>
             </div>
@@ -582,7 +583,7 @@ export const mainWindow = ()=>{
                 </div>
             </div>
             <div class="credits">
-                v0.1.1-beta [2024.06.04.]; by: toldi26
+                v0.1.2-beta [2024.06.08.]; by: toldi26
             </div>
         </div>
     </div>
@@ -597,33 +598,33 @@ export const mainWindow = ()=>{
 }
 
 window.mainInit = () => {
-    window.launchVillagesQuery = new Query(window.attackPlan.launchPool,$('.launch-list').get()[0],$('#launch-cnt').get()[0],launchItem);
+    window.launchVillagesQuery = new Query(window.attackPlan.launchPool,$('.launch-list').get()[0],$('#launch-cnt').get()[0],launchItem,'name');
     window.launchVillagesQuery.render();
-    window.targetPoolQuery = new Query(window.attackPlan.targetPool,$('.target-list').get()[0],$('#target-cnt').get()[0],targetItem);
+    window.targetPoolQuery = new Query(window.attackPlan.targetPool,$('.target-list').get()[0],$('#target-cnt').get()[0],targetItem,'village.name');
     window.targetPoolQuery.render();
 }
 
 window.openAddLauncherWindow = () => {
     if($('input[name="target"]:checked').get().length==0){
-        window.UI.ErrorMessage('No target selected')
+        window.UI.ErrorMessage(Lang('noTargetSel'))
         return;
     }
 
     if($('input[name="target"]:checked').get().length==0){
-        window.UI.ErrorMessage('No target selected')
+        window.UI.ErrorMessage(Lang('noTargetSel'))
         return;
     }
 
     if($('.launch-list').find("input:checked").get().length==0){
-        window.UI.ErrorMessage('No launcher selected')
+        window.UI.ErrorMessage(Lang('noLauncherSel'))
         return;
     }
 
-    window.createModal(addAttackModal(),'Támadás hozzáadása');
+    window.createModal(addAttackModal(),Lang('addAtatck'));
 }
 
 window.createModal = (content:string,header:string) => {
-    let close=`<div id="plannerCloseBtn" class="modal-input-inline"><button class="btn" onclick="window.closeModal()">Bezár</button></div>`;
+    let close=`<div id="plannerCloseBtn" class="modal-input-inline"><button class="btn" onclick="window.closeModal()">${Lang('close')}</button></div>`;
     $('.planner-modal-header b').text(header);
     $('.planner-modal-content').html(content+close);
     $('.planner-modal').show();
@@ -636,22 +637,22 @@ window.closeModal = () => {
 }
 
 window.editName = () => {
-    window.createModal(editPlanNameModal(window.attackPlan),'Terv átnevezése');
+    window.createModal(editPlanNameModal(window.attackPlan),Lang('renamePlan'));
 }
 
 window.editTargets = () => {
-    window.createModal(editTargetModal(window.attackPlan.targetPool),'Célpontok Hozzáadása');
+    window.createModal(editTargetModal(window.attackPlan.targetPool),Lang('editTargetsText'));
 }
 
 window.editArrivals = () =>{
-    window.createModal(editArrivalsModal(window.attackPlan.arrivals),'Érkezések szerkesztése');
+    window.createModal(editArrivalsModal(window.attackPlan.arrivals),Lang('editArrivalsText'));
 }
 
 window.editTemplates = () =>{
-    window.createModal(editTemplatesModal(window.attackPlan.templates),'Sablonok szerkesztése');
+    window.createModal(editTemplatesModal(window.attackPlan.templates),Lang('editTemplatesText'));
 }
 window.editPlayerBoosts = () =>{
-    window.createModal(addPlayerSpeedModal(),'Gyorsítók szerkesztése');
+    window.createModal(addPlayerSpeedModal(),Lang('editBoostersText'));
 }
 window.calculateAttack = () =>{
     let cnt=0;
@@ -662,14 +663,14 @@ window.calculateAttack = () =>{
     })
 
     if (cnt==0){
-        window.UI.ErrorMessage('Nincs egy támadás se kiosztva!');
+        window.UI.ErrorMessage(Lang('noAttackAssigned'));
         return;
     }
-    window.createModal(confirmCalculateAttackModal(),'Támadás kiszámítása');
+    window.createModal(confirmCalculateAttackModal(),Lang('calculateAttack'));
 }
 
 window.confirmCalculateAttack = () =>{
-    window.createModal(calculatedAttackModal(),'Támadási terv');
+    window.createModal(calculatedAttackModal(),Lang('attackPlan'));
 }
 
 window.openAutoAssignModal = ()=>{
@@ -677,11 +678,11 @@ window.openAutoAssignModal = ()=>{
     window.autoAssign.launchPoolCopy=structuredClone(window.attackPlan.launchPool)
     console.log(window.attackPlan.launchPool[5].unitsContain);
     console.log(window.autoAssign.launchPoolCopy[5].unitsContain);
-    window.createModal(autoAssignModal(),'Automata hozzárrendelés');
+    window.createModal(autoAssignModal(),Lang('autoAssigner'));
 }
 
 window.resetAssignments = ()=>{
-    window.createModal(confirmResetAssignmentsModal(),'Támadások visszaállítása');
+    window.createModal(confirmResetAssignmentsModal(),Lang('resetAssigments'));
 }
 
 

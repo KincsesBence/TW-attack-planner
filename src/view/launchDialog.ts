@@ -5,6 +5,7 @@ import { editPlanNameModal } from "./editPlanNameModal";
 import { editTargetModal } from "./editTargetModal";
 import { editTemplatesModal } from "./editTemplatesModal";
 import { mainWindow } from "./mainWindow";
+import { Lang } from "../core/Language";
 
 export const launchDialog = ()=>{
     return /* html */`
@@ -114,22 +115,22 @@ export const launchDialog = ()=>{
             }
         </style>
         <div id="dialog-loading" style="display: none;justify-content: center;width: 100%;">
-            <img style="height:25px" src="https://dshu.innogamescdn.com/asset/6389cdba/graphic/loading.gif"><span style="padding:5px">Betöltés...</span>
+            <img style="height:25px" src="https://dshu.innogamescdn.com/asset/6389cdba/graphic/loading.gif"><span style="padding:5px">${Lang('loading')}</span>
         </div>
         <div class="launch-dialog">
             <div><h1>TW Attack Planner</h1></div>
             <div class="launch-dialog-selector">
-                <h3>Plans:</h3>
+                <h3>${Lang("plans")}:</h3>
                 <select id="launchDialogSelect" size="5">
                     ${window.Plans.map((plan)=>{
                         console.log(plan);
                         return /* html */`<option value="${plan.id}">${plan.name}</option>`;
                     }).join('')}
                 </select>
-                <button onclick="launchDialog.loadPlan()" class="btn">Load Plan</button>
-                <button onclick="launchDialog.removePlan()" class="btn">Remove Plan</button>
+                <button onclick="launchDialog.loadPlan()" class="btn">${Lang("loadPlan")}</button>
+                <button onclick="launchDialog.removePlan()" class="btn">${Lang("removePlan")}</button>
 
-                <button onclick="launchDialog.newplan()" class="btn">+ New Plan</button>
+                <button onclick="launchDialog.newplan()" class="btn">+ ${Lang("newPlan")}</button>
             </div>
 
             <div class="new-plan">
@@ -148,9 +149,9 @@ export const launchDialog = ()=>{
                 <div class="step-3 step" style="display:none;"></div>
                 <div class="step-4 step" style="display:none;"></div>
                 <div class="step-5 step" style="display:none;"></div>
-                <button id="nextBtn" onclick="launchDialog.goNext(2)" class="btn" disabled>Next</button>
-                <button style="display:none;" id="createPlan" onclick="launchDialog.createPlan()" class="btn" disabled>Create Plan</button>
-                <button onclick="launchDialog.cancelNewPlan()" class="btn">Cancel</button>
+                <button id="nextBtn" onclick="launchDialog.goNext(2)" class="btn" disabled>${Lang("next")}</button>
+                <button style="display:none;" id="createPlan" onclick="launchDialog.createPlan()" class="btn" disabled>${Lang("createPlan")}</button>
+                <button onclick="launchDialog.cancelNewPlan()" class="btn">${Lang("cancel")}</button>
             </div>
         </div>
     `;
@@ -301,7 +302,7 @@ createPlan : async ()=>{
         window.attackPlan=window.launchDialog.plan;
         window.attackPlan.launchPool = await loadPages(window.launchDialog.groupIDs.map((groupID)=>{return groupID.id}));   
         await window.DB.savePlan(window.attackPlan)
-        window.UI.SuccessMessage('Plan successfully created!')
+        window.UI.SuccessMessage(Lang('PlanSuccessfullyCreated'))
         setTimeout(()=>{
             window.Dialog.close("launchDialog");
             window.Dialog.show("PlannerMainWindow",mainWindow());

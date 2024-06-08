@@ -1,4 +1,5 @@
 import { coordDistance, game } from "../core/Api";
+import { Lang } from "../core/Language";
 
 export const calculatedAttackModal = ()=>{
 
@@ -64,10 +65,10 @@ export const calculatedAttackModal = ()=>{
    
     return /* html */`
     <div id="dialog-loading">
-            <img style="height:25px" src="https://dshu.innogamescdn.com/asset/6389cdba/graphic/loading.gif"><span style="padding:5px">Számolás...</span>
+            <img style="height:25px" src="https://dshu.innogamescdn.com/asset/6389cdba/graphic/loading.gif"><span style="padding:5px">${Lang('calculaing')}...</span>
     </div>
     <div class="modal-input-inline" style="display:none">
-        <label for="bb">BB kód:</label>
+        <label for="bb">${Lang('bbCode')}:</label>
         <input onclick="window.changeDisplayType()" type="radio" id="bb" value="bb" name="showType" >
         <label for="inapp">In-app:</label>
         <input onclick="window.changeDisplayType()" type="radio" id="inapp" value="inapp" name="showType" checked>
@@ -82,26 +83,26 @@ export function generateLaunchText(attacks:attack[]):{bbcode:string,html:string}
     let maxChar=60000;
     let currentChar=0;
     let pageCnt=1;
-    let header=`<textarea style="resize: none;height:100px;width:400px;">[table][**] [||][building]barracks[/building][||]indítás[||]Célpont[||]Parancs[||]Jegyzet[/**]`;
+    let header=`<textarea style="resize: none;height:100px;width:400px;">[table][**] [||][building]barracks[/building][||]${Lang('launch')}[||]${Lang('target')}[||]${Lang('command')}[||]${Lang('note')}[/**]`;
     let closing='[/table]</textarea>';
     let bbcode='';
-    let html='<table class="vis"><tr><th></th><th></th><th>indítás</th><th>Célpont</th><th>Parancs</th><th>Jegyzet</th></tr>';
+    let html=`<table class="vis"><tr><th></th><th></th><th>${Lang('launch')}</th><th>${Lang('target')}</th><th>${Lang('command')}</th><th>${Lang('note')}</th></tr>`;
     for (let i = 0; i < attacks.length; i++) {
         let temp=`[*]#${i+1}[|][unit]${attacks[i].unitSpeed.key}[/unit][|][b]${attacks[i].launchDate}[/b]`
-        +`[|] ${attacks[i].villageTo.coord.text} [|][url=${attacks[i].launchLink}]${attacks[i].isAttack ? 'Támadás':'Erősítés'}[/url][|]${attacks[i].note}`;
+        +`[|] ${attacks[i].villageTo.coord.text} [|][url=${attacks[i].launchLink}]${attacks[i].isAttack ? Lang('attack'):Lang('support')}[/url][|]${attacks[i].note}`;
         if(currentChar+temp.length+closing.length>=maxChar){
             currentChar=0;
             bbcode+=closing;
         }
         if(currentChar==0){
-            bbcode+=`${pageCnt}.page<br>`+header
+            bbcode+=`${pageCnt}.${Lang('page')}<br>`+header
             currentChar+=header.length;
         }
         
         bbcode+=temp;
         currentChar+=temp.length;
         html+=`<tr><td>#${i+1}</td><td><img src="/graphic/unit/unit_${attacks[i].unitSpeed.key}.png"></td><td>${attacks[i].launchDate}</td>`+
-        `<td><a target="_blank" href="/game.php?village=${game.village.id}&screen=info_village&id=${attacks[i].villageTo.id}">${attacks[i].villageTo.name} (${attacks[i].villageTo.coord.text}) </a></td><td><a href="${attacks[i].launchLink}">${attacks[i].isAttack ? 'Támadás':'Erősítés'}</a></td><td>${attacks[i].note}</td></tr>`
+        `<td><a target="_blank" href="/game.php?village=${game.village.id}&screen=info_village&id=${attacks[i].villageTo.id}">${attacks[i].villageTo.name} (${attacks[i].villageTo.coord.text}) </a></td><td><a href="${attacks[i].launchLink}">${attacks[i].isAttack ? Lang('attack'):Lang('support')}</a></td><td>${attacks[i].note}</td></tr>`
     }
     html+='</table>'
     console.log(bbcode,html);

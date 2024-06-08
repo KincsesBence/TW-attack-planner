@@ -1,37 +1,38 @@
 import { TroopTransaction, calcUnitPop, getSlowestUnit } from "../core/Api"
+import { Lang } from "../core/Language"
 
 export const addAttackModal = ()=>{
     return /* html */`
     <div class="modal-input-inline">
-        <label for="attack">Támadás:</label>
+        <label for="attack">${Lang('attack')}:</label>
         <input type="radio" value="attack" name="planner-operation" checked>
-        <label for="reinforce">Erősítés:</label>
+        <label for="reinforce">${Lang('support')}:</label>
         <input type="radio" value="reinforce" name="planner-operation">
     </div>
     <div class="modal-input-group">
-        <label for="planner-template">Template:</label>
-        <select id="planner-template" placeholder="---Nincs kiválasztva---">
-            <option value="temp_all">Összes egység</option>
+        <label for="planner-template">${Lang('template')}:</label>
+        <select id="planner-template" placeholder="${Lang('notSelected')}">
+            <option value="temp_all">${Lang('allUnit')}</option>
             ${window.attackPlan.templates.map((template)=>{
                 return /* html */`<option value="${template.name}">${template.name}</option>`
             })}
         </select>
     </div>
     <div class="modal-input-group">
-        <label for="planner-arrival">Érkezés:</label>
-        <select id="planner-arrival" placeholder="---Nincs kiválasztva---">
+        <label for="planner-arrival">${Lang('arrival')}:</label>
+        <select id="planner-arrival" placeholder="${Lang('notSelected')}">
             ${window.attackPlan.arrivals.map((arrival)=>{
                 return /* html */`<option value="${arrival}">${arrival}</option>`
             })}
         </select>
     </div>
     <div class="modal-input-group">
-        <label for="planner-notes">Megjegyzés:</label>
-        <input id="planner-notes" placeholder="---Nincs megjegyzés---">
+        <label for="planner-notes">${Lang('note')}:</label>
+        <input id="planner-notes" placeholder="${Lang('noNote')}">
     </div>
     <div class="modal-input-inline">
-        <button class="btn" onclick="window.addAttackConfirm()">Hozzáadás</button> 
-        <button class="btn" onclick="window.closeModal()">Mégse</button>
+        <button class="btn" onclick="window.addAttackConfirm()">${Lang('add')}</button> 
+        <button class="btn" onclick="window.closeModal()">${Lang('cancel')}</button>
     </div>
     `
 }
@@ -41,12 +42,12 @@ window.window.addAttackConfirm = () => {
     let targets:target[]=[];
 
     if($('input[name="target"]:checked').get().length==0){
-        window.UI.ErrorMessage('No target selected')
+        window.UI.ErrorMessage(Lang('noTargetSelected'))
         return;
     }
 
     if($('.launch-list').find("input:checked").get().length==0){
-        window.UI.ErrorMessage('No launcher selected')
+        window.UI.ErrorMessage(Lang('noLauncherSelected'))
         return;
     }
 

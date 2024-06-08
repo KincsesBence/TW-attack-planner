@@ -1,6 +1,8 @@
+import { Lang } from "../core/Language";
+
 export const editLaunchVillagesModal = (launchVillages:village[])=>{
     return /* html */`
-        <label for="">Lanuchers:</label><br>
+        <label for="">${Lang('launchers')}:</label><br>
         <select id="plan_launcher_list" size="5">
         </select>
         <select id="plan_launcher_select" style="font-size:16px" >
@@ -9,8 +11,8 @@ export const editLaunchVillagesModal = (launchVillages:village[])=>{
             }).join('')}
         </select>
         <div>
-            <button onclick="editLaunchVillagesModal.addGroup()" >add</button>
-            <button onclick="editLaunchVillagesModal.removeGroup()" >remove</button>
+            <button class="btn" onclick="editLaunchVillagesModal.addGroup()" >${Lang('add')}</button>
+            <button class="btn" onclick="editLaunchVillagesModal.removeGroup()" >${Lang('remove')}</button>
         </div>
     `
 }

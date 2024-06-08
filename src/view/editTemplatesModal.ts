@@ -1,3 +1,4 @@
+import { Lang } from "../core/Language";
 
 export const editTemplatesModal = (templates:template[])=>{
     window.templateModal.templateRef=templates;
@@ -39,7 +40,7 @@ export const editTemplatesModal = (templates:template[])=>{
         </style>
         <div class="template-editor">
             <div class="template-select-box">
-                <label for="template_select">Templates:</label>
+                <label for="template_select">${Lang('templates')}:</label>
                 <select onclick="templateModal.selectTemplate()" id="template_select" size="5">
                     ${templates.map((template)=>{
                         return /* html */`
@@ -48,80 +49,80 @@ export const editTemplatesModal = (templates:template[])=>{
                     })
                     }
                 </select>
-                <label for="temp_name">name:</label>
+                <label for="temp_name">${Lang('name')}:</label>
                 <input id="temp_name" type="text" />
             </div>
             <div class="template-infantry">
                 <div class="template-input-group">
                     <img src="https://dshu.innogamescdn.com/asset/31698b62/graphic/unit/unit_spear.png" >
                     <input id="palnner_unit_input_spear" type="number" tabindex="1" value="0" class="template-unitsInput"><br>
-                    <input onclick="templateModal.selectAll('spear')" id="max_spear" type="checkbox"> Összes
+                    <input onclick="templateModal.selectAll('spear')" id="max_spear" type="checkbox"> ${Lang('all')}
                 </div>
                 <div class="template-input-group">
                     <img src="https://dshu.innogamescdn.com/asset/31698b62/graphic/unit/unit_sword.png" >
                     <input id="palnner_unit_input_sword" type="number" tabindex="1" value="0" class="template-unitsInput"><br>
-                    <input onclick="templateModal.selectAll('sword')" id="max_sword" type="checkbox"> Összes
+                    <input onclick="templateModal.selectAll('sword')" id="max_sword" type="checkbox"> ${Lang('all')}
                 </div>
                 <div class="template-input-group">
                     <img src="https://dshu.innogamescdn.com/asset/31698b62/graphic/unit/unit_axe.png" >
                     <input id="palnner_unit_input_axe" type="number" tabindex="1" value="0" class="template-unitsInput"><br>
-                    <input onclick="templateModal.selectAll('axe')" id="max_axe" type="checkbox"> Összes
+                    <input onclick="templateModal.selectAll('axe')" id="max_axe" type="checkbox"> ${Lang('all')}
                 </div>
-                <div class="template-input-group" ${window.gameConfig.game.archer==0 ? 'style="display:none;"':''} >
+                <div class="template-input-group" ${window.gameConfig.game.archer==0 && `style="display:none;"`} >
                     <img src="https://dshu.innogamescdn.com/asset/31698b62/graphic/unit/unit_archer.png" >
                     <input id="palnner_unit_input_archer" type="number" tabindex="1" value="0" class="template-unitsInput"><br>
-                    <input onclick="templateModal.selectAll('archer')" id="max_archer" type="checkbox"> Összes
+                    <input onclick="templateModal.selectAll('archer')" id="max_archer" type="checkbox"> ${Lang('all')}
                 </div>
             </div>
             <div class="template-calvary">
                 <div class="template-input-group">
                     <img src="https://dshu.innogamescdn.com/asset/31698b62/graphic/unit/unit_spy.png" >
                     <input id="palnner_unit_input_spy" type="number" tabindex="1" value="0" class="template-unitsInput"><br>
-                    <input onclick="templateModal.selectAll('spy')" id="max_spy" type="checkbox"> Összes
+                    <input onclick="templateModal.selectAll('spy')" id="max_spy" type="checkbox"> ${Lang('all')}
                 </div>
                 <div class="template-input-group">
                     <img src="https://dshu.innogamescdn.com/asset/31698b62/graphic/unit/unit_light.png" >
                     <input id="palnner_unit_input_light" type="number" tabindex="1" value="0" class="template-unitsInput"><br>
-                    <input onclick="templateModal.selectAll('light')" id="max_light" type="checkbox"> Összes
+                    <input onclick="templateModal.selectAll('light')" id="max_light" type="checkbox"> ${Lang('all')}
                 </div>
-                <div class="template-input-group" ${window.gameConfig.game.archer==0 ? 'style="display:none;"':''}>
+                <div class="template-input-group" ${window.gameConfig.game.archer==0 && `style="display:none;"`}>
                     <img src="https://dshu.innogamescdn.com/asset/31698b62/graphic/unit/unit_marcher.png" >
                     <input id="palnner_unit_input_marcher" type="number" tabindex="1" value="0" class="template-unitsInput"><br>
-                    <input onclick="templateModal.selectAll('marcher')" id="max_marcher" type="checkbox"> Összes
+                    <input onclick="templateModal.selectAll('marcher')" id="max_marcher" type="checkbox"> ${Lang('all')}
                 </div>
                 <div class="template-input-group">
                     <img src="https://dshu.innogamescdn.com/asset/31698b62/graphic/unit/unit_heavy.png" >
                     <input id="palnner_unit_input_heavy" type="number" tabindex="1" value="0" class="template-unitsInput"><br>
-                    <input onclick="templateModal.selectAll('heavy')" id="max_heavy" type="checkbox"> Összes
+                    <input onclick="templateModal.selectAll('heavy')" id="max_heavy" type="checkbox"> ${Lang('all')}
                 </div>    
             </div>
             <div class="template-machines">
                 <div class="template-input-group">
                     <img src="https://dshu.innogamescdn.com/asset/31698b62/graphic/unit/unit_ram.png" >
                     <input id="palnner_unit_input_ram" type="number" tabindex="1" value="0" class="template-unitsInput"><br>
-                    <input onclick="templateModal.selectAll('ram')" id="max_ram" type="checkbox"> Összes
+                    <input onclick="templateModal.selectAll('ram')" id="max_ram" type="checkbox"> ${Lang('all')}
                 </div>
                 <div class="template-input-group">
                     <img src="https://dshu.innogamescdn.com/asset/31698b62/graphic/unit/unit_catapult.png" >
                     <input id="palnner_unit_input_catapult"  type="number" tabindex="1" value="0" class="template-unitsInput"><br>
-                    <input onclick="templateModal.selectAll('catapult')" id="max_catapult" type="checkbox"> Összes
+                    <input onclick="templateModal.selectAll('catapult')" id="max_catapult" type="checkbox"> ${Lang('all')}
                 </div>
             </div>
             <div class="template-other">
                 <div class="template-input-group">
                     <img src="https://dshu.innogamescdn.com/asset/31698b62/graphic/unit/unit_knight.png" >
                     <input id="palnner_unit_input_knight" type="number" tabindex="1" value="0" class="template-unitsInput"><br>
-                    <input onclick="templateModal.selectAll('knight')" id="max_knight" type="checkbox"> Összes
+                    <input onclick="templateModal.selectAll('knight')" id="max_knight" type="checkbox"> ${Lang('all')}
                 </div>
                 <div class="template-input-group">
                     <img src="https://dshu.innogamescdn.com/asset/31698b62/graphic/unit/unit_snob.png" >
                     <input id="palnner_unit_input_snob" type="number" tabindex="1" value="0" class="template-unitsInput"><br>
-                    <input onclick="templateModal.selectAll('snob')" id="max_snob" type="checkbox"> Összes
+                    <input onclick="templateModal.selectAll('snob')" id="max_snob" type="checkbox"> ${Lang('all')}
                 </div>
             </div>
             <div class="template-buttons">
-                <button class="btn" onclick="templateModal.addTemplate()">add</button>
-                <button class="btn" onclick="templateModal.removeTemplate()">remove</button>
+                <button class="btn" onclick="templateModal.addTemplate()">${Lang('add')}</button>
+                <button class="btn" onclick="templateModal.removeTemplate()">${Lang('remove')}</button>
             </div>
         </div>
     `

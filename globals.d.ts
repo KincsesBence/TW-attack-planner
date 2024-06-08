@@ -240,9 +240,8 @@ declare global {
     unitsContain:units|null,
     distance?:number
   }
-
-
   interface Window {
+    Lang:string;
     DB:planDB,
     UI:UI,
     Dialog:Dialog;

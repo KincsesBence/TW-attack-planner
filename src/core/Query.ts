@@ -13,10 +13,13 @@ export class Query{
     private funcRef:(items:village | target)=>string
     private CanScroll=false;
     private To:NodeJS.Timeout;
+    private searchField:HTMLInputElement=null;
 
-    constructor(ref:any[],targetHtml:Element,targetCnt:Element,funcRef:(items:village | target)=>string) {
+    constructor(ref:any[],targetHtml:Element,targetCnt:Element,funcRef:(items:village | target)=>string,defaultOrder:string) {
+        this.field=defaultOrder,
         this.objectRef=ref;
-        this.objectCopy=[...ref];
+        this.objectCopy=structuredClone(this.objectRef);
+        this.controlledOrder(this.field,this.way);
         this.funcRef=funcRef;
         this.targetHtml=targetHtml;
         this.targetCnt=targetCnt;
@@ -41,21 +44,30 @@ export class Query{
             },500)
         });
     }
+
+    search(obj:HTMLInputElement){
+        this.searchField=obj;
+        this.reset();
+        this.objectCopy = this.objectCopy.filter((village:village)=>{return `${village.name} (${village.coord.text}) K${village.kontinent}`.includes(this.searchField!.value)})
+        this.render();
+    }
+
     setDraw(val:number){
         this.draw=val;
     }
 
     calcPaging(){
         this.to=this.from+this.draw;
-        if(this.to>this.objectRef.length){
-            this.to=this.objectRef.length;
+        if(this.to>this.objectCopy.length){
+            this.to=this.objectCopy.length;
         }
     }
 
     reset(){
         $(this.targetHtml).html('');
         $(this.targetHtml).scrollTop(0);
-        this.objectCopy=[...this.objectRef];
+        this.objectCopy=structuredClone(this.objectRef);
+        this.controlledOrder(this.field,1);
         this.from=0;
         this.to=0;
     }
@@ -63,6 +75,15 @@ export class Query{
     resetAll(){
         this.reset();
         this.render();
+        if(this.searchField) this.searchField.value='';
+    }
+
+    controlledOrder(field:string,way:number){
+        let classRef=this;
+        let fn = (a:any,b:any)=>{
+            return classRef.getProp(field,a)<classRef.getProp(field,b)? -1*this.way:1*this.way;
+        }
+        this.objectCopy.sort(fn);
     }
 
     order(field:string){
@@ -72,13 +93,7 @@ export class Query{
         }else{
             this.way=-1;
         }
-        
-        console.log(this.way,field);
-        let classRef=this;
-        let fn = (a:any,b:any)=>{
-            return classRef.getProp(field,a)<classRef.getProp(field,b)? -1*this.way:1*this.way;
-        }
-        this.objectCopy.sort(fn);
+        this.controlledOrder(field,this.way);
         this.field=field;
         this.render();
     }
@@ -107,15 +122,14 @@ export class Query{
         this.calcPaging();
         console.log(this.from,this.to,this.objectCopy);
         for (let i = this.from; i < this.to; i++) {
+            
             $(this.targetHtml).append(this.funcRef(this.objectCopy[i]));
         }
         $(this.targetCnt).text(this.objectCopy.length);
     }
 
     partialRender(renderObjects:village[] | target[],fieldPath:string){
-        
         renderObjects.forEach((renderObject:village | target)=>{
-            console.log($(this.targetHtml).find(`#${this.getProp(fieldPath,renderObject)}`));
             $(this.targetHtml).find(`#${this.getProp(fieldPath,renderObject)}`).replaceWith(this.funcRef(renderObject));
         })
         

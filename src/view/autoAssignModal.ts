@@ -1,4 +1,5 @@
 import { TroopTransaction, calcUnitPop, coordDistance, game, hasAvailableTroops } from "../core/Api";
+import { Lang } from "../core/Language";
 
 export const autoAssignModal = ()=>{
     let templates='';
@@ -90,7 +91,7 @@ export const autoAssignModal = ()=>{
     <div class="assigner">
         <div class="add-assignment">
             <div class="add-assignment-input">
-                <label>Dátum:</label>
+                <label>${Lang('date')}:</label>
                 <select id="assignmentArrival">
                 ${window.attackPlan.arrivals.map((arrival)=>{
                     return /* html */`<option value='${arrival}'>${arrival}</option>`
@@ -98,18 +99,18 @@ export const autoAssignModal = ()=>{
                 </select>
             </div>
             <div class="add-assignment-input">
-                <label>Template:</label>
+                <label>${Lang('template')}:</label>
                 <select id="assignmentTemplates">
                     ${templates}
                 </select>
             </div>
             <div class="add-assignment-input">
-                <label>Mennyiség:</label>
+                <label>${Lang('qntt')}:</label>
                 <input min="1" value="1" id="assigner-number-filter" type="number" disabled>
                 <input id="assigner-max-filter" onclick="$('#assigner-number-filter').prop('disabled', (i, v) => !v);" type="checkbox" checked>
             </div>
             
-            <button class="btn" onclick="autoAssign.addAssignment()">+ add</button>
+            <button class="btn" onclick="autoAssign.addAssignment()">+ ${Lang('add')}</button>
         </div>
         <div class="assigner-header">
             <div class="assigner-row assigner-date">
@@ -125,7 +126,7 @@ export const autoAssignModal = ()=>{
                     <div class="item checkbox"></div>
             </div>
             <div class="assigner-row assigner-name">
-                <div class="item">Falu (${window.attackPlan.targetPool.length})</div>
+                <div class="item">${Lang('village')} (${window.attackPlan.targetPool.length})</div>
                 <div class="item checkbox">
                     <input id="assigner-main-checkbox" onclick="autoAssign.checkAll()" type="checkbox">
                 </div>
@@ -148,18 +149,18 @@ export const autoAssignModal = ()=>{
             <div class="item checkbox"></div>
         </div>
         <div class="assignment-alg">
-            <input id="evenDistributeClosest" value="1" type="radio" name="assignmentAlg"><label for="evenDistributeClosest">Egyenletes</label>
-            <input id="oneByOneQ" value="2" type="radio" name="assignmentAlg"><label for="oneByOneQ">Egyenként sorban</label>
-            <input id="oneByOneClosest" value="3"  type="radio" name="assignmentAlg"><label for="oneByOneClosest">Egyenként legközelebb</label>
-            <input id="closestToTarget" value="4" type="radio" name="assignmentAlg"><label for="closestToTarget">Célpothoz legközelebb</label>
+            <input id="evenDistributeClosest" value="1" type="radio" name="assignmentAlg"><label for="evenDistributeClosest">${Lang('even')}</label>
+            <input id="oneByOneQ" value="2" type="radio" name="assignmentAlg"><label for="oneByOneQ">${Lang('oneByOne')}</label>
+            <input id="oneByOneClosest" value="3"  type="radio" name="assignmentAlg"><label for="oneByOneClosest">${Lang('oneByOneClosest')}</label>
+            <input id="closestToTarget" value="4" type="radio" name="assignmentAlg"><label for="closestToTarget">${Lang('closestToTarget')}</label>
         </div>
         <div>
-            <button style="margin: 0 auto; display: block;" onclick="autoAssign.startAssignment()" class="btn">Start Assignment</button>
+            <button style="margin: 0 auto; display: block;" onclick="autoAssign.startAssignment()" class="btn">${Lang('startAssignment')}</button>
         </div>
         
     </div>
     <div id="dialog-loading" style="display: none;justify-content: center;width: 100%;">
-        <img style="height:25px" src="https://dshu.innogamescdn.com/asset/6389cdba/graphic/loading.gif"><span style="padding:5px">Támadások kiosztása...</span>
+        <img style="height:25px" src="https://dshu.innogamescdn.com/asset/6389cdba/graphic/loading.gif"><span style="padding:5px">${Lang('assigningAttacks')}...</span>
     </div>
     `
 }
@@ -263,11 +264,23 @@ window.autoAssign = {
         
     },
     startAssignment:()=>{
+        let alg=$('input[name="assignmentAlg"]:checked').val();
+        if (!alg) {
+            window.UI.ErrorMessage(Lang('noAlgSelected'));
+            return;
+        }
+
+        if(window.autoAssign.assignTypes.length==0){
+            window.UI.ErrorMessage(Lang('noAttackAssigned'));
+            return;
+        }
+
+        
         $('#dialog-loading').show();
         $('#plannerCloseBtn').hide();
         $('.assigner').hide();
         setTimeout(() => {
-            let alg=$('input[name="assignmentAlg"]:checked').val();
+            
             switch (alg){
                 case "1":
                     evenDistributeClosest()

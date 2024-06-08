@@ -1,9 +1,10 @@
+import { Lang } from "../core/Language";
 
 export const editArrivalsModal = (arrivals:string[])=>{
     window.editArrivalsModal.arrivalsRef=arrivals;
     return /* html */`
     <div class="modal-input-group">
-        <label for="">Arrivals:</label>
+        <label for="">${Lang('arrivals')}:</label>
         <select id="plan_arrivals_select" size="5">
         ${arrivals.map((arrival)=>{
             return /* html */`
@@ -14,8 +15,8 @@ export const editArrivalsModal = (arrivals:string[])=>{
         <input id="plan_arrivals_input" type="datetime-local" type="text" step="1"/>
     </div>
     <div class="modal-input-inline">
-        <button class="btn" onclick="editArrivalsModal.addArrival()" >add</button>
-        <button class="btn" onclick="editArrivalsModal.removeArrival()">remove</button>
+        <button class="btn" onclick="editArrivalsModal.addArrival()" >${Lang('add')}</button>
+        <button class="btn" onclick="editArrivalsModal.removeArrival()">${Lang('remove')}</button>
     </div>
     `
 }

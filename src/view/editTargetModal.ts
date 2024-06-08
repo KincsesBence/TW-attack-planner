@@ -1,10 +1,11 @@
 import { TroopTransaction } from "../core/Api";
+import { Lang } from "../core/Language";
 
 export const editTargetModal = (targets:target[])=>{
     window.editTargetModal.targetRef=targets;
     return /* html */`
     <div class="modal-input-group">
-    <label for="target-select">Targets (<span id="modal-targets-cnt">${targets.length}</span>):</label>
+    <label for="target-select">${Lang('targets')} (<span id="modal-targets-cnt">${targets.length}</span>):</label>
     <select id="target-select" size="5" multiple>
         ${targets.map((target)=>{
             return /* html */`
@@ -14,11 +15,12 @@ export const editTargetModal = (targets:target[])=>{
     </select>
     </div>
     <div class="modal-input-group">
-        <label for="">new targets:</label><br>
+        <label for="">${Lang('newTargets')}:</label><br>
         <textarea id="plan_targets" size="10"></textarea>
     </div>
     <div class="modal-input-inline">
-        <button class="btn" onclick="editTargetModal.addTargets()">Add</button><button class="btn" onclick="editTargetModal.removeTargets()">Remove</button>
+        <button class="btn" onclick="editTargetModal.addTargets()">${Lang('add')}</button>
+        <button class="btn" onclick="editTargetModal.removeTargets()">${Lang('remove')}</button>
     </div>
     `
 }
@@ -48,13 +50,13 @@ window.editTargetModal = {
         $('#modal-targets-cnt').text(window.editTargetModal.targetRef.length);
         $('#target-select').html(window.editTargetModal.targetRef.map((target:target)=>{
             return /* html */`
-            <option value="${target.village.name}">${target.village.name} (${target.village.coord.text}) K${target.village.kontinent}</option>
+            <option value="${target.village.id}">${target.village.name} (${target.village.coord.text}) K${target.village.kontinent}</option>
             `
         }).join(''))
         
         if($('.mainWindow').get().length==1){
             window.DB.savePlan(window.attackPlan);
-            window.renderTargetVillages();
+            window.targetPoolQuery.resetAll();
         }else{
             window.launchDialog.stepCheck();
         }
@@ -89,7 +91,7 @@ window.editTargetModal = {
 
         $('#target-select').html(window.editTargetModal.targetRef.map((target:target)=>{
             return /* html */`
-            <option value="${target.village.name}">${target.village.name} (${target.village.coord.text}) K${target.village.kontinent}</option>
+            <option value="${target.village.id}">${target.village.name} (${target.village.coord.text}) K${target.village.kontinent}</option>
             `
         }).join(''))
         if($('.mainWindow').get().length==1){

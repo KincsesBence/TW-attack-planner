@@ -1,4 +1,5 @@
 import { TroopTransaction, game } from "../core/Api";
+import { Lang } from "../core/Language";
 import { ConfirmVillageSpeedRemoveModal } from "./ConfirmVillageSpeedRemoveModal";
 import { addVillageBoosterModal } from "./addVillageSpeedModal";
 import { confirmRemoveModal } from "./confirmRemoveModal";
@@ -131,23 +132,25 @@ window.targetItem = {
     },
     removeTargetItem:(event:Event,target:number)=>{
         event.stopPropagation();
-        $('.planner-modal-header b').text('Célpont eltávolítása');
+        $('.planner-modal-header b').text(Lang('removeTarget'));
         $('.planner-modal-content').html(confirmRemoveTargetModal(target));
         $('.planner-modal').show();
     },
     confirmRemoveTargetItem:(target:number)=>{
+        let partialRender:village[]=[];
         let targetIndex=window.attackPlan.targetPool.findIndex((tp)=>{return tp.village.id==target})
-
+        let needRerender:boolean=false;
         if(targetIndex<-1){
             return;
         }
         window.attackPlan.targetPool[targetIndex].launchers.forEach((launcher)=>{
 
             let LauncherIndex=window.attackPlan.launchPool.findIndex((lp)=>{return lp.id==launcher.village.id});
-
+           
             if(LauncherIndex==-1){
                 let newVillage={...launcher.village};
                 window.attackPlan.launchPool.push(newVillage);
+                needRerender=true;
             }else{
                 [window.attackPlan.launchPool[LauncherIndex].unitsContain,
                 launcher.village.unitsContain]  
@@ -156,20 +159,23 @@ window.targetItem = {
                     launcher.village.unitsContain,
                     launcher.village.unitsContain
                 )
+                partialRender.push(launcher.village);
             }
         });
 
-        if(window.attackPlan.targetPool[targetIndex].launchers.length>0){
+        if(needRerender){
             window.launchVillagesQuery.resetAll();
+        }else{
+            window.launchVillagesQuery.partialRender(partialRender,'id');
         }
-
+        
         window.attackPlan.targetPool.splice(targetIndex,1);
         window.targetPoolQuery.resetAll();
         window.closeModal();
         window.DB.savePlan(window.attackPlan);
     },
     removeTargetLauncherItem:(launcher:number,target:number)=>{
-        $('.planner-modal-header b').text('Támadás eltávolítása');
+        $('.planner-modal-header b').text(Lang('removeAttack'));
         $('.planner-modal-content').html(confirmRemoveModal(launcher,target));
         $('.planner-modal').show();
     },
@@ -218,7 +224,7 @@ window.targetItem = {
     },
     addVillageBooster:(event:Event,target:number)=>{
         event.stopPropagation();
-        $('.planner-modal-header b').text('Gyorsító hozzáadása faluhoz');
+        $('.planner-modal-header b').text(Lang('addVillageBoost'));
         $('.planner-modal-content').html(addVillageBoosterModal(target));
         $('.planner-modal').show();
     },
@@ -234,7 +240,7 @@ window.targetItem = {
     },
     removeVillageBooster:(event:Event,target:number)=>{
         event.stopPropagation();
-        $('.planner-modal-header b').text('Gyorsító eltávolítása faluról');
+        $('.planner-modal-header b').text(Lang('removeVillageBoost'));
         $('.planner-modal-content').html(ConfirmVillageSpeedRemoveModal(target));
         $('.planner-modal').show();
     },

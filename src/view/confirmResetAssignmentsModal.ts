@@ -1,12 +1,13 @@
 import { TroopTransaction } from "../core/Api"
+import { Lang } from "../core/Language"
 
 export const confirmResetAssignmentsModal = ()=>{
     return /* html */`
     <div class="modal-input-inline">
-        <h2>Biztosan szeretnéd visszaállítani az összes támadást?</h2>
+        <h2>${Lang('resetAttackQuestion')}</h2>
     </div>
     <div class="modal-input-inline">
-        <button class="btn" onclick="window.finalResetAssignments()">Igen</button>
+        <button class="btn" onclick="window.finalResetAssignments()">${Lang('yes')}</button>
     </div>
     `
 }
