@@ -1,6 +1,6 @@
 # Tw-attack-planner v0.1.2-beta
 
-This repository contains an in-game attack planner for Tribal Wars. With this script you can easily plan your arma assignments within a few minutes. It features automatic assignments and calculation based on distance a troop templates. It can handle 1000+ villages and targets.
+This repository contains an in-game attack planner for Tribal Wars. With this script you can easily plan your arma assignments within a few minutes. It features automatic assignments and calculation based on distance and troop templates. It can handle 1000+ villages and targets.
 
 Feel free to use the script, but i do not take any responsibility for in-game Ban's
 
@@ -37,7 +37,7 @@ $.get("https://raw.githubusercontent.com/KincsesBence/TW-attack-planner/main/dis
 
 ### 2. Startup window
 
-On the startup window you can load, create and delete your attack plans. When you creating a new plan first, you have to navigate through, the creation wizard's steps:
+On the startup window you can load, create and delete your attack plans. When you're creating a new plan, first you have to navigate through, the creation wizard's steps:
 
 - Naming your plan (you can not have duplicate names)
 - Adding the targets (you have to paste cordinates into the textarea in a recognizable pattern)
