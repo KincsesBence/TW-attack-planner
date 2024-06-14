@@ -311,11 +311,13 @@ createPlan : async ()=>{
     },1000);
 },
 loadPlan:()=>{
-    let val=$('#launchDialogSelect').val().toString();
-
-    if(val==""){
+    if($('#launchDialogSelect').val()==null){
+        window.UI.ErrorMessage(Lang('PlanNotSelected'))
         return
     }   
+
+    let val=$('#launchDialogSelect').val().toString();
+    
     let ind=window.Plans.findIndex((plan)=>{return plan.id==val});
     if(ind==-1) return;
     
@@ -329,10 +331,11 @@ loadPlan:()=>{
     },1000)
 },
 removePlan: async()=>{
-    let val=$('#launchDialogSelect').val().toString();
-    if(val==""){
+    if($('#launchDialogSelect').val()==null){
+        window.UI.ErrorMessage(Lang('PlanNotSelected'))
         return
     }
+    let val=$('#launchDialogSelect').val().toString();
     window.DB.removePlan(val);
     let plans = await window.DB.loadPlans()
     $('#launchDialogSelect').html(`${plans.map((plan)=>{

@@ -76,5 +76,6 @@ export const en = {
     rename:'Rename',
     launchVillages:'Starting villages',
     page:'Page',
-    search:'Search'
+    search:'Search',
+    PlanNotSelected:'No plans have been selected!'
 } 

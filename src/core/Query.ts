@@ -120,7 +120,6 @@ export class Query{
 
     render(){
         this.calcPaging();
-        console.log(this.from,this.to,this.objectCopy);
         for (let i = this.from; i < this.to; i++) {
             
             $(this.targetHtml).append(this.funcRef(this.objectCopy[i]));

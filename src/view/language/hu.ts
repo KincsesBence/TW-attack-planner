@@ -76,5 +76,6 @@ export const hu = {
     rename:'Átnevez',
     launchVillages:'Induló faluk',
     page:'Oldal',
-    search:'Keresés'
+    search:'Keresés',
+    PlanNotSelected:'Nincs egy terv se kiválaszva!'
 } 

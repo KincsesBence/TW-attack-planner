@@ -256,7 +256,7 @@ function transUnit(to:number,from:number,trans:number):[number,number]{
 }
 
 export function TroopTransaction(to:units,from:units,trans:units):[units,units]{
-    Object.keys(window.unitConfig).forEach((unis)=>{
+    Object.keys(trans).forEach((unis)=>{
         [to[unis as keyof units],from[unis as keyof units]] = transUnit(to[unis as keyof units],from[unis as keyof units],trans[unis as keyof units]);
     })
     return [to,from]
@@ -264,7 +264,7 @@ export function TroopTransaction(to:units,from:units,trans:units):[units,units]{
 
 export function calcUnitPop(units:units):number{
     let size=0;
-    Object.keys(window.unitConfig).forEach((unis)=>{
+    Object.keys(units).forEach((unis)=>{
         size+=window.unitConfig[unis as keyof unitConfig].pop*units[unis as keyof unitConfig];
     })
     return size;
@@ -272,7 +272,7 @@ export function calcUnitPop(units:units):number{
 
 export function getSlowestUnit(units:units,isAttack:boolean):speed{
     
-    var unitConfig = Object.keys(window.unitConfig)
+    var unitConfig = Object.keys(units)
     .map((k ) => { 
         return { 
         key: k,
@@ -305,7 +305,7 @@ export function coordDistance(village1:village | null, village2:village | null):
 }
 
 export function hasAvailableTroops(village:village,units:units){
-    let keys= Object.keys(window.unitConfig);    
+    let keys= Object.keys(units);    
     for (let i = 0; i < keys.length; i++) {
         const key = keys[i];
         if(key=='snob' && village.unitsContain[key as keyof unitConfig]>0 && units[key as keyof unitConfig]==0){

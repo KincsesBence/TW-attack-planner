@@ -2,9 +2,9 @@
 
 This repository contains an in-game attack planner for Tribal Wars. With this script you can easily plan your arma assignments within a few minutes. It features automatic assignments and calculation based on distance and troop templates. It can handle 1000+ villages and targets.
 
-Feel free to use the script, but i do not take any responsibility for in-game Ban's
-
 >  **This script is currently in beta version it may contain critical or minor bugs and glitches**
+
+>  Feel free to use the script, but i do not take any responsibility for in-game Ban's
 
 ## Features
 
@@ -32,7 +32,7 @@ To load the script you have to copy the content of the **dist/bundle.js** into t
 Or you could use the raw github file as a reference and enter it into your quick bar or terminal:
 
 ```js
-$.get("https://raw.githubusercontent.com/KincsesBence/TW-attack-planner/main/dist/bundle.js", (response) => { Function(`${response}`)();}); void(0);
+$.get("https://raw.githubusercontent.com/KincsesBence/TW-attack-planner/main/dist/bundle.js", (r) => { Function(`${r}`)();}); void(0);
 ```
 
 ### 2. Startup window

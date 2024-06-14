@@ -598,6 +598,8 @@ export const mainWindow = ()=>{
 }
 
 window.mainInit = () => {
+    console.log(window.attackPlan.launchPool);
+    
     window.launchVillagesQuery = new Query(window.attackPlan.launchPool,$('.launch-list').get()[0],$('#launch-cnt').get()[0],launchItem,'name');
     window.launchVillagesQuery.render();
     window.targetPoolQuery = new Query(window.attackPlan.targetPool,$('.target-list').get()[0],$('#target-cnt').get()[0],targetItem,'village.name');
