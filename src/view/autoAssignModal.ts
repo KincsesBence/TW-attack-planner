@@ -298,6 +298,7 @@ window.autoAssign = {
             window.targetPoolQuery.resetAll();
             window.launchVillagesQuery.resetAll();
             window.closeModal();
+            window.DB.savePlan(window.attackPlan);
         }, 200);
         
     },

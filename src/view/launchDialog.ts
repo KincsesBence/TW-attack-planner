@@ -123,7 +123,6 @@ export const launchDialog = ()=>{
                 <h3>${Lang("plans")}:</h3>
                 <select id="launchDialogSelect" size="5">
                     ${window.Plans.map((plan)=>{
-                        console.log(plan);
                         return /* html */`<option value="${plan.id}">${plan.name}</option>`;
                     }).join('')}
                 </select>
@@ -203,7 +202,6 @@ stepCheck:()=>{
     if( window.launchDialog.currentStep==5){
         $('#createPlan').prop( "disabled", false);
     }
-    console.log(max,window.launchDialog.currentStep);
 },
 goToStep:(stepIn) =>{
     $('.step-1').hide();
@@ -229,8 +227,6 @@ goNext:(stepIn) =>{
     $('.step-3').hide();
     $('.step-4').hide();
     $('.step-5').hide();
-    console.log('in',stepIn);
-    
 
     $('#c'+stepIn).attr('onclick','launchDialog.goToStep('+stepIn+')');
     if(stepIn>4){

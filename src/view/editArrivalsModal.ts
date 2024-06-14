@@ -48,8 +48,6 @@ window.editArrivalsModal = {
     },
     removeArrival:()=> {
         let val = $('#plan_arrivals_select').val().toString().replace('T',' ');
-        console.log(val);
-
         if(val==""){
             return;
         }

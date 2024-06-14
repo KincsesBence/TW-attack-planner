@@ -13,6 +13,7 @@ import { editTemplatesModal } from "./editTemplatesModal";
 import { launchItem } from "./launchItem";
 import { targetItem } from "./targetItem";
 
+const VER=`v0.1.3-beta [2024.06.14.]; by: toldi26`
 
 export const mainWindow = ()=>{
     return /* html */`
@@ -583,7 +584,7 @@ export const mainWindow = ()=>{
                 </div>
             </div>
             <div class="credits">
-                v0.1.2-beta [2024.06.08.]; by: toldi26
+                ${VER}
             </div>
         </div>
     </div>

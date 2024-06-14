@@ -32,7 +32,8 @@ export const calculatedAttackModal = ()=>{
                 }).format(launch);
 
                 let smartlink=``;
-                Object.keys(target.village.unitsContain).forEach((key)=>{
+                Object.keys(window.unitConfig).forEach((key)=>{
+                    if(!launcher.village.unitsContain.hasOwnProperty(key)) return;
                     if(launcher.village.unitsContain[key as keyof unitConfig]>0){
                         smartlink+=`&${key}=${launcher.village.unitsContain[key as keyof unitConfig]}`;
                     }
@@ -49,13 +50,10 @@ export const calculatedAttackModal = ()=>{
                 })
             })
         })
-        console.log(attacks);
         attacks.sort((attack1,attack2)=>{return attack1.launchDate>attack2.launchDate ? 1:-1});
         let {bbcode,html} = generateLaunchText(attacks);
         $('.bb-field').html(bbcode);
         $('.inApp-field').html(html);
-        console.log(bbcode,html);
-        
         
         $('#dialog-loading').hide();
         $('.modal-input-inline').show();
@@ -72,7 +70,7 @@ export const calculatedAttackModal = ()=>{
         <input onclick="window.changeDisplayType()" type="radio" id="bb" value="bb" name="showType" >
         <label for="inapp">In-app:</label>
         <input onclick="window.changeDisplayType()" type="radio" id="inapp" value="inapp" name="showType" checked>
-        <div class="bb-field" style="display:none"></div>
+        <div class="bb-field" style="display:none;max-height:600px; overflow-y: auto;"></div>
         <div class="inApp-field" style="max-height:600px; overflow-y: auto;">
         </div>
     </div>
@@ -83,8 +81,8 @@ export function generateLaunchText(attacks:attack[]):{bbcode:string,html:string}
     let maxChar=60000;
     let currentChar=0;
     let pageCnt=1;
-    let header=`<textarea style="resize: none;height:100px;width:400px;">[table][**] [||][building]barracks[/building][||]${Lang('launch')}[||]${Lang('target')}[||]${Lang('command')}[||]${Lang('note')}[/**]`;
-    let closing='[/table]</textarea>';
+    let header=`<textarea style="resize:none;overflow: hidden;height:100px;width:400px;">[table][**] [||][building]barracks[/building][||]${Lang('launch')}[||]${Lang('target')}[||]${Lang('command')}[||]${Lang('note')}[/**]`;
+    let closing='[/table]</textarea><br>';
     let bbcode='';
     let html=`<table class="vis"><tr><th></th><th></th><th>${Lang('launch')}</th><th>${Lang('target')}</th><th>${Lang('command')}</th><th>${Lang('note')}</th></tr>`;
     for (let i = 0; i < attacks.length; i++) {
@@ -92,6 +90,7 @@ export function generateLaunchText(attacks:attack[]):{bbcode:string,html:string}
         +`[|] ${attacks[i].villageTo.coord.text} [|][url=${attacks[i].launchLink}]${attacks[i].isAttack ? Lang('attack'):Lang('support')}[/url][|]${attacks[i].note}`;
         if(currentChar+temp.length+closing.length>=maxChar){
             currentChar=0;
+            pageCnt++;
             bbcode+=closing;
         }
         if(currentChar==0){
@@ -105,7 +104,6 @@ export function generateLaunchText(attacks:attack[]):{bbcode:string,html:string}
         `<td><a target="_blank" href="/game.php?village=${game.village.id}&screen=info_village&id=${attacks[i].villageTo.id}">${attacks[i].villageTo.name} (${attacks[i].villageTo.coord.text}) </a></td><td><a href="${attacks[i].launchLink}">${attacks[i].isAttack ? Lang('attack'):Lang('support')}</a></td><td>${attacks[i].note}</td></tr>`
     }
     html+='</table>'
-    console.log(bbcode,html);
 
     return {bbcode,html}
 }
