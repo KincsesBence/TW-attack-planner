@@ -32,7 +32,7 @@ export const calculatedAttackModal = ()=>{
                 }).format(launch);
 
                 let smartlink=``;
-                Object.keys(window.unitConfig).forEach((key)=>{
+                Object.keys(target.village.unitsContain).forEach((key)=>{
                     if(launcher.village.unitsContain[key as keyof unitConfig]>0){
                         smartlink+=`&${key}=${launcher.village.unitsContain[key as keyof unitConfig]}`;
                     }
