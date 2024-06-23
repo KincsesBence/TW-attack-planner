@@ -1,9 +1,12 @@
 const path = require('path');
-
+const HookShellScriptPlugin = require('hook-shell-script-webpack-plugin');
 module.exports = {
   entry: './src/index.ts',
   mode:'development',
   optimization: { minimize: true },
+  plugins: [
+    new HookShellScriptPlugin({afterEmit:['node clearHtmlWhiteSpaces.js']})
+  ],
   module: {
     rules: [
       {
