@@ -240,7 +240,25 @@ declare global {
     unitsContain:units|null,
     distance?:number
   }
+
+
+  interface state{
+    active:boolean
+    possible:boolean
+  }
+
+  interface features{
+    AccountManager:state
+    FarmAssistent:state
+    Premium:state
+  }
+
+  interface game_data{
+    features:features
+  }
+
   interface Window {
+    game_data:game_data,
     Lang:string;
     DB:planDB,
     UI:UI,

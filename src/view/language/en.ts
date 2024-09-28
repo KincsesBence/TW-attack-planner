@@ -77,5 +77,6 @@ export const en = {
     launchVillages:'Starting villages',
     page:'Page',
     search:'Search',
-    PlanNotSelected:'No plans have been selected!'
+    PlanNotSelected:'No plans have been selected!',
+    needPremiumFeature:'A premium account is required to run the script!'
 } 

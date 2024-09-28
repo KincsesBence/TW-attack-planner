@@ -77,5 +77,6 @@ export const hu = {
     launchVillages:'Induló faluk',
     page:'Oldal',
     search:'Keresés',
-    PlanNotSelected:'Nincs egy terv se kiválaszva!'
+    PlanNotSelected:'Nincs egy terv se kiválaszva!',
+    needPremiumFeature:'A script futtatásához prémium fiók szükséges!'
 } 

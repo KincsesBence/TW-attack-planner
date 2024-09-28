@@ -1,5 +1,5 @@
 import { fetchGroups, getServerConifg, getUnitConfig } from "./core/Api";
-import { determineLang } from "./core/Language";
+import { determineLang, Lang } from "./core/Language";
 import { PlayersModel } from "./core/PlayersModel";
 import { VillageModel } from "./core/VillageModel";
 import { planDB } from "./core/planDB";
@@ -7,6 +7,10 @@ import { launchDialog } from "./view/launchDialog";
 
 (async ()=>{
     window.Lang=determineLang();
+    if(!window.game_data.features.Premium.active){
+        window.UI.ErrorMessage(Lang('needPremiumFeature'))
+        return;
+    }
     window.DB = new planDB();
     await window.DB.init();
     window.Plans = await window.DB.loadPlans()

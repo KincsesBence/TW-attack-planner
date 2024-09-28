@@ -33,6 +33,7 @@ const playersAPI:string="/map/player.txt";
 const unitConfigAPI:string="/interface.php?func=get_unit_info";
 const gameConfigAPI:string="/interface.php?func=get_config";
 const GroupsLocation:string="screen=accountmanager";
+const GroupsFallBackLocation:string="screen=overview_villages&mode=combined";
 
 
 export async function getServerConifg():Promise<gameConfig>{
@@ -98,16 +99,29 @@ function createLink(page=1,group=0){
 }
 
 export async function fetchGroups():Promise<group[]>{
-    let res = await $.ajax({url: server+`/game.php?${game.player.sitter != 0 ? "t="+game.player.id+"&":""}village=${game.village.id}&`+GroupsLocation});
-
-    let groupsHTML = $(res).find('.group-menu-item').get();
+    let res = await $.ajax({url: server+`/game.php?${game.player.sitter != 0 ? "t="+game.player.id+"&":""}village=${game.village.id}& ${window.game_data.features.AccountManager.active? GroupsLocation:GroupsFallBackLocation}` });
     let groups:group[] = [];
-    groupsHTML.forEach((elem)=>{
-        groups.push({
-            id:parseInt($(elem).attr('data-group-id')),
-            name:$(elem).text().trim().slice(1,-1),
+    let groupsHTML = $(res).find('.group-menu-item').get();
+    if(groupsHTML.length>0){
+        groupsHTML.forEach((elem)=>{
+            groups.push({
+                id:parseInt($(elem).attr('data-group-id')),
+                name:$(elem).text().trim().slice(1,-1),
+            })
         })
-    })
+    }else{
+        let groupsHtml = $($(res).find('#paged_view_content').find('select').get()[0]).find('option').get();
+        groupsHtml.forEach(group => {
+            if(!$(group).is(':disabled')){
+                let params = new URLSearchParams($(group).attr('value'));
+                console.log(params,$(group).attr('value'));
+                groups.push({
+                    id:parseInt(params.get("group")),
+                    name:$(group).text()
+                });
+            }
+        });
+    }
     return groups
 }
 
@@ -329,3 +343,4 @@ export function hasAvailableTroops(village:village,units:units){
     }
     return true; 
 }
+
