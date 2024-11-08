@@ -306,6 +306,8 @@ declare global {
     editArrivals:()=>void;
     resetAssignments:()=>void;
     finalResetAssignments:()=>void;
+    latestArrival:string;
+    latestTemplate:string;
   }
 
   interface autoAssign{
@@ -380,6 +382,8 @@ declare global {
     createPlan: ()=> void;
     loadPlan:()=> void;
     removePlan:()=> void;
+    confirmRemovePlan:()=> void;
+    cancelRemovePlan:()=> void;
     goNext:(stepIn:number)=> void;
     goToStep:(stepIn:number)=> void;
     cancelNewPlan:()=> void;
@@ -411,6 +415,7 @@ declare global {
     unitSpeed:speed;
     launchDate:string;
     launchLink:string;
+    qrdata:string;
     isAttack:boolean;
     note:string
   }

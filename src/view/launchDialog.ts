@@ -113,6 +113,9 @@ export const launchDialog = ()=>{
                 background: linear-gradient(to bottom, #947a62 0%,#7b5c3d 22%,#6c4824 30%,#6c4824 100%);
                 z-index:1;
             }
+            .confirm-remove button{
+                margin:0 5px;
+            }
         </style>
         <div id="dialog-loading" style="display: none;justify-content: center;width: 100%;">
             <img style="height:25px" src="https://dshu.innogamescdn.com/asset/6389cdba/graphic/loading.gif"><span style="padding:5px">${Lang('loading')}</span>
@@ -121,14 +124,17 @@ export const launchDialog = ()=>{
             <div><h1>TW Attack Planner</h1></div>
             <div class="launch-dialog-selector">
                 <h3>${Lang("plans")}:</h3>
-                <select id="launchDialogSelect" size="5">
+                <select id="launchDialogSelect" size="5" onDblClick="launchDialog.loadPlan()">
                     ${window.Plans.map((plan)=>{
                         return /* html */`<option value="${plan.id}">${plan.name}</option>`;
                     }).join('')}
                 </select>
                 <button onclick="launchDialog.loadPlan()" class="btn">${Lang("loadPlan")}</button>
-                <button onclick="launchDialog.removePlan()" class="btn">${Lang("removePlan")}</button>
-
+                <button id="removePlan" onclick="launchDialog.confirmRemovePlan()" class="btn">${Lang("removePlan")}</button>
+                <div class="confirm-remove" style="display:none;">
+                    <button onclick="launchDialog.removePlan()" class="btn">${Lang("remove")}</button>
+                    <button onclick="launchDialog.cancelRemovePlan()" class="btn">${Lang("cancel")}</button>
+                </div>
                 <button onclick="launchDialog.newplan()" class="btn">+ ${Lang("newPlan")}</button>
             </div>
 
@@ -337,6 +343,21 @@ removePlan: async()=>{
     $('#launchDialogSelect').html(`${plans.map((plan)=>{
         return /* html */`<option value="${plan.id}">${plan.name}</option>`;
     })}`);
+    $('.confirm-remove').hide();
+    $('#removePlan').show();
+},
+confirmRemovePlan:()=>{
+    if($('#launchDialogSelect').val()==null){
+        window.UI.ErrorMessage(Lang('PlanNotSelected'))
+        return
+    }
+
+    $('.confirm-remove').show();
+    $('#removePlan').hide();
+},
+cancelRemovePlan:()=>{
+    $('.confirm-remove').hide();
+    $('#removePlan').show();
 },
 plan:undefined
 }

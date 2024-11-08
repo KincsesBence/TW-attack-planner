@@ -14,7 +14,7 @@ export const addAttackModal = ()=>{
         <select id="planner-template" placeholder="${Lang('notSelected')}">
             <option value="temp_all">${Lang('allUnit')}</option>
             ${window.attackPlan.templates.map((template)=>{
-                return /* html */`<option value="${template.name}">${template.name}</option>`
+                return /* html */`<option value="${template.name}" ${window.latestTemplate==template.name? `selected`:``}>${template.name}</option>`
             })}
         </select>
     </div>
@@ -22,7 +22,7 @@ export const addAttackModal = ()=>{
         <label for="planner-arrival">${Lang('arrival')}:</label>
         <select id="planner-arrival" placeholder="${Lang('notSelected')}">
             ${window.attackPlan.arrivals.map((arrival)=>{
-                return /* html */`<option value="${arrival}">${arrival}</option>`
+                return /* html */`<option value="${arrival}" ${window.latestArrival==arrival? `selected`:``}>${arrival}</option>`
             })}
         </select>
     </div>
@@ -37,7 +37,7 @@ export const addAttackModal = ()=>{
     `
 }
 
-window.window.addAttackConfirm = () => {  
+window.addAttackConfirm = () => {  
     let launchers:village[]=[];
     let targets:target[]=[];
 
@@ -52,10 +52,13 @@ window.window.addAttackConfirm = () => {
     }
 
     let targetID:number = parseInt($('input[name="target"]:checked').val().toString());
-    let templateName = $('#planner-template').val();
+    let templateName = $('#planner-template').val().toString();
     let operation = $('input[name="planner-operation"]:checked').val().toString();
     let arrival = $('#planner-arrival').val().toString();
     let notes = $('#planner-notes').val().toString();
+
+    window.latestTemplate=templateName;
+    window.latestArrival=arrival;
 
     console.log($('.launch-list').find("input:checked").get().length,targetID,templateName,operation,arrival,notes);
     let indTarget= window.attackPlan.targetPool.findIndex((target)=>{return target.village.id==targetID})    
@@ -94,7 +97,6 @@ window.window.addAttackConfirm = () => {
 }
 
 window.addLauncher = (indTarget: number, indLanucher: number,trans:units,operation:string,arrival:string,notes:string) => { 
-    console.log("addLauncher");
       
     let newVillage={...window.attackPlan.launchPool[indLanucher]};
         newVillage.unitsContain={spear:0,sword:0,axe:0,archer:0,spy:0,light:0,marcher:0,heavy:0,ram:0,catapult:0,knight:0,snob:0};

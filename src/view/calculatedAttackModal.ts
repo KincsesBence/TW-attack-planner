@@ -2,7 +2,7 @@ import { coordDistance, game } from "../core/Api";
 import { Lang } from "../core/Language";
 
 export const calculatedAttackModal = ()=>{
-
+    const unitCode=['spear','sword','axe','archer','spy','light','marcher','heavy','ram','catapult','knight','snob'];
     function calculate(){
         let attacks:attack[]=[];
        
@@ -32,16 +32,26 @@ export const calculatedAttackModal = ()=>{
                 }).format(launch);
 
                 let smartlink=``;
-                Object.keys(window.unitConfig).forEach((key)=>{
+                let qrlink=``;
+                Object.keys(window.unitConfig).forEach((key,index)=>{
                     if(!launcher.village.unitsContain.hasOwnProperty(key)) return;
                     if(launcher.village.unitsContain[key as keyof unitConfig]>0){
                         smartlink+=`&${key}=${launcher.village.unitsContain[key as keyof unitConfig]}`;
+                        qrlink+=`${unitCode.indexOf(key).toString(16)}:${launcher.village.unitsContain[key as keyof unitConfig].toString(16)},`;
                     }
                 }); 
+                
     
                 attacks.push({
                     launchDate:launchtext,
                     launchLink:`https://${window.location.host}/game.php?village=${launcher.village.id}&screen=place&target=${target.village.id}${smartlink}`,
+                    qrdata:`${launcher.isAttack? 1:0},`+
+                    `${unitCode.indexOf(launcher.unitSpeed.key).toString(16)},`+
+                    `${new Date(launchtext).getTime().toString(16)},`+
+                    `${launcher.village.id.toString(16)},`+
+                    `${target.village.id.toString(16)},`+
+                    `${sanitizeQRtext(target.village.name)},`+
+                    `${qrlink.slice(0,-1)};`,
                     unitSpeed:launcher.unitSpeed,
                     villageFrom:launcher.village,
                     villageTo:target.village,
@@ -51,12 +61,18 @@ export const calculatedAttackModal = ()=>{
             })
         })
         attacks.sort((attack1,attack2)=>{return attack1.launchDate>attack2.launchDate ? 1:-1});
-        let {bbcode,html} = generateLaunchText(attacks);
+        let {bbcode,html,QRhtml} = generateLaunchText(attacks);
+        console.log(QRhtml);
+        
+
         $('.bb-field').html(bbcode);
         $('.inApp-field').html(html);
+        $('.qr-field').html(QRhtml);
+        
         
         $('#dialog-loading').hide();
         $('.modal-input-inline').show();
+       
     }
 
     setTimeout(()=>{calculate()}, 2000);
@@ -70,20 +86,25 @@ export const calculatedAttackModal = ()=>{
         <input onclick="window.changeDisplayType()" type="radio" id="bb" value="bb" name="showType" >
         <label for="inapp">In-app:</label>
         <input onclick="window.changeDisplayType()" type="radio" id="inapp" value="inapp" name="showType" checked>
+        <label for="inapp">mobile-app:</label>
+        <input onclick="window.changeDisplayType()" type="radio" id="mobile" value="mobile" name="showType" >
         <div class="bb-field" style="display:none;max-height:600px; overflow-y: auto;"></div>
-        <div class="inApp-field" style="max-height:600px; overflow-y: auto;">
-        </div>
+        <div class="inApp-field" style="max-height:600px; overflow-y: auto;"></div>
+        <div class="qr-field" style="display:none;max-height:650px; overflow-y: auto;"></div>
     </div>
     `
 }
 
-export function generateLaunchText(attacks:attack[]):{bbcode:string,html:string}{
+export function generateLaunchText(attacks:attack[]):{bbcode:string,html:string,QRhtml:string}{
     let maxChar=60000;
     let currentChar=0;
     let pageCnt=1;
     let header=`<textarea style="resize:none;overflow: hidden;height:100px;width:400px;">[table][**] [||][building]barracks[/building][||]${Lang('launch')}[||]${Lang('target')}[||]${Lang('command')}[||]${Lang('note')}[/**]`;
     let closing='[/table]</textarea><br>';
     let bbcode='';
+    let QRhtml='';
+    let QRPage=1;
+    let QR=`twla://${QRPage.toString(16)}:-pageCnt-,${window.location.hostname},${sanitizeQRtext(window.attackPlan.name)}/`;
     let html=`<table class="vis"><tr><th></th><th></th><th>${Lang('launch')}</th><th>${Lang('target')}</th><th>${Lang('command')}</th><th>${Lang('note')}</th></tr>`;
     for (let i = 0; i < attacks.length; i++) {
         let temp=`[*]#${i+1}[|][unit]${attacks[i].unitSpeed.key}[/unit][|][b]${attacks[i].launchDate}[/b]`
@@ -97,23 +118,56 @@ export function generateLaunchText(attacks:attack[]):{bbcode:string,html:string}
             bbcode+=`${pageCnt}.${Lang('page')}<br>`+header
             currentChar+=header.length;
         }
-        
+
+        if(QR.length+attacks[i].qrdata.length>1000){
+            QRhtml+=`<h3>${QRPage}.Oldal</h3><div><p><img src="https://api.qrserver.com/v1/create-qr-code/?size=600x600&data=${QR}"></p></div>`;
+            QRPage++;
+            QR=`twla://${QRPage.toString(16)}/`;
+        }
+
+        QR+=attacks[i].qrdata;
+
+        if(i == attacks.length-1){
+            QRhtml+=`<h3>${QRPage}.Oldal</h3><div><p><img src="https://api.qrserver.com/v1/create-qr-code/?size=600x600&data=${QR}"></p></div>`;
+        }
+
         bbcode+=temp;
         currentChar+=temp.length;
+       
         html+=`<tr><td>#${i+1}</td><td><img src="/graphic/unit/unit_${attacks[i].unitSpeed.key}.png"></td><td>${attacks[i].launchDate}</td>`+
         `<td><a target="_blank" href="/game.php?village=${game.village.id}&screen=info_village&id=${attacks[i].villageTo.id}">${attacks[i].villageTo.name} (${attacks[i].villageTo.coord.text}) </a></td><td><a href="${attacks[i].launchLink}">${attacks[i].isAttack ? Lang('attack'):Lang('support')}</a></td><td>${attacks[i].note}</td></tr>`
     }
     html+='</table>'
+    
+    QRhtml = QRhtml.replace('-pageCnt-',QRPage.toString(16));
 
-    return {bbcode,html}
+    return {bbcode,html,QRhtml}
 }
 
 window.changeDisplayType = () => {
-    if ($('input[name=showType]:checked').val()=='bb') {
-        $('.bb-field').show();
-        $('.inApp-field').hide();
-    }else{
-        $('.bb-field').hide();
-        $('.inApp-field').show();
+    let val=$('input[name=showType]:checked').val();
+    $('.inApp-field').hide();
+    $('.bb-field').hide();
+    $('.qr-field').hide();
+    switch(val){
+        case 'bb':
+            $('.bb-field').show();
+        break;
+        case 'inapp':
+            $('.inApp-field').show();
+        break;
+        case 'mobile':
+            $('.qr-field').show();
+            $( ".qr-field").accordion();
+        break;
     }
+}
+
+function sanitizeQRtext(text:string):string{
+    const list=[';','/',',',':'];
+    list.forEach((item)=>{
+        text=text.replaceAll(item,' ');
+    })
+
+    return text;
 }
