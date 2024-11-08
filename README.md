@@ -32,7 +32,7 @@ To load the script you have to copy the content of the **dist/bundle.js** into t
 Or you could use the raw github file as a reference and enter it into your quick bar or terminal:
 
 ```js
-$.get("https://raw.githubusercontent.com/KincsesBence/TW-attack-planner/main/dist/bundle.js", (r) => { Function(`${r}`)();}); void(0);
+javascript:$.get("https://raw.githubusercontent.com/KincsesBence/TW-attack-planner/main/dist/bundle.js", (r) => { Function(`${r}`)();}); void(0);
 ```
 
 ### 2. Startup window
