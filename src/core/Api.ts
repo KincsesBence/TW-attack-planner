@@ -278,8 +278,9 @@ export function TroopTransaction(to:units,from:units,trans:units):[units,units]{
 
 export function calcUnitPop(units:units):number{
     let size=0;
-    Object.keys(units).forEach((unis)=>{
-        size+=window.unitConfig[unis as keyof unitConfig].pop*units[unis as keyof unitConfig];
+    Object.keys(units).forEach((unit)=>{
+        if(window.gameConfig.game.archer==0 && (unit=='archer' || unit=='marcher')) return
+        size+=window.unitConfig[unit as keyof unitConfig].pop*units[unit as keyof unitConfig];
     })
     return size;
 }
@@ -288,6 +289,7 @@ export function getSlowestUnit(units:units,isAttack:boolean):speed{
     
     var unitConfig = Object.keys(units)
     .map((k ) => { 
+        if(window.gameConfig.game.archer==0 && (k=='archer' || k=='marcher')) return
         return { 
         key: k,
         value: window.unitConfig[k as keyof unitConfig].speed

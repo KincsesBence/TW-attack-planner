@@ -13,7 +13,7 @@ import { editTemplatesModal } from "./editTemplatesModal";
 import { launchItem } from "./launchItem";
 import { targetItem } from "./targetItem";
 
-const VER=`v0.1.4-beta [2024.11.09.]; by: toldi26`
+const VER=`v0.1.5-beta [2025.03.07.]; by: toldi26`
 
 export const mainWindow = ()=>{
     return /* html */`
@@ -130,22 +130,22 @@ export const mainWindow = ()=>{
             background: linear-gradient(to bottom,#e2c07c 0%,#dab874 44%,#c1a264 100%);
             grid-area: launch-header;
             display: grid;
-            grid-template-columns:  1fr 1fr 1fr 1fr${window.gameConfig.game.archer==1 && ' 1fr'} 1fr 1fr${window.gameConfig.game.archer==1 && ' 1fr'} 1fr 1fr 1fr 1fr 1fr; 
+            grid-template-columns:  1fr 1fr 1fr 1fr${window.gameConfig.game.archer==1 ? ' 1fr':''} 1fr 1fr${window.gameConfig.game.archer==1 ? '1fr':''} 1fr 1fr 1fr 1fr 1fr; 
             grid-template-rows: 30px;
             gap: 0px;
             grid-template-areas: 
-                "size-icon spear-icon sword-icon axe-icon${window.gameConfig.game.archer==1 && ' archer-icon'} spy-icon light-icon${window.gameConfig.game.archer==1 && ' marcher-icon'} heavy-icon ram-icon catapult-icon pala-icon snob-icon"
+                "size-icon spear-icon sword-icon axe-icon${window.gameConfig.game.archer==1 ? ' archer-icon':''} spy-icon light-icon${window.gameConfig.game.archer==1 ? ' marcher-icon':''} heavy-icon ram-icon catapult-icon pala-icon snob-icon"
         }
 
         .target-launch-header { 
             background: linear-gradient(to bottom,#e2c07c 0%,#dab874 44%,#c1a264 100%);
             grid-area: launch-header;
             display: grid;
-            grid-template-columns:  30px 1fr 1fr 1fr${window.gameConfig.game.archer==1 && ' 1fr'} 1fr 1fr${window.gameConfig.game.archer==1 ? ' 1fr':''} 1fr 1fr 1fr 1fr 1fr 30px; 
+            grid-template-columns:  30px 1fr 1fr 1fr${window.gameConfig.game.archer==1 ? ' 1fr':''} 1fr 1fr${window.gameConfig.game.archer==1 ? ' 1fr':''} 1fr 1fr 1fr 1fr 1fr 30px; 
             grid-template-rows: 30px;
             gap: 0px;
             grid-template-areas: 
-                "size-icon spear-icon sword-icon axe-icon${window.gameConfig.game.archer==1 && ' archer-icon'} spy-icon light-icon${window.gameConfig.game.archer==1 && ' marcher-icon'} heavy-icon ram-icon catapult-icon pala-icon snob-icon del-icon"
+                "size-icon spear-icon sword-icon axe-icon${window.gameConfig.game.archer==1 ? ' archer-icon':''} spy-icon light-icon${window.gameConfig.game.archer==1? ' marcher-icon':''} heavy-icon ram-icon catapult-icon pala-icon snob-icon del-icon"
         }
 
         .target-launch-header div {
@@ -228,12 +228,12 @@ export const mainWindow = ()=>{
                 margin-top:3px;
                 text-align:center;
                 display: grid; 
-                grid-template-columns:  30px 1fr 1fr 1fr${window.gameConfig.game.archer==1 && ` 1fr`} 1fr 1fr${window.gameConfig.game.archer==1 && ` 1fr`} 1fr 1fr 1fr 1fr 1fr 30px; 
+                grid-template-columns:  30px 1fr 1fr 1fr${window.gameConfig.game.archer==1 ? ` 1fr`:''} 1fr 1fr${window.gameConfig.game.archer==1 ? ` 1fr`:''} 1fr 1fr 1fr 1fr 1fr 30px; 
                 grid-template-rows: 35px 30px ;
                 gap: 0px 0px; 
                 grid-template-areas: 
-                    "size-field name-field name-field name-field${window.gameConfig.game.archer==1 && ` name-field`} name-field name-field${window.gameConfig.game.archer==1 && ` name-field`} name-field name-field name-field name-field name-field del-field"
-                    "size-field spear-field sword-field axe-field${window.gameConfig.game.archer==1 && ` archer-field`} spy-field light-field${window.gameConfig.game.archer==1 && ` marcher-field`} heavy-field ram-field catapult-field knight-field snob-field del-field";
+                    "size-field name-field name-field name-field${window.gameConfig.game.archer==1 ? ` name-field`:``} name-field name-field${window.gameConfig.game.archer==1 ? ` name-field`:``} name-field name-field name-field name-field name-field del-field"
+                    "size-field spear-field sword-field axe-field${window.gameConfig.game.archer==1 ? ` archer-field`:``} spy-field light-field${window.gameConfig.game.archer==1 ? ` marcher-field`:``} heavy-field ram-field catapult-field knight-field snob-field del-field";
             }
             .del-field{ grid-area: del-field; padding: 20px 5px;background-color:#fff5dc;border-left: 1px solid #6c4824;}
             .size-field{ grid-area: size-field; padding: 5px 8px;background-color:#fff5dc;border-right: 1px solid #6c4824;}
@@ -245,12 +245,12 @@ export const mainWindow = ()=>{
             margin-top:3px;
             text-align:center;
             display: grid; 
-            grid-template-columns:  1fr 1fr 1fr 1fr${window.gameConfig.game.archer==1 && ` 1fr`} 1fr 1fr${window.gameConfig.game.archer==1 && ` 1fr`} 1fr 1fr 1fr 1fr 1fr;
+            grid-template-columns:  1fr 1fr 1fr 1fr${window.gameConfig.game.archer==1 ? ` 1fr`:``} 1fr 1fr${window.gameConfig.game.archer==1 ? ` 1fr`:``} 1fr 1fr 1fr 1fr 1fr;
             grid-template-rows: 30px 30px ;
             gap: 0px 0px; 
             grid-template-areas:
-                "check-field name-field name-field name-field${window.gameConfig.game.archer==1 && ` name-field`} name-field name-field${window.gameConfig.game.archer==1 && ` name-field`} name-field name-field name-field name-field name-field"
-                "check-field spear-field sword-field axe-field${window.gameConfig.game.archer==1 && ` archer-field`} spy-field light-field${window.gameConfig.game.archer==1 && ` marcher-field`}  heavy-field ram-field catapult-field knight-field snob-field";
+                "check-field name-field name-field name-field${window.gameConfig.game.archer==1 ? `name-field`:``} name-field name-field${window.gameConfig.game.archer==1 ? ` name-field`:``} name-field name-field name-field name-field name-field"
+                "check-field spear-field sword-field axe-field${window.gameConfig.game.archer==1 ? ` archer-field`:``} spy-field light-field${window.gameConfig.game.archer==1 ? ` marcher-field`:``}  heavy-field ram-field catapult-field knight-field snob-field";
             }
 
             .check-field input{
@@ -553,20 +553,20 @@ export const mainWindow = ()=>{
                     <div class="axe-icon">
                         <img onclick="window.launchVillagesQuery.order('unitsContain.axe')" src="https://dshu.innogamescdn.com/asset/fd86cac8/graphic/unit/unit_axe.png">
                     </div>
-                    ${window.gameConfig.game.archer==1 &&
+                    ${window.gameConfig.game.archer==1 ?
                         /* html */`<div class="archer-icon">
                         <img onclick="window.launchVillagesQuery.order('unitsContain.archer')" src="https://dshu.innogamescdn.com/asset/fd86cac8/graphic/unit/unit_archer.png">
-                    </div>`}
+                    </div>`:``}
                     <div class="spy-icon">
                         <img onclick="window.launchVillagesQuery.order('unitsContain.spy')" src="https://dshu.innogamescdn.com/asset/fd86cac8/graphic/unit/unit_spy.png">
                     </div>
                     <div class="light-icon">
                         <img onclick="window.launchVillagesQuery.order('unitsContain.light')" src="https://dshu.innogamescdn.com/asset/fd86cac8/graphic/unit/unit_light.png">
                     </div>
-                    ${window.gameConfig.game.archer==1 &&
+                    ${window.gameConfig.game.archer==1?
                         /* html */`<div class="marcher-icon">
                             <img onclick="window.launchVillagesQuery.order('unitsContain.marcher')" src="https://dshu.innogamescdn.com/asset/fd86cac8/graphic/unit/unit_marcher.png">
-                        </div>`
+                        </div>`:``
                     }
                     <div class="heavy-icon">
                         <img onclick="window.launchVillagesQuery.order('unitsContain.heavy')" src="https://dshu.innogamescdn.com/asset/fd86cac8/graphic/unit/unit_heavy.png">
