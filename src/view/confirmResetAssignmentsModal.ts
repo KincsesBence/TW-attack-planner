@@ -1,4 +1,4 @@
-import { TroopTransaction } from "../core/Api"
+import { savePlan, TroopTransaction } from "../core/Api"
 import { Lang } from "../core/Language"
 
 export const confirmResetAssignmentsModal = ()=>{
@@ -36,5 +36,5 @@ window.finalResetAssignments = () => {
     window.closeModal();
     window.launchVillagesQuery.resetAll();
     window.targetPoolQuery.resetAll();
-    window.DB.savePlan(window.attackPlan);
+    savePlan()
 }

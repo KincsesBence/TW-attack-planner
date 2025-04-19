@@ -1,4 +1,4 @@
-import { TroopTransaction, game } from "../core/Api";
+import { TroopTransaction, game, savePlan } from "../core/Api";
 import { Lang } from "../core/Language";
 import { ConfirmVillageSpeedRemoveModal } from "./ConfirmVillageSpeedRemoveModal";
 import { addVillageBoosterModal } from "./addVillageSpeedModal";
@@ -32,7 +32,7 @@ export const targetItem = (target:target)=>{
     return /* html */`
     <div id="${target.village.id}" class="target-item">
         <div onclick="targetItem.toggleTargetItem(this)" class="target-header">
-            <div><input value="${target.village.id}" onclick="targetItem.selectTargetItem(event)" type="radio" name="target" ${target.isSelected? `checked`:``}/></div>
+            <div class="target-radio"><input value="${target.village.id}" onclick="targetItem.selectTargetItem(event)" type="radio" name="target" ${target.isSelected? `checked`:``}/></div>
             <div class="indicator ${target.isOpen? 'indicator-open':''}"><span >▶<span></div>
             <div class="target-village-name"><a target="_blank" href="/game.php?village=${game.village.id}&screen=info_village&id=${target.village.id}">${target.village.name}(${target.village.coord.text}) K${target.village.kontinent}</a></div>
             <div class="target-extras">
@@ -172,7 +172,7 @@ window.targetItem = {
         window.attackPlan.targetPool.splice(targetIndex,1);
         window.targetPoolQuery.resetAll();
         window.closeModal();
-        window.DB.savePlan(window.attackPlan);
+        savePlan()
     },
     removeTargetLauncherItem:(launcher:number,target:number)=>{
         $('.planner-modal-header b').text(Lang('removeAttack'));
@@ -220,7 +220,7 @@ window.targetItem = {
         window.launchVillagesQuery.partialRender(renderLauncher,"id");
         window.targetPoolQuery.partialRender([window.attackPlan.targetPool[targetIndex]],"village.id");
         window.closeModal();
-        window.DB.savePlan(window.attackPlan);
+        savePlan()
     },
     addVillageBooster:(event:Event,target:number)=>{
         event.stopPropagation();
@@ -236,7 +236,7 @@ window.targetItem = {
         window.attackPlan.targetPool[targetIndex].booster=parseInt($('#planner-village-boost').val().toString());
         window.closeModal();
         window.targetPoolQuery.partialRender([window.attackPlan.targetPool[targetIndex]],"village.id");
-        window.DB.savePlan(window.attackPlan);
+        savePlan()
     },
     removeVillageBooster:(event:Event,target:number)=>{
         event.stopPropagation();
@@ -253,7 +253,7 @@ window.targetItem = {
         window.attackPlan.targetPool[targetIndex].booster=0;
         window.closeModal();
         window.targetPoolQuery.partialRender([window.attackPlan.targetPool[targetIndex]],"village.id");
-        window.DB.savePlan(window.attackPlan);
+        savePlan()
     },
 }
 

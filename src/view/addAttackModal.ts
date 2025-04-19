@@ -1,4 +1,4 @@
-import { TroopTransaction, calcUnitPop, getSlowestUnit } from "../core/Api"
+import { TroopTransaction, calcUnitPop, getSlowestUnit, savePlan } from "../core/Api"
 import { Lang } from "../core/Language"
 
 export const addAttackModal = ()=>{
@@ -93,7 +93,7 @@ window.addAttackConfirm = () => {
 
     $('.planner-modal').hide();
 
-    window.DB.savePlan(window.attackPlan);
+    savePlan()
 }
 
 window.addLauncher = (indTarget: number, indLanucher: number,trans:units,operation:string,arrival:string,notes:string) => { 

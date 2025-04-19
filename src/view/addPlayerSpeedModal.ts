@@ -1,3 +1,4 @@
+import { savePlan } from "../core/Api";
 import { Lang } from "../core/Language";
 
 export const addPlayerSpeedModal = ()=>{
@@ -51,14 +52,14 @@ window.addPlayerBoost = ()=> {
 
     if(val==0) return;
 
-    let res = window.Players.find((palyer:player)=>{return palyer.id==id})
+    let player = window.Players.find((palyer:player)=>{return palyer.id==id})
 
     window.attackPlan.boosters.push({
-        player:res.name,
+        player:player,
         playerId:id,
         value:val
     })
-    window.DB.savePlan(window.attackPlan);
+    savePlan()
     $('.planner-modal-content').html(addPlayerSpeedModal());
 }
 

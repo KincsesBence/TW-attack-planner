@@ -1,4 +1,4 @@
-import { TroopTransaction, calcUnitPop, coordDistance, game, hasAvailableTroops } from "../core/Api";
+import { TroopTransaction, calcUnitPop, coordDistance, game, hasAvailableTroops, savePlan } from "../core/Api";
 import { Lang } from "../core/Language";
 
 export const autoAssignModal = ()=>{
@@ -298,7 +298,7 @@ window.autoAssign = {
             window.targetPoolQuery.resetAll();
             window.launchVillagesQuery.resetAll();
             window.closeModal();
-            window.DB.savePlan(window.attackPlan);
+            savePlan()
         }, 200);
         
     },

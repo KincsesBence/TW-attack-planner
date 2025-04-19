@@ -1,3 +1,4 @@
+import { savePlan } from "../core/Api";
 import { Lang } from "../core/Language";
 
 export const editPlanNameModal = (plan:plan)=>{
@@ -16,7 +17,7 @@ window.editPlanNameModal={
             $('#open-plan-name').text(val);
         }
         if($('.mainWindow').get().length==1){
-            window.DB.savePlan(window.attackPlan);
+            savePlan()
         }else{
             window.launchDialog.stepCheck();
         }

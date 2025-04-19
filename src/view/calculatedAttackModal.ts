@@ -1,4 +1,4 @@
-import { coordDistance, game } from "../core/Api";
+import { coordDistance, formatDateTime, game } from "../core/Api";
 import { Lang } from "../core/Language";
 
 export const calculatedAttackModal = ()=>{
@@ -9,7 +9,7 @@ export const calculatedAttackModal = ()=>{
         window.attackPlan.targetPool.forEach((target:target)=>{
             let boostIndx=window.attackPlan.boosters.findIndex((booster:boost)=>{return booster.playerId==target.village.owner});
             target.launchers.forEach((launcher:launcher)=>{
-                let boost:number=1;
+                let boost:number=1
     
                 if(boostIndx>-1){
                     target.booster=window.attackPlan.boosters[boostIndx].value;
@@ -25,11 +25,7 @@ export const calculatedAttackModal = ()=>{
                 let launch=new Date(attackDate.valueOf() 
                 - Math.round((speed * 1000 / window.gameConfig.speed / (window.gameConfig.unit_speed*boost)) 
                 * coordDistance(launcher.village,target.village)));
-                let launchtext = new Intl.DateTimeFormat('hu-hu', {
-                    year: 'numeric', month: '2-digit', day: '2-digit',
-                    hour: '2-digit', minute: '2-digit', second: '2-digit',
-                    hour12: false,
-                }).format(launch);
+                let launchtext = formatDateTime(launch)
 
                 let smartlink=``;
                 let qrlink=``;

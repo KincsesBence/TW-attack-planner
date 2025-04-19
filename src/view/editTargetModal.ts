@@ -1,4 +1,4 @@
-import { TroopTransaction } from "../core/Api";
+import { savePlan, TroopTransaction } from "../core/Api";
 import { Lang } from "../core/Language";
 
 export const editTargetModal = (targets:target[])=>{
@@ -55,7 +55,7 @@ window.editTargetModal = {
         }).join(''))
         
         if($('.mainWindow').get().length==1){
-            window.DB.savePlan(window.attackPlan);
+            savePlan()
             window.targetPoolQuery.resetAll();
         }else{
             window.launchDialog.stepCheck();

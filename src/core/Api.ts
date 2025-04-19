@@ -1,9 +1,10 @@
-import { VillageModel } from "./VillageModel";
+import { getLangFormat } from "./Language";
 import { xml2json } from "./xml2json";
 
 export type group = {
     id:number,
-    name:string
+    name:string,
+    all?:boolean
 }
 
 type Objectkey = keyof units
@@ -22,21 +23,19 @@ interface pageLoadInput{
 }
 
 
-
 const server:string="https://"+window.location.hostname;
 // @ts-ignore: Unreachable code error   
 export const game=game_data;
 // @ts-ignore: Unreachable code error   
-//const mainOverView:string=`/game.php?village=${game!.village.id}&screen=overview_villages&page=-1&order=axe&dir=desc&mode=combined&group=${params.get('group')}`;
 const villageAPI:string="/map/village.txt";
 const playersAPI:string="/map/player.txt";
 const unitConfigAPI:string="/interface.php?func=get_unit_info";
 const gameConfigAPI:string="/interface.php?func=get_config";
 const GroupsLocation:string="screen=accountmanager";
 const GroupsFallBackLocation:string="screen=overview_villages&mode=combined";
+export const storeName="TW_ATTACK_PLANNER"
 
-
-export async function getServerConifg():Promise<gameConfig>{
+export async function getGameConfig():Promise<gameConfig>{
     let result = await $.ajax({url: server+gameConfigAPI});
     
     return  xml2json(result,"")
@@ -46,6 +45,58 @@ export async function getUnitConfig():Promise<unitConfig>{
     let result = await $.ajax({url: server+unitConfigAPI});
 
     return xml2json(result,"")
+}
+
+
+//TODO manager class
+export function loadScriptOptions():scriptOptions{
+    const opt = localStorage.getItem(storeName);
+
+    if(opt==null) return {
+        latestApiUpdate: 0
+    }
+
+    return JSON.parse(opt);
+}
+
+export function saveScriptOptions(){
+    localStorage.setItem(storeName,JSON.stringify(window.scriptOptions));
+}
+
+export async function loadWorldApi(){
+    let villages:village[]=[];
+    let players:player[]=[];
+    let gameConfig:gameConfig
+    let unitConfig:unitConfig
+    const now = new Date().getTime()-3600000;
+    if(window.scriptOptions.latestApiUpdate>now){
+        villages = await window.DB.getAllData('villages');
+        players = await window.DB.getAllData('players');
+        window.gameConfig = window.scriptOptions.gameConfig
+        window.unitConfig = window.scriptOptions.unitConfig
+    }else{
+        gameConfig = await getGameConfig();
+        unitConfig = await getUnitConfig();
+        villages = await getAllVillages();
+        players = await getAllPlayer();
+
+        for (const player of players) {
+            await window.DB.setData('players',player);
+        }
+
+        for (const village of villages) {
+            await window.DB.setData('villages',village);
+        }
+        
+        window.scriptOptions.latestApiUpdate = new Date().getTime();
+        window.scriptOptions.gameConfig = gameConfig
+        window.scriptOptions.unitConfig = unitConfig
+        window.gameConfig = gameConfig
+        window.unitConfig = unitConfig
+        saveScriptOptions();
+        window.Villages = villages
+        window.Players = players
+    }
 }
 
 export async function getAllVillages():Promise<village[]>{    
@@ -95,7 +146,7 @@ export async function getAllPlayer():Promise<player[]>{
 }
 
 function createLink(page=1,group=0){
-    return `/game.php?${game.player.sitter != 0 ? "t="+game.player.id+"&":""}village=${game.village.id}&group=${group}&page=${page}&screen=overview_villages&mode=combined`;
+    return `/game.php?${game.player.sitter != 0 ? "t="+game.player.id+"&":""}village=${game.village.id}&group=${group}&page=${page}&screen=overview_villages&mode=units`;
 }
 
 export async function fetchGroups():Promise<group[]>{
@@ -124,68 +175,42 @@ export async function fetchGroups():Promise<group[]>{
     }
     return groups
 }
-
-export async function loadPages(groupIDs:number[]){
-    
+ 
+export async function loadPages(groups:group[]){
     let villages:village[]=[];
-    let groupPromises:Promise<any>[] = [];
-    let groupCnts:number[] = [];
-    for (let i = 0; i < groupIDs.length; i++) {
-        groupPromises.push(
-            pageRequestDelayed(createLink(0,groupIDs[i]),i,1)
-        );
+    for (const group of groups) {
+        const resultMain = await pageRequest(createLink(0,group.id),group.all)
+        villages=[...villages,...resultMain.villages];
+        await wait(200)
+
+        for (let i = 0; i < resultMain.pageCnt; i++) {
+            const result = await pageRequest(createLink(i+1,group.id),group.all)
+            villages=[...villages,...result.villages];
+            await wait(200) 
+        }
     }
 
-    await Promise.allSettled(groupPromises).then((results) => results.forEach(
-        async (result:any) => {
-            groupCnts.push(result.value.pageCnt);
-            result.value.villages.forEach((village:village)=>{
-                let res = villages.findIndex(
-                    (villageIN:village)=>{return village.id==villageIN.id}
-                );
-                if(res==-1){
-                    villages.push(village);
-                }
-            })
-        } 
-    ));
-
-    groupPromises = [];
-    
-    for (let i = 0; i < groupIDs.length; i++) {
-       for (let j = 1; j < groupCnts[i]; j++) {
-            groupPromises.push(
-                pageRequestDelayed(createLink(j,groupIDs[i]),(i+1)*j,j)
-            );
-       }
-    }
-
-    await Promise.allSettled(groupPromises).then((results) => results.forEach(
-        async (result:any) => {
-            result.value.villages.forEach((village:village)=>{
-                let res = villages.findIndex(
-                    (villageIN:village)=>{return village.id==villageIN.id}
-                );
-                if(res==-1){
-                    villages.push(village);
-                }
-            })
-        } 
-    ));
-    
     return villages
 }
-function pageRequestDelayed(url:string,delay:number,pageCnt:number){
+
+
+async function wait(ms:number) {
+    return new Promise<void>(async (resolve,reject)=>{
+        setTimeout(()=>{
+            resolve();
+        },ms)
+    })  
+}
+
+
+function pageRequest(url:string,all:boolean){
     return new Promise<pageData>( async (resolve,reject)=>{
-        setTimeout(async ()=>{
             let result = await $.ajax({url: url});
-            let resultVillages = await fetchVillage(result);
+            let resultVillages = await fetchVillage(result,all);
             resolve({
                 pageCnt:parsePageInfo(result),
-                pageNum:pageCnt-1,
                 villages:resultVillages,
             });
-        },200*delay)
     })
 }
 
@@ -196,7 +221,7 @@ function parsePageInfo(html:string){
         let opt = select.find('option');
         pageCnt = opt.length-1;
     }else{
-        pageCnt = $(html).find('.paged-nav-item').length;
+        pageCnt = $(html).find('.paged-nav-item').length-1;
     }
 
     return pageCnt
@@ -207,12 +232,10 @@ function getUnitNameFromUrl(url:string){
     return frag[frag.length-1].split('.')[0].replace('unit_','').replace('@2x','');
 }
 
-async function fetchVillage(html:any){  
-    let table = $(html).find('#combined_table');
-    let rows = table.find('tr');
-    let villagePool:village[]=[];
+async function fetchVillage(html:any,all:boolean){  
     let unitTypes:unitTypes[]=[];
-    let ths = $(rows).find('th').get();
+    let table = $(html).find('#units_table');
+    let ths = $(table).find('thead th').get();
     ths.forEach((th, index) => {
         let img=$(th).find('img');
         if(img.length>0){
@@ -226,28 +249,36 @@ async function fetchVillage(html:any){
         }
     });
 
-    for (let i = 1; i < rows.length; i++) {
-        const row = rows[i];
-        let colums = $(row).find('td');    
-        let villageID=parseInt($(row).find('.quickedit-vn').attr('data-id'));     
+    let tbodys = $(table).find('tbody').get();
+    let villagePool:village[]=[];
+    for (const tbody of tbodys) {
+        let trs = $(tbody).find('tr').get();
+
+        let homeTd = $(trs[0]).find('td')
+        let onWayTd = $(trs[3]).find('td')
+
+        let villageID=parseInt($(homeTd).find('.quickedit-vn').attr('data-id'));     
         let units:units={spear:0,sword:0,axe:0,archer:0,spy:0,light:0,marcher:0,heavy:0,ram:0,catapult:0,knight:0,snob:0,}
         let size=0;
+
         unitTypes.forEach((type:unitTypes)=>{
-            let val=parseInt($(colums[type.index]).text());
-            units[type.name as keyof units] = val
-            
+            let valHome=parseInt($(homeTd[type.index]).text());
+            let valOnWay=parseInt($(onWayTd[type.index-1]).text());
+            let val=all? valHome+valOnWay:valHome;
+            units[type.name as keyof units] = val;
             size+=window.unitConfig[type.name as keyof unitConfig].pop*val;
         })
 
-        let villages = await VillageModel.init();
+        let villages = window.Villages
         let village:village = villages.find((elem:village)=>{ return elem.id==villageID})      
       
-        let popRemain = parseInt($(colums[7]).find('a').text().split(' ')[0]);
+        let popRemain = 0;
         village.unitsContain=units;        
         village.popRemain=popRemain;
         village.popSize=size
-        villagePool.push(village);   
+        villagePool.push(village); 
     }
+
     return villagePool;
 }
 
@@ -346,3 +377,22 @@ export function hasAvailableTroops(village:village,units:units){
     return true; 
 }
 
+export async function savePlan(){
+    await window.DB.setData('plans',window.attackPlan)
+}
+
+export function formatDateTime(date:Date | number){
+    const dateName = getLangFormat()
+    return new Intl.DateTimeFormat(dateName,{
+        year: 'numeric', month: '2-digit', day: '2-digit',
+        hour: '2-digit', minute: '2-digit', second: '2-digit',
+        hour12: false,
+    }).format(date);
+}
+
+export function formatDate(date:Date | number){
+    const dateName = getLangFormat()
+    return new Intl.DateTimeFormat(dateName,{
+        year: 'numeric', month: '2-digit', day: '2-digit',
+    }).format(date);
+}

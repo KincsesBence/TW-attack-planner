@@ -1,3 +1,4 @@
+import { formatDate } from "../core/Api";
 import { Lang } from "../core/Language";
 import { Query } from "../core/Query";
 import { addAttackModal } from "./addAttackModal";
@@ -13,7 +14,6 @@ import { editTemplatesModal } from "./editTemplatesModal";
 import { launchItem } from "./launchItem";
 import { targetItem } from "./targetItem";
 
-const VER=`v0.1.5-beta [2025.03.07.]; by: toldi26`
 
 export const mainWindow = ()=>{
     return /* html */`
@@ -357,6 +357,7 @@ export const mainWindow = ()=>{
                 font-size: 16px;
                 padding-left: 5px;
                 padding-right: 5px;
+                transform: translateY(-2px);
             }
 
             .indicator-open{
@@ -588,7 +589,8 @@ export const mainWindow = ()=>{
                 </div>
             </div>
             <div class="credits">
-                ${VER}
+            <b>${SCRIPT_INFO.version}</b> [${formatDate(SCRIPT_INFO.date)}];<br> Dev: ${SCRIPT_INFO.dev}
+            <a href="${SCRIPT_INFO.git}" target="_blank"><img height="20" width="20" style="padding:0 5px;transform: translateY(5px);" src="https://github.com/fluidicon.png"></a>
             </div>
         </div>
     </div>

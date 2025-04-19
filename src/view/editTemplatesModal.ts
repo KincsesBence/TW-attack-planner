@@ -1,3 +1,4 @@
+import { savePlan } from "../core/Api";
 import { Lang } from "../core/Language";
 
 export const editTemplatesModal = (templates:template[])=>{
@@ -182,7 +183,7 @@ window.templateModal = {
         $('#template_select').html(select);
         
         if($('.mainWindow').get().length==1){
-            window.DB.savePlan(window.attackPlan);
+            savePlan()
         }else{
             window.launchDialog.stepCheck();
         }
@@ -204,7 +205,7 @@ window.templateModal = {
         $('#template_select').html(select);
 
         if($('.mainWindow').get().length==1){
-            window.DB.savePlan(window.attackPlan);
+            savePlan()
         }else{
             window.launchDialog.stepCheck();
         }

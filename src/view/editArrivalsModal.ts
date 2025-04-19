@@ -1,3 +1,4 @@
+import { savePlan } from "../core/Api";
 import { Lang } from "../core/Language";
 
 export const editArrivalsModal = (arrivals:string[])=>{
@@ -41,7 +42,7 @@ window.editArrivalsModal = {
         });
         $('#plan_arrivals_select').html(select);
         if($('.mainWindow').get().length==1){
-            window.DB.savePlan(window.attackPlan);
+            savePlan()
         }else{
             window.launchDialog.stepCheck();
         }
@@ -64,7 +65,7 @@ window.editArrivalsModal = {
         });
         $('#plan_arrivals_select').html(select);
         if($('.mainWindow').get().length==1){
-            window.DB.savePlan(window.attackPlan);
+            savePlan()
         }else{
             window.launchDialog.stepCheck();
         }

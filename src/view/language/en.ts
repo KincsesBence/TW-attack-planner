@@ -78,5 +78,8 @@ export const en = {
     page:'Page',
     search:'Search',
     PlanNotSelected:'No plans have been selected!',
-    needPremiumFeature:'A premium account is required to run the script!'
+    needPremiumFeature:'A premium account is required to run the script!',
+    home:'Home',
+    available:'Available',
+    groups:'Groups',
 } 

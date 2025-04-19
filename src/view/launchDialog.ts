@@ -302,8 +302,8 @@ createPlan : async ()=>{
     $('.launch-dialog').hide();
     setTimeout( async ()=>{
         window.attackPlan=window.launchDialog.plan;
-        window.attackPlan.launchPool = await loadPages(window.launchDialog.groupIDs.map((groupID)=>{return groupID.id}));   
-        await window.DB.savePlan(window.attackPlan)
+        window.attackPlan.launchPool = await loadPages(window.launchDialog.groupIDs);   
+        await window.DB.setData('plans',window.attackPlan)
         window.UI.SuccessMessage(Lang('PlanSuccessfullyCreated'))
         setTimeout(()=>{
             window.Dialog.close("launchDialog");
@@ -338,8 +338,8 @@ removePlan: async()=>{
         return
     }
     let val=$('#launchDialogSelect').val().toString();
-    window.DB.removePlan(val);
-    let plans = await window.DB.loadPlans()
+    window.DB.removeData('plans',val);
+    let plans = await window.DB.getAllData('plans')
     $('#launchDialogSelect').html(`${plans.map((plan)=>{
         return /* html */`<option value="${plan.id}">${plan.name}</option>`;
     })}`);

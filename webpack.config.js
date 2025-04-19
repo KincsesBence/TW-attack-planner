@@ -1,11 +1,20 @@
 const path = require('path');
+const webpack = require('webpack');
 const HookShellScriptPlugin = require('hook-shell-script-webpack-plugin');
 module.exports = {
   entry: './src/index.ts',
   mode:'development',
   optimization: { minimize: true },
   plugins: [
-    new HookShellScriptPlugin({afterEmit:['node clearHtmlWhiteSpaces.js']})
+    new HookShellScriptPlugin({afterEmit:['node clearHtmlWhiteSpaces.js']}),
+    new webpack.DefinePlugin({
+      SCRIPT_INFO: JSON.stringify({
+        version:'v0.1.6-beta',
+        date:new Date().getTime(),
+        dev:'toldi26',
+        git:'https://github.com/KincsesBence/TW-attack-planner',
+      }),
+    }),
   ],
   module: {
     rules: [

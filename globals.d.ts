@@ -1,9 +1,6 @@
 import { group } from "./src/core/Api";
-import { LaunchVillagesModel } from "./src/core/LaunchVillagesModel";
-import { PlayersModel } from "./src/core/PlayersModel";
+import { IndexedDBHandler } from "./src/core/IndexedDBhandler";
 import { Query } from "./src/core/Query";
-import { VillageModel } from "./src/core/VillageModel";
-import { planDB } from "./src/core/planDB";
 
 declare module '*.css';
 declare module "*.html" {
@@ -15,9 +12,15 @@ export {};
 
 declare global {
 
+  const SCRIPT_INFO: {
+    version:string
+    date:number
+    dev:string
+    git:string
+  }
+
   interface pageData{
     pageCnt:number,
-    pageNum:number,
     villages:village[]
   }
 
@@ -257,18 +260,25 @@ declare global {
     features:features
   }
 
+  interface scriptOptions{
+    latestApiUpdate:number
+    gameConfig?:gameConfig
+    unitConfig?:unitConfig
+  }
+
   interface Window {
     game_data:game_data,
     Lang:string;
-    DB:planDB,
+    DB:IndexedDBHandler,
     UI:UI,
+    scriptOptions:scriptOptions
     Dialog:Dialog;
     attackPlan:plan;
     launchDialog:launchDialog;
     gameConfig:gameConfig
     unitConfig:unitConfig 
-    Villages:VillageModel
-    Players:PlayersModel
+    Villages:village[],
+    Players:player[],
     templateModal:templateModal
     editTargetModal:editTargetModal,
     editPlanNameModal:editPlanNameModal

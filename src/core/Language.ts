@@ -18,6 +18,16 @@ export function Lang(text:string){
     
 }
 
+export function getLangFormat(){
+    switch(window.Lang){
+        case 'hu':
+            return 'hu-HU'
+        case 'en':
+            return 'en-US'
+    }
+
+}
+
 export function determineLang(){
     const langSupported=['hu','en'];
     const navigatorLang=navigator.language.split('-')[0];
