@@ -1,4 +1,4 @@
-import { savePlan, TroopTransaction } from "../core/Api"
+import { calcTargetInfo, savePlan, TroopTransaction } from "../core/Api"
 import { Lang } from "../core/Language"
 
 export const confirmResetAssignmentsModal = ()=>{
@@ -32,6 +32,7 @@ window.finalResetAssignments = () => {
             }
         })
         target.launchers=[];
+        target.info=calcTargetInfo(target.launchers);
     })
     window.closeModal();
     window.launchVillagesQuery.resetAll();

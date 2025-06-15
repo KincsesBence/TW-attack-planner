@@ -82,4 +82,7 @@ export const en = {
     home:'Home',
     available:'Available',
     groups:'Groups',
+    from:'From',
+    addVillageBoostError:'Boost % value must be between 1 and 100!',
+    timeDiff:'Time difference from the server:'
 } 

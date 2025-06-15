@@ -1,4 +1,4 @@
-import { game } from "../core/Api";
+import { AssetName, game } from "../core/Api";
 
 export const targetsLauncher = (launcher:launcher,targetId:number):string=>{    
     let size='small';
@@ -9,10 +9,10 @@ export const targetsLauncher = (launcher:launcher,targetId:number):string=>{
     }
     
 
-    let src=`https://dshu.innogamescdn.com/asset/72737c96/graphic/command/attack_${size}.png`;
+    let src=`${AssetName}/graphic/command/attack_${size}.png`;
 
     if(!launcher.isAttack){
-        src=`https://dshu.innogamescdn.com/asset/69990994/graphic/command/support.png`;
+        src=`${AssetName}/graphic/command/support.png`;
     }
 
     let units=Object.keys(launcher.village.unitsContain) as (keyof typeof launcher.village.unitsContain)[]

@@ -5,8 +5,8 @@ export const addPlayerSpeedModal = ()=>{
 
     let owners:number[]=[];
     window.attackPlan.targetPool.forEach((target:target)=>{
-        if(!owners.includes(target.village.owner)){
-            owners.push(target.village.owner);
+        if(!owners.includes((target.village.owner as owner).id)){
+            owners.push((target.village.owner as owner).id);
         }
     })
 

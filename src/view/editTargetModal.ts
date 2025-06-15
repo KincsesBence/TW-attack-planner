@@ -28,9 +28,7 @@ export const editTargetModal = (targets:target[])=>{
 window.editTargetModal = {
     addTargets:() => {
         let val:string = $('#plan_targets').val().toString();
-        console.log(val);
         let reg = Array.from(val.matchAll(/([0-9]{1,3}).([0-9]{1,3})/g));
-        console.log(reg);
         reg.forEach((elem:any)=>{
             let coord=elem[1]+"|"+elem[2];
             let village = window.Villages.find((village:village)=>{ return village.coord.text==coord})
@@ -42,6 +40,13 @@ window.editTargetModal = {
                     village:village,
                     isOpen:false,
                     isSelected:false,
+                    info:{
+                        snob:0,
+                        small:0,
+                        medium:0,
+                        large:0,
+                        sup:0
+                    }
                 })
             }
         });

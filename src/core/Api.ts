@@ -34,6 +34,7 @@ const gameConfigAPI:string="/interface.php?func=get_config";
 const GroupsLocation:string="screen=accountmanager";
 const GroupsFallBackLocation:string="screen=overview_villages&mode=combined";
 export const storeName="TW_ATTACK_PLANNER"
+export const AssetName='https://dshu.innogamescdn.com/asset/6389cdba'
 
 export async function getGameConfig():Promise<gameConfig>{
     let result = await $.ajax({url: server+gameConfigAPI});
@@ -70,15 +71,17 @@ export async function loadWorldApi(){
     let unitConfig:unitConfig
     const now = new Date().getTime()-3600000;
     if(window.scriptOptions.latestApiUpdate>now){
-        villages = await window.DB.getAllData('villages');
         players = await window.DB.getAllData('players');
+        villages = await window.DB.getAllData('villages');
         window.gameConfig = window.scriptOptions.gameConfig
         window.unitConfig = window.scriptOptions.unitConfig
+        window.Players = players
+        window.Villages = villages
     }else{
         gameConfig = await getGameConfig();
         unitConfig = await getUnitConfig();
-        villages = await getAllVillages();
         players = await getAllPlayer();
+        villages = await getAllVillages(players);
 
         for (const player of players) {
             await window.DB.setData('players',player);
@@ -97,9 +100,11 @@ export async function loadWorldApi(){
         window.Villages = villages
         window.Players = players
     }
+    //stall for index db transaction to be GC-d (weird race condition)
+    await wait(100);
 }
 
-export async function getAllVillages():Promise<village[]>{    
+export async function getAllVillages(players:player[]):Promise<village[]>{    
     let result:string = await $.ajax({url: server+villageAPI});
     result = result.trim();
     let villages:village[] = [];
@@ -108,10 +113,17 @@ export async function getAllVillages():Promise<village[]>{
         let columns = lines[i].split(',');
         let x=parseInt(columns[2]);
         let y=parseInt(columns[3]);
-        villages.push( {
+        const ownerID = parseInt(columns[4]);
+        const playerInd=players.findIndex(p=>p.id==ownerID)
+        const owner = playerInd==-1? null:{
+           name: players[playerInd].name,
+           id: players[playerInd].id
+        }
+
+        villages.push({
             id:parseInt(columns[0]),
             name:decodeURIComponent(columns[1]).replaceAll('+',' '),
-            owner:parseInt(columns[4]),
+            owner:owner,
             kontinent:Math.floor(y/100)*10+Math.floor(x/100),
             coord:{
                 text:columns[2]+'|'+columns[3],
@@ -316,6 +328,30 @@ export function calcUnitPop(units:units):number{
     return size;
 }
 
+export function calcTargetInfo(launchers:launcher[]){
+        let targetInfo:targetInfo={
+            snob:0,
+            small:0,
+            medium:0,
+            large:0,
+            sup:0,
+        }
+        launchers.forEach((launcher)=>{
+            if(launcher.village.popSize<=1000){
+                targetInfo.small++;
+            }else if(launcher.village.popSize>1000 && launcher.village.popSize<=5000){
+                targetInfo.medium++
+            }else if(launcher.village.popSize>5000){
+                targetInfo.large++;
+            }
+            if(!launcher.isAttack){
+                targetInfo.sup++;
+            }
+            targetInfo.snob+=launcher.village.unitsContain.snob;
+        })
+    return targetInfo;
+}
+
 export function getSlowestUnit(units:units,isAttack:boolean):speed{
     
     var unitConfig = Object.keys(units)
@@ -378,6 +414,8 @@ export function hasAvailableTroops(village:village,units:units){
 }
 
 export async function savePlan(){
+    console.log();
+    
     await window.DB.setData('plans',window.attackPlan)
 }
 

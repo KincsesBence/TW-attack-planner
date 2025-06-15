@@ -1,4 +1,4 @@
-import { calcUnitPop, game } from "../core/Api";
+import { AssetName, calcUnitPop, game } from "../core/Api";
 
 export const launchItem = (village:village):string=>{   
 
@@ -19,7 +19,7 @@ export const launchItem = (village:village):string=>{
                 <a href="/game.php?village=${game.village.id}&screen=info_village&id=${village.id}" target="_blank">${village.name} (${village.coord.text}) K${village.kontinent}</a>
             </div>
             <div class="check-field">
-                <input type="checkbox" value="${village.id}"><img src="https://dshu.innogamescdn.com/asset/72737c96/graphic/command/attack_${size}.png">
+                <input type="checkbox" value="${village.id}"><img src="${AssetName}/graphic/command/attack_${size}.png">
             </div>
             ${units.map((key: keyof units)=>{
                 if(window.gameConfig.game.archer==0 && (key=="archer" || key=="marcher")){

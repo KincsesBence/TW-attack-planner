@@ -237,11 +237,16 @@ declare global {
     name:string,
     coord:coord,
     kontinent:number,
-    owner:number,
+    owner:owner|null|number,
     popRemain:number|null,
     popSize:number|null,
     unitsContain:units|null,
     distance?:number
+  }
+
+  type owner = {
+    id:number
+    name:string
   }
 
 
@@ -318,6 +323,8 @@ declare global {
     finalResetAssignments:()=>void;
     latestArrival:string;
     latestTemplate:string;
+    launchVillagesSearch:()=>void;
+    targetVillagesSearch:()=>void;
   }
 
   interface autoAssign{
@@ -375,8 +382,8 @@ declare global {
   }
 
   interface targetItem{
-    toggleTargetItem:(elem:any)=> void;
-    selectTargetItem:(event:Event) => void;
+    toggleTargetItem:(event:Event,id:number)=> void;
+    selectTargetItem:(event:Event,id:number) => void;
     removeTargetItem:(event:Event,target:number) => void;
     confirmRemoveTargetItem:(target:number) => void;
     removeTargetLauncherItem:(launcher:number,target:number)=>void;
@@ -442,6 +449,15 @@ declare global {
       launchers:launcher[],
       isOpen:boolean,
       isSelected:boolean,
+      info:targetInfo
+  }
+
+  type targetInfo = {
+    snob:number
+    small:number
+    medium:number
+    large:number
+    sup:number
   }
 
   type launcher ={
@@ -479,6 +495,7 @@ declare global {
   }
 
   type plan = {
+    version:string
     id:string,
     name:string,
     targetPool:target[];

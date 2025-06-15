@@ -1,4 +1,4 @@
-# Tw-attack-planner v0.1.6-beta
+# Tw-attack-planner v0.1.7-beta
 
 This repository contains an in-game attack planner for Tribal Wars. With this script you can easily plan your arma assignments within a few minutes. It features automatic assignments and calculation based on distance and troop templates. It can handle 1000+ villages and targets.
 
@@ -43,6 +43,8 @@ On the startup window you can load, create and delete your attack plans. When yo
 
 ### 3. Main window
 
+![main window](https://github.com/KincsesBence/TW-attack-planner/blob/main/screenshots/mainwindow.jpg)
+
 After you've created or loaded a plan, you will encounter the main planning window:
 
 - On the left you can see the target list, and on the right the launch
@@ -56,6 +58,9 @@ the target via clicking the arrow pointing to the left.
 - and you can remove target and reset their launchers via clicking the X on the target's drop down element
 - you can add defender's speed booster on the target with the + button defined in percent
 - you can remove the defender's speed booster on the target with the - button
+
+![calculated attack window](https://github.com/KincsesBence/TW-attack-planner/blob/main/screenshots/calculatedattack.jpg)
+
 
 On the far left side you can use the options menu:
 

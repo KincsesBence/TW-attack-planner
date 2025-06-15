@@ -87,6 +87,7 @@ export class IndexedDBHandler {
             req.onsuccess= () =>{
                 resolve(req.result);
             }
+
         })
     }
 

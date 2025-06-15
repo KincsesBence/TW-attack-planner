@@ -82,4 +82,7 @@ export const hu = {
     home:'Otthon',
     available:'Elérhető',
     groups:'Csoportok',
+    from:'Honnan',
+    addVillageBoostError:'A gyorsító % étékének 1 és 100 között kell lennie!',
+    timeDiff:'Időeltérés a szervertől:'
 } 

@@ -1,4 +1,4 @@
-import { TroopTransaction, calcUnitPop, coordDistance, game, hasAvailableTroops, savePlan } from "../core/Api";
+import { AssetName, TroopTransaction, calcUnitPop, coordDistance, game, hasAvailableTroops, savePlan } from "../core/Api";
 import { Lang } from "../core/Language";
 
 export const autoAssignModal = ()=>{
@@ -65,7 +65,7 @@ export const autoAssignModal = ()=>{
             display:block;
             width: 20px;
             height: 20px;
-            background: url(https://dshu.innogamescdn.com/asset/80b013af/graphic/login_close.png) top left no-repeat;
+            background: url(${AssetName}/graphic/login_close.png) top left no-repeat;
             cursor: pointer;
             background-size: 20px;
             margin-right: 10px;
@@ -160,7 +160,7 @@ export const autoAssignModal = ()=>{
         
     </div>
     <div id="dialog-loading" style="display: none;justify-content: center;width: 100%;">
-        <img style="height:25px" src="https://dshu.innogamescdn.com/asset/6389cdba/graphic/loading.gif"><span style="padding:5px">${Lang('assigningAttacks')}...</span>
+        <img style="height:25px" src="${AssetName}/graphic/loading.gif"><span style="padding:5px">${Lang('assigningAttacks')}...</span>
     </div>
     `
 }

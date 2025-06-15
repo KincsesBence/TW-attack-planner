@@ -45,10 +45,9 @@ export class Query{
         });
     }
 
-    search(obj:HTMLInputElement){
-        this.searchField=obj;
+    search(fn:(data:any)=>boolean){
         this.reset();
-        this.objectCopy = this.objectCopy.filter((village:village)=>{return `${village.name} (${village.coord.text}) K${village.kontinent}`.includes(this.searchField!.value)})
+        this.objectCopy = this.objectCopy.filter(fn)
         this.render();
     }
 

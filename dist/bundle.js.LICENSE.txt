@@ -4,9 +4,13 @@
 
 /*! ../core/Query */
 
+/*! ../core/upgarde */
+
 /*! ../view/language/en */
 
 /*! ../view/language/hu */
+
+/*! ./Api */
 
 /*! ./ConfirmVillageSpeedRemoveModal */
 
@@ -69,6 +73,10 @@
 /*!***************************!*\
   !*** ./src/core/Query.ts ***!
   \***************************/
+
+/*!*****************************!*\
+  !*** ./src/core/upgarde.ts ***!
+  \*****************************/
 
 /*!******************************!*\
   !*** ./src/core/Language.ts ***!

@@ -1,4 +1,4 @@
-import { TroopTransaction, calcUnitPop, getSlowestUnit, savePlan } from "../core/Api"
+import { TroopTransaction, calcTargetInfo, calcUnitPop, getSlowestUnit, savePlan } from "../core/Api"
 import { Lang } from "../core/Language"
 
 export const addAttackModal = ()=>{
@@ -59,8 +59,7 @@ window.addAttackConfirm = () => {
 
     window.latestTemplate=templateName;
     window.latestArrival=arrival;
-
-    console.log($('.launch-list').find("input:checked").get().length,targetID,templateName,operation,arrival,notes);
+    
     let indTarget= window.attackPlan.targetPool.findIndex((target)=>{return target.village.id==targetID})    
     let indPlan= window.attackPlan.templates.findIndex((template)=>{return template.name==templateName})
 
@@ -76,7 +75,6 @@ window.addAttackConfirm = () => {
         }
         let villageId=window.attackPlan.launchPool[indLanucher].id;
         let isDel = window.addLauncher(indTarget,indLanucher,template,operation,arrival,notes)
-        console.log(isDel);
         
         if(!isDel){
             launchers.push(window.attackPlan.launchPool[indLanucher]);
@@ -111,9 +109,6 @@ window.addLauncher = (indTarget: number, indLanucher: number,trans:units,operati
         newVillage.popSize=calcUnitPop(newVillage.unitsContain);
         window.attackPlan.launchPool[indLanucher].popSize=calcUnitPop(window.attackPlan.launchPool[indLanucher].unitsContain);
 
-        //console.log(getSlowestUnit(newVillage.unitsContain,operation=='attack'));
-        
-
         if(newVillage.popSize>0){
             window.attackPlan.targetPool[indTarget].launchers.push({
                 arrival:arrival,
@@ -124,6 +119,8 @@ window.addLauncher = (indTarget: number, indLanucher: number,trans:units,operati
             })
         }
 
+        window.attackPlan.targetPool[indTarget].info=calcTargetInfo(window.attackPlan.targetPool[indTarget].launchers);
+        window.attackPlan.targetPool[indTarget].launchers.sort((a,b)=>{return a.arrival>b.arrival? 1:-1})
         if(window.attackPlan.launchPool[indLanucher].popSize==0){
             window.attackPlan.launchPool.splice(indLanucher,1);
             return true;

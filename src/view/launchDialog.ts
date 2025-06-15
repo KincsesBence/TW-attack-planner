@@ -1,4 +1,4 @@
-import { loadPages} from "../core/Api";
+import { AssetName, loadPages} from "../core/Api";
 import { editArrivalsModal } from "./editArrivalsModal";
 import { editLaunchVillagesModal } from "./editLaunchVillagesModal";
 import { editPlanNameModal } from "./editPlanNameModal";
@@ -6,6 +6,7 @@ import { editTargetModal } from "./editTargetModal";
 import { editTemplatesModal } from "./editTemplatesModal";
 import { mainWindow } from "./mainWindow";
 import { Lang } from "../core/Language";
+import { upgradePlan } from "../core/upgarde";
 
 export const launchDialog = ()=>{
     return /* html */`
@@ -118,7 +119,7 @@ export const launchDialog = ()=>{
             }
         </style>
         <div id="dialog-loading" style="display: none;justify-content: center;width: 100%;">
-            <img style="height:25px" src="https://dshu.innogamescdn.com/asset/6389cdba/graphic/loading.gif"><span style="padding:5px">${Lang('loading')}</span>
+            <img style="height:25px" src="${AssetName}/graphic/loading.gif"><span style="padding:5px">${Lang('loading')}</span>
         </div>
         <div class="launch-dialog">
             <div><h1>TW Attack Planner</h1></div>
@@ -262,7 +263,8 @@ newplan: () => {
         id:new Date().getTime().toString(),
         name:'',
         targetPool:[],
-        templates:[]
+        templates:[],
+        version:SCRIPT_INFO.version
     }
     $('.step-1').html(editPlanNameModal(window.launchDialog.plan));
     $('.step-2').html(editTargetModal(window.launchDialog.plan.targetPool));
@@ -327,7 +329,7 @@ loadPlan:()=>{
     $('.launch-dialog').hide();
     setTimeout(()=>{
         window.Dialog.close("launchDialog");
-        window.attackPlan=window.Plans[ind]
+        window.attackPlan=upgradePlan(window.Plans[ind]);
         window.Dialog.show("PlannerMainWindow",mainWindow());
         $('.popup_box_container').append('<div style="position: fixed;width: 100%;height: 100%;top:0;left:0;z-index:12001"></div>');
     },1000)

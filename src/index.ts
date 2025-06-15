@@ -29,7 +29,9 @@ import { launchDialog } from "./view/launchDialog";
     ],1);
     
     await loadWorldApi()
-    window.Plans = await window.DB.getAllData('plans'); 
+    window.Players = await window.DB.getAllData('players');
+    window.Villages = await window.DB.getAllData('villages'); 
+    window.Plans = await window.DB.getAllData('plans');
     window.Groups = await fetchGroups();
     window.Dialog.show("launchDialog",launchDialog());
     $('.popup_box_container').append('<div style="position: fixed;width: 100%;height: 100%;top:0;left:0;z-index:12001"></div>');

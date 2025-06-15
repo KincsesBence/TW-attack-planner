@@ -1,4 +1,4 @@
-import { formatDate } from "../core/Api";
+import { AssetName, formatDate } from "../core/Api";
 import { Lang } from "../core/Language";
 import { Query } from "../core/Query";
 import { addAttackModal } from "./addAttackModal";
@@ -308,9 +308,20 @@ export const mainWindow = ()=>{
                 height:35px;
                 width:100%;
                 display: flex;
-	            justify-content: space-around;
+	            justify-content: center;
                 background-color: #ecd8b2;
                 cursor: pointer;
+            }
+
+            .target-list-header{
+                height:35px;
+                width:100%;
+                display: flex;
+	            justify-content: center;
+                align-items: center;
+                background-color: #ecd8b2;
+                cursor: pointer;
+                gap:10px;
             }
 
             .target-header div{
@@ -338,7 +349,7 @@ export const mainWindow = ()=>{
                 z-index: 2;
                 width: 20px;
                 height: 20px;
-                background: url(https://dshu.innogamescdn.com/asset/80b013af/graphic/login_close.png) top left no-repeat;
+                background: url(${AssetName}/80b013af/graphic/login_close.png) top left no-repeat;
                 cursor: pointer;
                 background-size: 20px;
                 margin-right: 10px;
@@ -358,6 +369,10 @@ export const mainWindow = ()=>{
                 padding-left: 5px;
                 padding-right: 5px;
                 transform: translateY(-2px);
+                user-select: none;
+                -webkit-user-select: none; /* Safari */
+                -moz-user-select: none;    /* Firefox */
+                -ms-user-select: none;     /* Internet Explorer/Edge */
             }
 
             .indicator-open{
@@ -365,7 +380,7 @@ export const mainWindow = ()=>{
             }
 
             .planner-modal {
-                background: transparent url(https://dshu.innogamescdn.com/asset/fd86cac8/graphic/index/contentbg.png) scroll left top repeat;
+                background: transparent url(${AssetName}/graphic/index/contentbg.png) scroll left top repeat;
                 filter: drop-shadow(0 0 0.75rem rgb(88, 88, 88));
                 width: max-content;
                 height: fit-content;
@@ -473,7 +488,7 @@ export const mainWindow = ()=>{
                 z-index: 2;
                 width: 20px;
                 height: 20px;
-                background: url(https://dshu.innogamescdn.com/asset/80b013af/graphic/login_close.png) top left no-repeat;
+                background: url(${AssetName}/80b013af/graphic/login_close.png) top left no-repeat;
                 cursor: pointer;
                 background-size: 20px;
             }
@@ -520,7 +535,26 @@ export const mainWindow = ()=>{
                 <h3>${Lang('targets')} (<span id="target-cnt"></span>)</h3>
             </div>
             <div class="target-panel">
-                <div class="target-header">
+                <div class="target-list-header">
+                    <button onclick="window.targetPoolQuery.order('village.coord.text')" class="btn">XY</button>
+                    <button onclick="window.targetPoolQuery.order('village.name')" class="btn">${Lang('name')}</button>
+                    <button onclick="window.targetPoolQuery.order('info.snob')" class="btn">                        
+                        <img height="14px" src="${AssetName}/graphic/unit/unit_snob.png">
+                    </button>
+                    <button onclick="window.targetPoolQuery.order('info.small')" class="btn">                        
+                        <img src="${AssetName}/graphic/command/attack_small.png">
+                    </button>
+                    <button onclick="window.targetPoolQuery.order('info.medium')" class="btn">                        
+                        <img src="${AssetName}/graphic/command/attack_medium.png">
+                    </button>
+                    <button onclick="window.targetPoolQuery.order('info.large')" class="btn">                        
+                        <img src="${AssetName}/graphic/command/attack_large.png">
+                    </button>
+                    <button onclick="window.targetPoolQuery.order('info.sup')" class="btn">                        
+                        <img src="${AssetName}/graphic/command/support.png">
+                    </button>
+                    <input id="target-search-bar" onkeyup="window.targetVillagesSearch()" placeholder="${Lang('search')}" type="text">
+                    <button onclick="window.targetPoolQuery.resetAll()" class="btn">${Lang('reset')}</button>
                 </div>
                 <div class="target-list">
                 </div>
@@ -529,13 +563,12 @@ export const mainWindow = ()=>{
                 <div class="launch-filter-bar">
                     <button onclick="window.launchVillagesQuery.order('coord.text')" class="btn">XY</button>
                     <button onclick="window.launchVillagesQuery.order('name')" class="btn">${Lang('name')}</button>
-                    
                 </div>
                 <h3>${Lang('launchVillages')} (<span id="launch-cnt"></span>)</h3>
                 <div class="launch-filter-bar">
                     <button onclick="window.launchVillagesQuery.order('popSize')" class="btn">${Lang('size')}</button>
                     <div class="launch-search-bar">
-                        <input id="search-bar" onkeyup="window.launchVillagesQuery.search(this)" placeholder="${Lang('search')}" type="text">
+                        <input id="launch-search-bar" onkeyup="window.launchVillagesSearch()" placeholder="${Lang('search')}" type="text">
                         <button onclick="window.launchVillagesQuery.resetAll()" class="btn">${Lang('reset')}</button>
                     </div>
                 </div>
@@ -546,43 +579,43 @@ export const mainWindow = ()=>{
                         <button onclick="window.openAddLauncherWindow()" class="btn btn-add-attack">⬅</button>
                     </div>
                     <div class="spear-icon">
-                        <img onclick="window.launchVillagesQuery.order('unitsContain.spear')" src="https://dshu.innogamescdn.com/asset/fd86cac8/graphic/unit/unit_spear.png">
+                        <img onclick="window.launchVillagesQuery.order('unitsContain.spear')" src="${AssetName}/graphic/unit/unit_spear.png">
                     </div>
                     <div class="sword-icon">
-                        <img onclick="window.launchVillagesQuery.order('unitsContain.sword')" src="https://dshu.innogamescdn.com/asset/fd86cac8/graphic/unit/unit_sword.png">
+                        <img onclick="window.launchVillagesQuery.order('unitsContain.sword')" src="${AssetName}/graphic/unit/unit_sword.png">
                     </div>
                     <div class="axe-icon">
-                        <img onclick="window.launchVillagesQuery.order('unitsContain.axe')" src="https://dshu.innogamescdn.com/asset/fd86cac8/graphic/unit/unit_axe.png">
+                        <img onclick="window.launchVillagesQuery.order('unitsContain.axe')" src="${AssetName}/graphic/unit/unit_axe.png">
                     </div>
                     ${window.gameConfig.game.archer==1 ?
                         /* html */`<div class="archer-icon">
-                        <img onclick="window.launchVillagesQuery.order('unitsContain.archer')" src="https://dshu.innogamescdn.com/asset/fd86cac8/graphic/unit/unit_archer.png">
+                        <img onclick="window.launchVillagesQuery.order('unitsContain.archer')" src="${AssetName}/graphic/unit/unit_archer.png">
                     </div>`:``}
                     <div class="spy-icon">
-                        <img onclick="window.launchVillagesQuery.order('unitsContain.spy')" src="https://dshu.innogamescdn.com/asset/fd86cac8/graphic/unit/unit_spy.png">
+                        <img onclick="window.launchVillagesQuery.order('unitsContain.spy')" src="${AssetName}/graphic/unit/unit_spy.png">
                     </div>
                     <div class="light-icon">
-                        <img onclick="window.launchVillagesQuery.order('unitsContain.light')" src="https://dshu.innogamescdn.com/asset/fd86cac8/graphic/unit/unit_light.png">
+                        <img onclick="window.launchVillagesQuery.order('unitsContain.light')" src="${AssetName}/graphic/unit/unit_light.png">
                     </div>
                     ${window.gameConfig.game.archer==1?
                         /* html */`<div class="marcher-icon">
-                            <img onclick="window.launchVillagesQuery.order('unitsContain.marcher')" src="https://dshu.innogamescdn.com/asset/fd86cac8/graphic/unit/unit_marcher.png">
+                            <img onclick="window.launchVillagesQuery.order('unitsContain.marcher')" src="${AssetName}/graphic/unit/unit_marcher.png">
                         </div>`:``
                     }
                     <div class="heavy-icon">
-                        <img onclick="window.launchVillagesQuery.order('unitsContain.heavy')" src="https://dshu.innogamescdn.com/asset/fd86cac8/graphic/unit/unit_heavy.png">
+                        <img onclick="window.launchVillagesQuery.order('unitsContain.heavy')" src="${AssetName}/graphic/unit/unit_heavy.png">
                     </div>
                     <div class="ram-icon">
-                        <img onclick="window.launchVillagesQuery.order('unitsContain.ram')" src="https://dshu.innogamescdn.com/asset/fd86cac8/graphic/unit/unit_ram.png">
+                        <img onclick="window.launchVillagesQuery.order('unitsContain.ram')" src="${AssetName}/graphic/unit/unit_ram.png">
                     </div>
                     <div class="catapult-icon">
-                        <img onclick="window.launchVillagesQuery.order('unitsContain.catapult')" src="https://dshu.innogamescdn.com/asset/fd86cac8/graphic/unit/unit_catapult.png">
+                        <img onclick="window.launchVillagesQuery.order('unitsContain.catapult')" src="${AssetName}/graphic/unit/unit_catapult.png">
                     </div>
                     <div class="pala-icon">
-                        <img onclick="window.launchVillagesQuery.order('unitsContain.pala')" src="https://dshu.innogamescdn.com/asset/fd86cac8/graphic/unit/unit_knight.png">
+                        <img onclick="window.launchVillagesQuery.order('unitsContain.pala')" src="${AssetName}/graphic/unit/unit_knight.png">
                     </div>
                     <div class="snob-icon">
-                        <img onclick="window.launchVillagesQuery.order('unitsContain.snob')" src="https://dshu.innogamescdn.com/asset/fd86cac8/graphic/unit/unit_snob.png">
+                        <img onclick="window.launchVillagesQuery.order('unitsContain.snob')" src="${AssetName}/graphic/unit/unit_snob.png">
                     </div>
                 </div>
                 <div class="launch-list">
@@ -679,7 +712,9 @@ window.calculateAttack = () =>{
 }
 
 window.confirmCalculateAttack = () =>{
-    window.createModal(calculatedAttackModal(),Lang('attackPlan'));
+    let diff = $('#diff-time').val().toString();
+    let sign = $('#diff-time-sign').val().toString();
+    window.createModal(calculatedAttackModal(sign+':'+diff),Lang('attackPlan'));
 }
 
 window.openAutoAssignModal = ()=>{
@@ -692,4 +727,12 @@ window.resetAssignments = ()=>{
     window.createModal(confirmResetAssignmentsModal(),Lang('resetAssigments'));
 }
 
+window.launchVillagesSearch = () => {
+    let val = $('#launch-search-bar').val().toString();
+    window.launchVillagesQuery.search((village:village)=>{return `${village.name} (${village.coord.text}) K${village.kontinent}`.includes(val)})
+}
 
+window.targetVillagesSearch = () => {
+    let val = $('#target-search-bar').val().toString();
+    window.targetPoolQuery.search((target:target)=>{return `${target.village.name} (${target.village.coord.text}) K${target.village.kontinent}${target.village.owner? ` (${(target.village.owner as owner).name})`:'' }`.includes(val)})
+}

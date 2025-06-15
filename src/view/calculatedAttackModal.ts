@@ -1,13 +1,16 @@
-import { coordDistance, formatDateTime, game } from "../core/Api";
+import { AssetName, coordDistance, formatDateTime, game } from "../core/Api";
 import { Lang } from "../core/Language";
 
-export const calculatedAttackModal = ()=>{
+export const calculatedAttackModal = (diff:string)=>{ 
+    const addTimeFrags = diff.split(':');
+
+    const addTime = (addTimeFrags[0]=='-'? -1:1) * parseInt(addTimeFrags[1])*1000*60*60+parseInt(addTimeFrags[2])*1000*60+parseInt(addTimeFrags[3])*1000
+
     const unitCode=['spear','sword','axe','archer','spy','light','marcher','heavy','ram','catapult','knight','snob'];
     function calculate(){
         let attacks:attack[]=[];
-       
         window.attackPlan.targetPool.forEach((target:target)=>{
-            let boostIndx=window.attackPlan.boosters.findIndex((booster:boost)=>{return booster.playerId==target.village.owner});
+            let boostIndx=window.attackPlan.boosters.findIndex((booster:boost)=>{return booster.playerId==(target.village.owner as owner).id});
             target.launchers.forEach((launcher:launcher)=>{
                 let boost:number=1
     
@@ -22,7 +25,7 @@ export const calculatedAttackModal = ()=>{
                 let speed:number=launcher.unitSpeed.value*60;
                 
                 let attackDate=new Date(launcher.arrival)
-                let launch=new Date(attackDate.valueOf() 
+                let launch=new Date(attackDate.valueOf() + addTime
                 - Math.round((speed * 1000 / window.gameConfig.speed / (window.gameConfig.unit_speed*boost)) 
                 * coordDistance(launcher.village,target.village)));
                 let launchtext = formatDateTime(launch)
@@ -36,7 +39,6 @@ export const calculatedAttackModal = ()=>{
                         qrlink+=`${unitCode.indexOf(key).toString(16)}:${launcher.village.unitsContain[key as keyof unitConfig].toString(16)},`;
                     }
                 }); 
-                
     
                 attacks.push({
                     launchDate:launchtext,
@@ -58,8 +60,6 @@ export const calculatedAttackModal = ()=>{
         })
         attacks.sort((attack1,attack2)=>{return attack1.launchDate>attack2.launchDate ? 1:-1});
         let {bbcode,html,QRhtml} = generateLaunchText(attacks);
-        console.log(QRhtml);
-        
 
         $('.bb-field').html(bbcode);
         $('.inApp-field').html(html);
@@ -75,7 +75,7 @@ export const calculatedAttackModal = ()=>{
    
     return /* html */`
     <div id="dialog-loading">
-            <img style="height:25px" src="https://dshu.innogamescdn.com/asset/6389cdba/graphic/loading.gif"><span style="padding:5px">${Lang('calculaing')}...</span>
+            <img style="height:25px" src="${AssetName}/graphic/loading.gif"><span style="padding:5px">${Lang('calculaing')}...</span>
     </div>
     <div class="modal-input-inline" style="display:none">
         <label for="bb">${Lang('bbCode')}:</label>
@@ -95,16 +95,16 @@ export function generateLaunchText(attacks:attack[]):{bbcode:string,html:string,
     let maxChar=60000;
     let currentChar=0;
     let pageCnt=1;
-    let header=`<textarea style="resize:none;overflow: hidden;height:100px;width:400px;">[table][**] [||][building]barracks[/building][||]${Lang('launch')}[||]${Lang('target')}[||]${Lang('command')}[||]${Lang('note')}[/**]`;
+    let header=`<textarea style="resize:none;overflow: hidden;height:100px;width:400px;">[table][**] [||][building]barracks[/building][||]${Lang('launch')}[||]${Lang('from')}[||]${Lang('target')}[||]${Lang('command')}[||]${Lang('note')}[/**]`;
     let closing='[/table]</textarea><br>';
     let bbcode='';
     let QRhtml='';
     let QRPage=1;
     let QR=`twla://${QRPage.toString(16)}:-pageCnt-,${window.location.hostname},${sanitizeQRtext(window.attackPlan.name)}/`;
-    let html=`<table class="vis"><tr><th></th><th></th><th>${Lang('launch')}</th><th>${Lang('target')}</th><th>${Lang('command')}</th><th>${Lang('note')}</th></tr>`;
+    let html=`<table class="vis"><tr><th></th><th></th><th>${Lang('launch')}</th><th>${Lang('from')}</th><th>${Lang('target')}</th><th>${Lang('command')}</th><th>${Lang('note')}</th></tr>`;
     for (let i = 0; i < attacks.length; i++) {
         let temp=`[*]#${i+1}[|][unit]${attacks[i].unitSpeed.key}[/unit][|][b]${attacks[i].launchDate}[/b]`
-        +`[|] ${attacks[i].villageTo.coord.text} [|][url=${attacks[i].launchLink}]${attacks[i].isAttack ? Lang('attack'):Lang('support')}[/url][|]${attacks[i].note}`;
+        +`[|] ${attacks[i].villageFrom.coord.text} [|] ${attacks[i].villageTo.coord.text} [|][url=${attacks[i].launchLink}]${attacks[i].isAttack ? Lang('attack'):Lang('support')}[/url][|]${attacks[i].note}`;
         if(currentChar+temp.length+closing.length>=maxChar){
             currentChar=0;
             pageCnt++;
@@ -131,7 +131,7 @@ export function generateLaunchText(attacks:attack[]):{bbcode:string,html:string,
         currentChar+=temp.length;
        
         html+=`<tr><td>#${i+1}</td><td><img src="/graphic/unit/unit_${attacks[i].unitSpeed.key}.png"></td><td>${attacks[i].launchDate}</td>`+
-        `<td><a target="_blank" href="/game.php?village=${game.village.id}&screen=info_village&id=${attacks[i].villageTo.id}">${attacks[i].villageTo.name} (${attacks[i].villageTo.coord.text}) </a></td><td><a href="${attacks[i].launchLink}">${attacks[i].isAttack ? Lang('attack'):Lang('support')}</a></td><td>${attacks[i].note}</td></tr>`
+        `<td><a target="_blank" href="/game.php?village=${game.village.id}&screen=info_village&id=${attacks[i].villageFrom.id}">${attacks[i].villageFrom.name} (${attacks[i].villageFrom.coord.text}) </a></td><td><a target="_blank" href="/game.php?village=${game.village.id}&screen=info_village&id=${attacks[i].villageTo.id}">${attacks[i].villageTo.name} (${attacks[i].villageTo.coord.text}) </a></td><td><a href="${attacks[i].launchLink}">${attacks[i].isAttack ? Lang('attack'):Lang('support')}</a></td><td>${attacks[i].note}</td></tr>`
     }
     html+='</table>'
     
