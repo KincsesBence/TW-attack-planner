@@ -249,7 +249,7 @@ export const mainWindow = ()=>{
             grid-template-rows: 30px 30px ;
             gap: 0px 0px; 
             grid-template-areas:
-                "check-field name-field name-field name-field${window.gameConfig.game.archer==1 ? `name-field`:``} name-field name-field${window.gameConfig.game.archer==1 ? ` name-field`:``} name-field name-field name-field name-field name-field"
+                "check-field name-field name-field name-field${window.gameConfig.game.archer==1 ? ` name-field`:``} name-field name-field${window.gameConfig.game.archer==1 ? ` name-field`:``} name-field name-field name-field name-field name-field"
                 "check-field spear-field sword-field axe-field${window.gameConfig.game.archer==1 ? ` archer-field`:``} spy-field light-field${window.gameConfig.game.archer==1 ? ` marcher-field`:``}  heavy-field ram-field catapult-field knight-field snob-field";
             }
 
@@ -349,7 +349,7 @@ export const mainWindow = ()=>{
                 z-index: 2;
                 width: 20px;
                 height: 20px;
-                background: url(${AssetName}/80b013af/graphic/login_close.png) top left no-repeat;
+                background: url(${AssetName}/graphic/login_close.png) top left no-repeat;
                 cursor: pointer;
                 background-size: 20px;
                 margin-right: 10px;

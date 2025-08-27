@@ -9,7 +9,7 @@ module.exports = {
     new HookShellScriptPlugin({afterEmit:['node clearHtmlWhiteSpaces.js']}),
     new webpack.DefinePlugin({
       SCRIPT_INFO: JSON.stringify({
-        version:'v0.1.7-beta',
+        version:'v0.1.8-beta',
         date:new Date().getTime(),
         dev:'toldi26',
         git:'https://github.com/KincsesBence/TW-attack-planner',
