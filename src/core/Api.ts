@@ -48,7 +48,6 @@ export async function getUnitConfig():Promise<unitConfig>{
     return xml2json(result,"")
 }
 
-
 //TODO manager class
 export function loadScriptOptions():scriptOptions{
     const opt = localStorage.getItem(storeName);
@@ -392,7 +391,6 @@ export function hasAvailableTroops(village:village,units:units){
     for (let i = 0; i < keys.length; i++) {
         const key = keys[i];
         if(key=='snob' && village.unitsContain[key as keyof unitConfig]>0 && units[key as keyof unitConfig]==0){
-            console.log("ide");
             return false;
         }
 

@@ -116,7 +116,7 @@ export function generateLaunchText(attacks:attack[]):{bbcode:string,html:string,
         }
 
         if(QR.length+attacks[i].qrdata.length>1000){
-            QRhtml+=`<h3>${QRPage}.Oldal</h3><div><p><img src="https://api.qrserver.com/v1/create-qr-code/?size=600x600&data=${QR}"></p></div>`;
+            QRhtml+=`<h3>${QRPage}.${Lang('page')}</h3><div><p><img src="https://api.qrserver.com/v1/create-qr-code/?size=600x600&data=${QR}"></p></div>`;
             QRPage++;
             QR=`twla://${QRPage.toString(16)}/`;
         }

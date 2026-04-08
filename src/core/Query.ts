@@ -12,7 +12,7 @@ export class Query{
     private targetCnt:Element
     private funcRef:(items:village | target)=>string
     private CanScroll=false;
-    private To:NodeJS.Timeout;
+    private To:ReturnType<typeof setTimeout>;
     private searchField:HTMLInputElement=null;
 
     constructor(ref:any[],targetHtml:Element,targetCnt:Element,funcRef:(items:village | target)=>string,defaultOrder:string) {

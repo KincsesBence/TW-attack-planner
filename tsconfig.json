@@ -1,6 +1,7 @@
 {
     "compilerOptions": {
-      "outDir": "./dist/",
+      "rootDir": "./src",
+      "outDir": "./dist",
       "noImplicitAny": true,
       "module": "es6",
       "target": "es2021",
@@ -8,7 +9,9 @@
       "allowJs": true,
       "emitDecoratorMetadata": true,
       "experimentalDecorators": true,
-      "moduleResolution": "node"
+      "moduleResolution": "bundler",
+      "types": ["jquery", "jqueryui"],
+      "strict": false
     },
     "include": ["src", "globals.d.ts"]
   }
