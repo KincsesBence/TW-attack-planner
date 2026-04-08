@@ -21,14 +21,13 @@ export const calculatedAttackModal = (diff:string)=>{
                 if(!launcher.isAttack){
                     boost+=target.booster/100;        
                 }
-                
-                let speed:number=launcher.unitSpeed.value*60;
-                
-                let attackDate=new Date(launcher.arrival)
-                let launch=new Date(attackDate.valueOf() + addTime
-                - Math.round((speed * 1000 / window.gameConfig.speed / (window.gameConfig.unit_speed*boost)) 
-                * coordDistance(launcher.village,target.village)));
-                let launchtext = formatDateTime(launch)
+
+                const speed:number=launcher.unitSpeed.value;
+                const distance = coordDistance(launcher.village,target.village)
+                const miliseconds = Math.round(distance * (speed*60))*1000;
+                const attackDate = new Date(launcher.arrival);
+                const launch = new Date(attackDate.valueOf() + addTime - miliseconds);
+                const launchtext = formatDateTime(launch)
 
                 let smartlink=``;
                 let qrlink=``;
