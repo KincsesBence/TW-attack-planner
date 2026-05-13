@@ -12,6 +12,7 @@
   "devDependencies": {
     "@types/jquery": "^4.0.0",
     "@types/jqueryui": "^1.12.23",
+    "@types/qrcode": "^1.5.6",
     "css-loader": "^6.8.1",
     "hook-shell-script-webpack-plugin": "^0.4.0",
     "to-string-loader": "^1.2.0",
@@ -19,5 +20,9 @@
     "typescript": "^5.3.2",
     "webpack": "^5.89.0",
     "webpack-cli": "^5.1.4"
+  },
+  "dependencies": {
+    "qrcode": "^1.5.4",
+    "terser-webpack-plugin": "^5.6.0"
   }
 }

@@ -19,7 +19,7 @@ interface pageLoadInput{
     page?:number,
     groups?:group[],
     pageCnt?:number,
-    villages?:village[]
+    villages?:village[],
 }
 
 
@@ -31,8 +31,7 @@ const villageAPI:string="/map/village.txt";
 const playersAPI:string="/map/player.txt";
 const unitConfigAPI:string="/interface.php?func=get_unit_info";
 const gameConfigAPI:string="/interface.php?func=get_config";
-const GroupsLocation:string="screen=accountmanager";
-const GroupsFallBackLocation:string="screen=overview_villages&mode=combined";
+const GroupsLocation:string="screen=groups&mode=overview&ajax=load_group_menu";
 export const storeName="TW_ATTACK_PLANNER"
 export const AssetName='https://dshu.innogamescdn.com/asset/6389cdba'
 
@@ -78,9 +77,13 @@ export async function loadWorldApi(){
         window.Villages = villages
     }else{
         gameConfig = await getGameConfig();
+        await wait(200)
         unitConfig = await getUnitConfig();
+        await wait(200)
         players = await getAllPlayer();
+        await wait(200)
         villages = await getAllVillages(players);
+        await wait(200)
 
         for (const player of players) {
             await window.DB.setData('players',player);
@@ -161,30 +164,14 @@ function createLink(page=1,group=0){
 }
 
 export async function fetchGroups():Promise<group[]>{
-    let res = await $.ajax({url: server+`/game.php?${game.player.sitter != 0 ? "t="+game.player.id+"&":""}village=${game.village.id}& ${window.game_data.features.AccountManager.active? GroupsLocation:GroupsFallBackLocation}` });
-    let groups:group[] = [];
-    let groupsHTML = $(res).find('.group-menu-item').get();
-    if(groupsHTML.length>0){
-        groupsHTML.forEach((elem)=>{
-            groups.push({
-                id:parseInt($(elem).attr('data-group-id')),
-                name:$(elem).text().trim().slice(1,-1),
-            })
-        })
-    }else{
-        let groupsHtml = $($(res).find('#paged_view_content').find('select').get()[0]).find('option').get();
-        groupsHtml.forEach(group => {
-            if(!$(group).is(':disabled')){
-                let params = new URLSearchParams($(group).attr('value'));
-                console.log(params,$(group).attr('value'));
-                groups.push({
-                    id:parseInt(params.get("group")),
-                    name:$(group).text()
-                });
-            }
-        });
-    }
-    return groups
+    let res = await $.ajax({url: server+`/game.php?${game.player.sitter != 0 ? "t="+game.player.id+"&":""}village=${game.village.id}&${GroupsLocation}` });
+
+    return res.result.map((g:any)=>{
+        return {
+            id:g.group_id,
+            name:g.name,
+        }
+    })
 }
  
 export async function loadPages(groups:group[]){

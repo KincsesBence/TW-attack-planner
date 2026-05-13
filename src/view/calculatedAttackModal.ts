@@ -1,5 +1,6 @@
 import { AssetName, coordDistance, formatDateTime, game } from "../core/Api";
 import { Lang } from "../core/Language";
+import QRCode from "qrcode";
 
 export const calculatedAttackModal = (diff:string)=>{ 
     const addTimeFrags = diff.split(':');
@@ -7,7 +8,7 @@ export const calculatedAttackModal = (diff:string)=>{
     const addTime = (addTimeFrags[0]=='-'? -1:1) * parseInt(addTimeFrags[1])*1000*60*60+parseInt(addTimeFrags[2])*1000*60+parseInt(addTimeFrags[3])*1000
 
     const unitCode=['spear','sword','axe','archer','spy','light','marcher','heavy','ram','catapult','knight','snob'];
-    function calculate(){
+    async function calculate(){
         let attacks:attack[]=[];
         window.attackPlan.targetPool.forEach((target:target)=>{
             let boostIndx=window.attackPlan.boosters.findIndex((booster:boost)=>{return booster.playerId==(target.village.owner as owner).id});
@@ -58,7 +59,7 @@ export const calculatedAttackModal = (diff:string)=>{
             })
         })
         attacks.sort((attack1,attack2)=>{return attack1.launchDate>attack2.launchDate ? 1:-1});
-        let {bbcode,html,QRhtml} = generateLaunchText(attacks);
+        let {bbcode,html,QRhtml} = await generateLaunchText(attacks);
 
         $('.bb-field').html(bbcode);
         $('.inApp-field').html(html);
@@ -90,7 +91,7 @@ export const calculatedAttackModal = (diff:string)=>{
     `
 }
 
-export function generateLaunchText(attacks:attack[]):{bbcode:string,html:string,QRhtml:string}{
+export async function generateLaunchText(attacks:attack[]):Promise<{bbcode:string,html:string,QRhtml:string}>{
     let maxChar=60000;
     let currentChar=0;
     let pageCnt=1;
@@ -115,7 +116,8 @@ export function generateLaunchText(attacks:attack[]):{bbcode:string,html:string,
         }
 
         if(QR.length+attacks[i].qrdata.length>1000){
-            QRhtml+=`<h3>${QRPage}.${Lang('page')}</h3><div><p><img src="https://api.qrserver.com/v1/create-qr-code/?size=600x600&data=${QR}"></p></div>`;
+            let QRurl = await QRCode.toDataURL(QR);
+            QRhtml+=`<h3>${QRPage}.${Lang('page')}</h3><div><p><img src="${QRurl}"></p></div>`;
             QRPage++;
             QR=`twla://${QRPage.toString(16)}/`;
         }
@@ -123,7 +125,8 @@ export function generateLaunchText(attacks:attack[]):{bbcode:string,html:string,
         QR+=attacks[i].qrdata;
 
         if(i == attacks.length-1){
-            QRhtml+=`<h3>${QRPage}.Oldal</h3><div><p><img src="https://api.qrserver.com/v1/create-qr-code/?size=600x600&data=${QR}"></p></div>`;
+            let QRurl = await QRCode.toDataURL(QR);
+            QRhtml+=`<h3>${QRPage}.Oldal</h3><div><p><img src="${QRurl}"></p></div>`;
         }
 
         bbcode+=temp;

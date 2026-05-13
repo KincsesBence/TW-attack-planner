@@ -1,8 +1,6 @@
-# Tw-attack-planner v0.1.7-beta
+# Tw-attack-planner v2.0 - public
 
 This repository contains an in-game attack planner for Tribal Wars. With this script you can easily plan your arma assignments within a few minutes. It features automatic assignments and calculation based on distance and troop templates. It can handle 1000+ villages and targets.
-
->  **This script is currently in beta version it may contain critical or minor bugs and glitches**
 
 ## Features
 
